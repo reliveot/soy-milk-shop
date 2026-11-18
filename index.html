@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>晨光永和豆漿 V0.7｜全裝置自適應認知復健系統</title>
+  <title>晨光永和豆漿 V0.8｜全裝置自適應認知復健系統</title>
   <style>
     :root {
       --sign-red: #c53030;
@@ -128,18 +128,13 @@
       white-space: nowrap;
     }
 
-    /* 手機直式 Header 雙排自適應 */
     @media (max-width: 640px) {
       header {
         flex-wrap: wrap;
-        padding: 5px 8px;
+        padding: 4px 8px;
         gap: 4px;
       }
-      .header-left {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .header-right {
+      .header-left, .header-right {
         width: 100%;
         justify-content: space-between;
       }
@@ -157,7 +152,7 @@
       padding: 4px 8px;
       text-align: center;
       font-weight: 800;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       flex-shrink: 0;
       white-space: nowrap;
       overflow: hidden;
@@ -172,7 +167,7 @@
     /* 正向勳章浮動提示 */
     .praise-toast {
       position: fixed;
-      top: 90px;
+      top: 88px;
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       background: linear-gradient(135deg, #d97706, #b45309);
@@ -211,12 +206,12 @@
 
     /* 第一層：固定三座位顧客櫃檯 */
     .customers-layer {
-      flex: 0.62;
+      flex: 0.58;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 6px;
-      min-height: 112px;
-      max-height: 150px;
+      min-height: 106px;
+      max-height: 145px;
     }
 
     .seat-slot {
@@ -334,7 +329,7 @@
     }
 
     .cust-note {
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       color: #b91c1c;
       font-weight: 900;
       margin-top: 1px;
@@ -343,7 +338,6 @@
       text-overflow: ellipsis;
     }
 
-    /* 電腦版雙欄點餐氣泡；手機直式自動切換為單欄完整品名 */
     .order-needs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -351,17 +345,17 @@
       margin-top: 3px;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 760px) {
       .customers-layer {
-        max-height: 136px;
-        min-height: 108px;
+        max-height: 126px;
+        min-height: 102px;
       }
       .cust-avatar {
-        display: none; /* 手機直式隱藏小頭像，騰出完整寬度顯示名字與急件標籤 */
+        display: none;
       }
       .order-needs {
         grid-template-columns: 1fr;
-        gap: 3px;
+        gap: 2px;
       }
     }
 
@@ -406,21 +400,14 @@
 
     /* 第二層：開放式大廚房工作區 + 原木出餐台 */
     .kitchen-layer {
-      flex: 1.65;
+      flex: 1.7;
       display: grid;
       grid-template-columns: 2.5fr 1fr;
       gap: 8px;
       min-height: 0;
     }
 
-    @media (max-width: 760px) {
-      .kitchen-layer {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-      }
-    }
-
-    /* 不鏽鋼白鐵廚房工作台 */
+    /* 電腦與平板橫式：維持 2x2 四宮格 */
     .stations-grid {
       background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
       border: 2.5px solid #475569;
@@ -438,7 +425,7 @@
       background: #ffffff;
       border: 2px solid #94a3b8;
       border-radius: 12px;
-      padding: 5px 6px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -456,6 +443,14 @@
       pointer-events: none;
     }
 
+    .st-left-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      min-width: 0;
+    }
+
     .st-header {
       display: flex;
       justify-content: space-between;
@@ -463,7 +458,7 @@
       font-size: 0.78rem;
       font-weight: 900;
       color: #0f172a;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
       gap: 4px;
       flex-shrink: 0;
       white-space: nowrap;
@@ -515,13 +510,13 @@
       animation: pulse 1.2s infinite;
     }
 
-    /* 動畫料理舞台區（自適應伸縮，絕不擠壓下方按鈕） */
+    /* 動畫料理舞台區 */
     .st-slots {
       display: flex;
       gap: 6px;
       flex: 1;
       min-height: 36px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .slot-unit {
@@ -599,12 +594,12 @@
     .anim-sizzle { animation: sizzleWobble 0.6s infinite ease-in-out; }
     .anim-pour { stroke-dasharray: 4 4; animation: pourStream 0.5s infinite linear; }
 
-    /* 下半部：食材按鈕（完整露出不裁切） */
+    /* 食材操作大按鈕 */
     .st-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      height: 38px;
+      gap: 6px;
+      height: 40px;
       flex-shrink: 0;
     }
 
@@ -613,14 +608,13 @@
       border: 2px solid #334155;
       border-bottom-width: 3px;
       border-radius: 9px;
-      padding: 0 4px;
+      padding: 0 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
       min-width: 0;
-      overflow: hidden;
       transition: transform 0.1s, background-color 0.15s;
     }
 
@@ -629,21 +623,88 @@
     .food-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
     .food-btn-label {
-      font-size: 0.8rem;
+      font-size: 0.84rem;
       font-weight: 900;
       color: #0f172a;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    @media (max-width: 400px) {
-      .st-header { font-size: 0.72rem; }
-      .food-btn-label { font-size: 0.74rem; }
-      .svg-btn { width: 20px; height: 20px; }
+    /* =====================================================================
+       方案一核心響應式設計：手機直式（<= 760px）切換為「四層橫向工作帶」
+       左側（43%）：標題＋爐台動畫槽 ｜ 右側（57%）：並排 2 顆寬敞全字大按鈕
+       ===================================================================== */
+    @media (max-width: 760px) {
+      .kitchen-layer {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+      }
+
+      .stations-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 5px;
+        padding: 5px;
+      }
+
+      .station-card {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 6px;
+        padding: 4px 6px;
+      }
+
+      .st-left-group {
+        flex: 0.85;
+        justify-content: space-between;
+      }
+
+      .st-header {
+        margin-bottom: 2px;
+        font-size: 0.72rem;
+      }
+
+      .st-slots {
+        margin-bottom: 0;
+        min-height: 0;
+        gap: 4px;
+      }
+
+      .slot-unit {
+        font-size: 0.68rem;
+        padding: 1px 2px;
+      }
+
+      .st-actions {
+        flex: 1.25;
+        height: auto;
+        gap: 5px;
+      }
+
+      .food-btn {
+        padding: 0 4px;
+        gap: 4px;
+      }
+
+      .food-btn-label {
+        font-size: 0.8rem;
+      }
+
+      .svg-btn {
+        width: 20px;
+        height: 20px;
+      }
+
+      .svg-anim {
+        width: 24px;
+        height: 24px;
+      }
+
+      .cooking-stage-text {
+        font-size: 0.64rem;
+      }
     }
 
-    /* 右側／底部：原木出餐台 + 3 個白瓷盤 */
+    /* 原木出餐台 + 3 個白瓷盤 */
     .serving-panel {
       background: linear-gradient(180deg, #deb887 0%, #c89d6c 100%);
       border: 2.5px solid var(--wood-dark);
@@ -679,7 +740,7 @@
     @media (max-width: 760px) {
       .plates-grid {
         flex-direction: row;
-        height: 46px;
+        height: 44px;
         flex: none;
       }
       .serving-panel {
@@ -741,9 +802,9 @@
       color: #991b1b;
     }
 
-    /* SVG 尺寸 */
+    /* 預設（電腦/平板）SVG 尺寸 */
     .svg-anim { width: 32px; height: 32px; flex-shrink: 0; }
-    .svg-btn  { width: 22px; height: 22px; flex-shrink: 0; }
+    .svg-btn  { width: 24px; height: 24px; flex-shrink: 0; }
     .svg-sm   { width: 17px; height: 17px; flex-shrink: 0; }
 
     /* 彈窗樣式 */
@@ -889,7 +950,7 @@
 </head>
 <body>
 
-  <!-- 正宗永和豆漿紅底白字招牌（手機直式自動折疊為雙排完整顯示） -->
+  <!-- 正宗永和豆漿紅底白字招牌 -->
   <header>
     <div class="header-left">
       <div class="brand-sign">晨光永和豆漿</div>
@@ -913,18 +974,20 @@
       <div class="seat-slot" id="seat-2">櫃檯 3 號位</div>
     </section>
 
-    <!-- 第二層：開放式大廚房工作區 + 原木出餐台 -->
+    <!-- 第二層：開放式廚房工作區（手機直式為四層橫向工作帶；電腦為 2x2） + 原木出餐台 -->
     <section class="kitchen-layer">
       <div class="stations-grid">
         <!-- 1. 雙格鐵板煎台 -->
         <div class="station-card st-griddle">
-          <div class="st-header">
-            <span class="st-title-text">🔥 雙格煎台</span>
-            <span style="color:#dc2626;">4秒</span>
-          </div>
-          <div class="st-slots">
-            <div class="slot-unit slot-griddle" id="griddle-0">左位</div>
-            <div class="slot-unit slot-griddle" id="griddle-1">右位</div>
+          <div class="st-left-group">
+            <div class="st-header">
+              <span class="st-title-text">🔥 雙格煎台</span>
+              <span style="color:#dc2626;">4秒</span>
+            </div>
+            <div class="st-slots">
+              <div class="slot-unit slot-griddle" id="griddle-0">左位</div>
+              <div class="slot-unit slot-griddle" id="griddle-1">右位</div>
+            </div>
           </div>
           <div class="st-actions">
             <button class="food-btn" onclick="startCooking('egg_pancake')">
@@ -940,15 +1003,17 @@
 
         <!-- 2. 酥餅飯糰備料區（含視覺化油條保溫櫃） -->
         <div class="station-card st-prep" id="card-prep">
-          <div class="st-header">
-            <span class="st-title-text">🥖 餅糰台</span>
-            <div class="youtiao-cabinet" title="油條保溫櫃">
-              <div class="youtiao-sticks" id="youtiaoVisualBox"></div>
-              <button class="mini-restock-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條</button>
+          <div class="st-left-group">
+            <div class="st-header">
+              <span class="st-title-text">🥖 餅糰台</span>
+              <div class="youtiao-cabinet" title="油條保溫櫃">
+                <div class="youtiao-sticks" id="youtiaoVisualBox"></div>
+                <button class="mini-restock-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條</button>
+              </div>
             </div>
-          </div>
-          <div class="st-slots">
-            <div class="slot-unit slot-prep" id="prep-0">備料砧板空位</div>
+            <div class="st-slots">
+              <div class="slot-unit slot-prep" id="prep-0">備料空位</div>
+            </div>
           </div>
           <div class="st-actions">
             <button class="food-btn" onclick="startCooking('shaobing')">
@@ -964,12 +1029,14 @@
 
         <!-- 3. 傳統竹製蒸籠區 -->
         <div class="station-card st-steamer" id="card-steamer">
-          <div class="st-header">
-            <span class="st-title-text">♨️ 竹製蒸籠</span>
-            <span style="color:#16a34a;">3.5秒</span>
-          </div>
-          <div class="st-slots">
-            <div class="slot-unit slot-steamer" id="steamer-0">竹蒸籠空位</div>
+          <div class="st-left-group">
+            <div class="st-header">
+              <span class="st-title-text">♨️ 竹製蒸籠</span>
+              <span style="color:#16a34a;">3.5秒</span>
+            </div>
+            <div class="st-slots">
+              <div class="slot-unit slot-steamer" id="steamer-0">蒸籠空位</div>
+            </div>
           </div>
           <div class="st-actions">
             <button class="food-btn" onclick="startCooking('xiaolongbao')">
@@ -985,12 +1052,14 @@
 
         <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
         <div class="station-card st-drink">
-          <div class="st-header">
-            <span class="st-title-text">🥤 豆漿機</span>
-            <span style="color:#2563eb;">2秒</span>
-          </div>
-          <div class="st-slots">
-            <div class="slot-unit slot-drink" id="drink-0">不鏽鋼出杯台</div>
+          <div class="st-left-group">
+            <div class="st-header">
+              <span class="st-title-text">🥤 豆漿機</span>
+              <span style="color:#2563eb;">2秒</span>
+            </div>
+            <div class="st-slots">
+              <div class="slot-unit slot-drink" id="drink-0">出杯台</div>
+            </div>
           </div>
           <div class="st-actions">
             <button class="food-btn" onclick="startCooking('hot_soy')">
@@ -1135,14 +1204,14 @@
     };
 
     const STAGE_LABELS = {
-      egg_pancake: '煎蛋餅中',
-      radish_cake: '煎蘿蔔糕',
-      shaobing:    '夾油條中',
-      fantuan:     '包飯糰中',
-      xiaolongbao: '蒸湯包中',
-      mantou_egg:  '蒸饅頭蛋',
-      hot_soy:     '注熱豆漿',
-      iced_soy:    '注冰豆漿'
+      egg_pancake: '煎蛋餅',
+      radish_cake: '煎蘿蔔',
+      shaobing:    '夾油條',
+      fantuan:     '包飯糰',
+      xiaolongbao: '蒸湯包',
+      mantou_egg:  '蒸饅頭',
+      hot_soy:     '注熱漿',
+      iced_soy:    '注冰漿'
     };
 
     const MENU = {
@@ -1775,20 +1844,20 @@
     function renderYoutiaoCabinet() {
       const box = document.getElementById('youtiaoVisualBox');
       if (restockTimer > 0) {
-        box.innerHTML = `<span style="font-size:0.7rem; font-weight:900; color:#ea580c;" class="anim-sizzle">🫧油炸中</span>`;
+        box.innerHTML = `<span style="font-size:0.68rem; font-weight:900; color:#ea580c;" class="anim-sizzle">🫧油炸中</span>`;
         return;
       }
       if (youtiaoStock === 0) {
-        box.innerHTML = `<span style="font-size:0.7rem; font-weight:900; color:#dc2626;">0根</span>`;
+        box.innerHTML = `<span style="font-size:0.68rem; font-weight:900; color:#dc2626;">0根</span>`;
         return;
       }
       let sticksHtml = '';
       const displayCount = Math.min(youtiaoStock, 4);
       for (let i = 0; i < displayCount; i++) {
-        sticksHtml += `<svg viewBox="0 0 12 24" style="width:7px; height:16px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
+        sticksHtml += `<svg viewBox="0 0 12 24" style="width:6px; height:14px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
       }
       if (youtiaoStock > 4) {
-        sticksHtml += `<span style="font-size:0.68rem; font-weight:900; color:#92400e;">+${youtiaoStock - 4}</span>`;
+        sticksHtml += `<span style="font-size:0.66rem; font-weight:900; color:#92400e;">+${youtiaoStock - 4}</span>`;
       }
       box.innerHTML = sticksHtml;
     }
