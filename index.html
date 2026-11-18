@@ -3,16 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>晨光永和豆漿 V0.6｜全料理動畫與認知復健系統</title>
+  <title>晨光永和豆漿 V0.7｜全裝置自適應認知復健系統</title>
   <style>
     :root {
       --sign-red: #c53030;
       --sign-red-dark: #9b2c2c;
       --wall-tile: #f8f5ee;
-      --steel-top: #e2e8f0;
-      --steel-mid: #cbd5e1;
-      --steel-border: #64748b;
-      --wood-counter: #c89d6c;
       --wood-dark: #5c3a18;
       --text-dark: #1a202c;
     }
@@ -26,7 +22,7 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
+      height: 100dvh;
       font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
       background-color: var(--wall-tile);
       background-image:
@@ -39,7 +35,7 @@
       flex-direction: column;
     }
 
-    /* 正宗永和豆漿：紅底白字發光招牌列 */
+    /* 頂部紅底白字招牌列 */
     header {
       background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
       border-bottom: 3px solid #7f1d1d;
@@ -49,41 +45,39 @@
       align-items: center;
       gap: 8px;
       flex-shrink: 0;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       min-width: 0;
     }
 
     .brand-sign {
       background: #c53030;
       color: #ffffff;
-      border: 2.5px solid #ffffff;
+      border: 2px solid #ffffff;
       border-radius: 6px;
-      padding: 3px 12px;
-      font-size: 1.08rem;
+      padding: 2px 10px;
+      font-size: 1rem;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       white-space: nowrap;
       text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-      box-shadow: 0 0 10px rgba(254, 240, 138, 0.45);
+      box-shadow: 0 0 8px rgba(254, 240, 138, 0.45);
     }
 
     .mode-badge {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       border: 1.5px solid #fef08a;
       padding: 3px 8px;
       border-radius: 8px;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 900;
       color: #7f1d1d;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .header-right {
@@ -97,10 +91,10 @@
       background: #fef08a;
       border: 1.5px solid #ca8a04;
       color: #713f12;
-      padding: 4px 10px;
-      border-radius: 10px;
+      padding: 4px 8px;
+      border-radius: 8px;
       font-weight: 900;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       white-space: nowrap;
     }
 
@@ -108,9 +102,9 @@
       background-color: #1e293b;
       color: #fff;
       border: 1.5px solid #94a3b8;
-      border-radius: 10px;
-      padding: 5px 10px;
-      font-size: 0.82rem;
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 0.78rem;
       font-weight: 800;
       cursor: pointer;
       white-space: nowrap;
@@ -126,12 +120,33 @@
       background: #ffffff;
       border: 1.5px solid #fecaca;
       color: #991b1b;
-      border-radius: 10px;
-      padding: 5px 9px;
-      font-size: 0.82rem;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
+    }
+
+    /* 手機直式 Header 雙排自適應 */
+    @media (max-width: 640px) {
+      header {
+        flex-wrap: wrap;
+        padding: 5px 8px;
+        gap: 4px;
+      }
+      .header-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .stat-pill {
+        flex: 1;
+        text-align: center;
+      }
     }
 
     /* 狀態提示條 */
@@ -139,10 +154,10 @@
       background-color: #fffbeb;
       border-bottom: 1.5px solid #fde68a;
       color: #78350f;
-      padding: 4px 10px;
+      padding: 4px 8px;
       text-align: center;
       font-weight: 800;
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       flex-shrink: 0;
       white-space: nowrap;
       overflow: hidden;
@@ -157,15 +172,15 @@
     /* 正向勳章浮動提示 */
     .praise-toast {
       position: fixed;
-      top: 86px;
+      top: 90px;
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       background: linear-gradient(135deg, #d97706, #b45309);
       color: #fff;
       border: 2px solid #fef08a;
-      padding: 5px 16px;
+      padding: 5px 14px;
       border-radius: 20px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 900;
       box-shadow: 0 6px 16px rgba(0,0,0,0.25);
       z-index: 60;
@@ -180,39 +195,42 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* 主容器：上層顧客（緊湊 30%） + 下層開放式大廚房（70%） */
+    /* 主容器 */
     main {
       flex: 1;
       max-width: 1160px;
       width: 100%;
       margin: 0 auto;
-      padding: 6px 10px 8px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      min-height: 0;
       overflow: hidden;
     }
 
-    /* 第一層（緊湊 30%）：固定三座位顧客櫃檯 */
+    /* 第一層：固定三座位顧客櫃檯 */
     .customers-layer {
-      flex: 0.65;
+      flex: 0.62;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      min-height: 118px;
-      max-height: 155px;
+      gap: 6px;
+      min-height: 112px;
+      max-height: 150px;
     }
 
     .seat-slot {
       background: rgba(255, 255, 255, 0.65);
       border: 2px dashed #cbd5e1;
-      border-radius: 14px;
+      border-radius: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #64748b;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 800;
+      text-align: center;
+      padding: 4px;
       min-height: 0;
     }
 
@@ -221,14 +239,15 @@
       height: 100%;
       background: #ffffff;
       border: 2px solid #cbd5e1;
-      border-bottom: 4px solid #94a3b8;
-      border-radius: 14px;
-      padding: 6px 8px;
+      border-bottom: 3.5px solid #94a3b8;
+      border-radius: 12px;
+      padding: 5px 6px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
       transition: transform 0.12s, border-color 0.15s;
+      overflow: hidden;
     }
 
     .customer-card.urgent {
@@ -243,24 +262,24 @@
     }
 
     .customer-card.assist-target {
-      border: 3px solid #2563eb;
+      border: 2.5px solid #2563eb;
       background: #eff6ff;
-      box-shadow: 0 0 12px rgba(37, 99, 235, 0.45);
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.45);
       transform: translateY(-2px);
     }
 
     .cust-top {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .cust-avatar {
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      width: 30px;
-      height: 30px;
+      border: 1px solid #cbd5e1;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -277,11 +296,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 4px;
+      gap: 2px;
     }
 
     .cust-name {
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 900;
       white-space: nowrap;
       overflow: hidden;
@@ -291,19 +310,19 @@
     .urgent-tag {
       background: #dc2626;
       color: #fff;
-      font-size: 0.66rem;
+      font-size: 0.62rem;
       font-weight: 900;
-      padding: 1px 5px;
-      border-radius: 5px;
+      padding: 1px 4px;
+      border-radius: 4px;
       flex-shrink: 0;
     }
 
     .patience-track {
       width: 100%;
-      height: 5px;
+      height: 4px;
       background: #e2e8f0;
       border-radius: 3px;
-      margin-top: 3px;
+      margin-top: 2px;
       overflow: hidden;
     }
 
@@ -315,7 +334,7 @@
     }
 
     .cust-note {
-      font-size: 0.7rem;
+      font-size: 0.66rem;
       color: #b91c1c;
       font-weight: 900;
       margin-top: 1px;
@@ -324,23 +343,37 @@
       text-overflow: ellipsis;
     }
 
-    /* 緊湊雙欄點餐氣泡（節省垂直高度） */
+    /* 電腦版雙欄點餐氣泡；手機直式自動切換為單欄完整品名 */
     .order-needs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      margin-top: 4px;
+      gap: 4px;
+      margin-top: 3px;
+    }
+
+    @media (max-width: 640px) {
+      .customers-layer {
+        max-height: 136px;
+        min-height: 108px;
+      }
+      .cust-avatar {
+        display: none; /* 手機直式隱藏小頭像，騰出完整寬度顯示名字與急件標籤 */
+      }
+      .order-needs {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
     }
 
     .need-pill {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 3px 6px;
-      border-radius: 8px;
+      padding: 2px 5px;
+      border-radius: 6px;
       border: 1.5px solid #cbd5e1;
       background: #f8fafc;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 900;
       min-width: 0;
     }
@@ -371,40 +404,41 @@
       border-color: #2563eb;
     }
 
-    /* 第二層（放大為 70% 視覺主舞台）：開放式白鐵廚房 + 原木出餐台 */
+    /* 第二層：開放式大廚房工作區 + 原木出餐台 */
     .kitchen-layer {
-      flex: 1.55;
+      flex: 1.65;
       display: grid;
       grid-template-columns: 2.5fr 1fr;
-      gap: 10px;
+      gap: 8px;
       min-height: 0;
     }
 
     @media (max-width: 760px) {
       .kitchen-layer {
         grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
       }
     }
 
     /* 不鏽鋼白鐵廚房工作台 */
     .stations-grid {
       background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
-      border: 3px solid #475569;
-      border-radius: 16px;
-      padding: 8px;
+      border: 2.5px solid #475569;
+      border-radius: 14px;
+      padding: 6px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
       min-height: 0;
-      box-shadow: inset 0 2px 6px rgba(255,255,255,0.8);
+      box-shadow: inset 0 2px 5px rgba(255,255,255,0.8);
     }
 
     .station-card {
       background: #ffffff;
       border: 2px solid #94a3b8;
-      border-radius: 14px;
-      padding: 7px 9px;
+      border-radius: 12px;
+      padding: 5px 6px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -426,39 +460,46 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 900;
       color: #0f172a;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
+      gap: 4px;
       flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .st-title-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* 視覺化透明玻璃油條保溫櫃 + 炸油條鈕 */
     .youtiao-cabinet {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       background: #fffbeb;
       border: 1.5px solid #f59e0b;
-      border-radius: 8px;
-      padding: 2px 6px;
+      border-radius: 6px;
+      padding: 1px 4px;
+      flex-shrink: 0;
     }
 
     .youtiao-sticks {
       display: flex;
       align-items: center;
       gap: 2px;
-      min-width: 46px;
-      height: 18px;
+      height: 16px;
     }
 
     .mini-restock-btn {
       background: #ea580c;
       color: #fff;
       border: none;
-      border-radius: 6px;
-      padding: 2px 7px;
-      font-size: 0.72rem;
+      border-radius: 5px;
+      padding: 2px 5px;
+      font-size: 0.68rem;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
@@ -474,40 +515,37 @@
       animation: pulse 1.2s infinite;
     }
 
-    /* 放大版動畫料理舞台區（佔工作站 48% 高度，清楚呈現烹飪動態） */
+    /* 動畫料理舞台區（自適應伸縮，絕不擠壓下方按鈕） */
     .st-slots {
       display: flex;
-      gap: 8px;
-      flex: 1.25;
-      min-height: 54px;
-      margin-bottom: 6px;
+      gap: 6px;
+      flex: 1;
+      min-height: 36px;
+      margin-bottom: 4px;
     }
 
     .slot-unit {
       flex: 1;
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 4px;
+      padding: 2px 4px;
       position: relative;
       overflow: hidden;
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 800;
       transition: all 0.2s;
     }
 
-    /* 各工作站專屬器具底色 */
-    .slot-griddle { background: #1e293b; border: 2px solid #475569; color: #94a3b8; }
-    .slot-prep    { background: #fef3c7; border: 2px dashed #d97706; color: #92400e; }
-    .slot-steamer { background: #ecfdf5; border: 2px dashed #10b981; color: #065f46; }
-    .slot-drink   { background: #eff6ff; border: 2px dashed #3b82f6; color: #1e40af; }
+    .slot-griddle { background: #1e293b; border: 1.5px solid #475569; color: #94a3b8; }
+    .slot-prep    { background: #fef3c7; border: 1.5px dashed #d97706; color: #92400e; }
+    .slot-steamer { background: #ecfdf5; border: 1.5px dashed #10b981; color: #065f46; }
+    .slot-drink   { background: #eff6ff; border: 1.5px dashed #3b82f6; color: #1e40af; }
 
     .slot-unit.busy {
       border-style: solid;
-      border-width: 2.5px;
-      box-shadow: inset 0 0 12px rgba(245, 158, 11, 0.35);
+      border-width: 2px;
     }
 
     .slot-griddle.busy { background: #27272a; border-color: #f97316; color: #fef08a; }
@@ -518,29 +556,32 @@
     .cooking-anim-wrap {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      min-width: 0;
     }
 
     .cooking-stage-text {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 900;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .slot-progress {
       position: absolute;
       bottom: 0;
       left: 0;
-      height: 5px;
+      height: 4px;
       background: linear-gradient(90deg, #f59e0b, #ef4444);
       width: 0%;
     }
 
-    /* 關鍵幀動畫：冒熱氣、煎烤滋滋、豆漿注水、油鍋翻滾 */
+    /* 關鍵幀動畫 */
     @keyframes steamRise {
       0%   { transform: translateY(2px); opacity: 0.4; }
-      50%  { transform: translateY(-3px); opacity: 1; }
-      100% { transform: translateY(-7px); opacity: 0.2; }
+      50%  { transform: translateY(-2px); opacity: 1; }
+      100% { transform: translateY(-6px); opacity: 0.2; }
     }
 
     @keyframes sizzleWobble {
@@ -558,25 +599,25 @@
     .anim-sizzle { animation: sizzleWobble 0.6s infinite ease-in-out; }
     .anim-pour { stroke-dasharray: 4 4; animation: pourStream 0.5s infinite linear; }
 
-    /* 下半部：寬敞單行食材按鈕（徹底杜絕文字溢位） */
+    /* 下半部：食材按鈕（完整露出不裁切） */
     .st-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      height: 44px;
+      gap: 5px;
+      height: 38px;
       flex-shrink: 0;
     }
 
     .food-btn {
       background: #ffffff;
       border: 2px solid #334155;
-      border-bottom-width: 3.5px;
-      border-radius: 10px;
-      padding: 0 8px;
+      border-bottom-width: 3px;
+      border-radius: 9px;
+      padding: 0 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       cursor: pointer;
       min-width: 0;
       overflow: hidden;
@@ -588,18 +629,26 @@
     .food-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
     .food-btn-label {
-      font-size: 0.88rem;
+      font-size: 0.8rem;
       font-weight: 900;
       color: #0f172a;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* 右側：原木出餐台 + 3 個立體白瓷盤 + 報廢桶 */
+    @media (max-width: 400px) {
+      .st-header { font-size: 0.72rem; }
+      .food-btn-label { font-size: 0.74rem; }
+      .svg-btn { width: 20px; height: 20px; }
+    }
+
+    /* 右側／底部：原木出餐台 + 3 個白瓷盤 */
     .serving-panel {
       background: linear-gradient(180deg, #deb887 0%, #c89d6c 100%);
-      border: 3px solid var(--wood-dark);
-      border-radius: 16px;
-      padding: 8px 10px;
+      border: 2.5px solid var(--wood-dark);
+      border-radius: 14px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -608,20 +657,20 @@
     }
 
     .serving-header {
-      font-size: 0.84rem;
+      font-size: 0.78rem;
       font-weight: 900;
       color: #3e220d;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       flex-shrink: 0;
     }
 
     .plates-grid {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       flex: 1;
       justify-content: center;
       min-height: 0;
@@ -630,49 +679,55 @@
     @media (max-width: 760px) {
       .plates-grid {
         flex-direction: row;
+        height: 46px;
+        flex: none;
+      }
+      .serving-panel {
+        padding: 5px 8px;
       }
     }
 
     .plate-card {
       flex: 1;
-      background: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.5);
       border: 2px dashed #6b4226;
-      border-radius: 14px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 6px 10px;
-      font-size: 0.8rem;
+      gap: 6px;
+      padding: 4px 6px;
+      font-size: 0.76rem;
       font-weight: 800;
       color: #4a2c11;
       transition: all 0.15s;
+      min-width: 0;
     }
 
     .plate-card.ready {
       background: radial-gradient(circle, #ffffff 70%, #f1f5f9 100%);
-      border: 2.5px solid #16a34a;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.16);
+      border: 2px solid #16a34a;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
       cursor: pointer;
       color: #0f172a;
     }
 
     .plate-card.selected {
       background: #dbeafe;
-      border: 3px solid #2563eb;
+      border: 2.5px solid #2563eb;
       transform: scale(1.03);
-      box-shadow: 0 0 14px rgba(37, 99, 235, 0.7);
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.7);
     }
 
     .trash-btn {
-      margin-top: 8px;
+      margin-top: 5px;
       width: 100%;
-      padding: 8px;
-      border-radius: 10px;
-      border: 2px solid #64748b;
+      padding: 6px;
+      border-radius: 9px;
+      border: 1.5px solid #64748b;
       background: #f8fafc;
       color: #334155;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 900;
       cursor: pointer;
       text-align: center;
@@ -686,10 +741,10 @@
       color: #991b1b;
     }
 
-    /* SVG 尺寸控制 */
-    .svg-anim { width: 42px; height: 42px; flex-shrink: 0; }
-    .svg-btn  { width: 26px; height: 26px; flex-shrink: 0; }
-    .svg-sm   { width: 19px; height: 19px; flex-shrink: 0; }
+    /* SVG 尺寸 */
+    .svg-anim { width: 32px; height: 32px; flex-shrink: 0; }
+    .svg-btn  { width: 22px; height: 22px; flex-shrink: 0; }
+    .svg-sm   { width: 17px; height: 17px; flex-shrink: 0; }
 
     /* 彈窗樣式 */
     .modal-overlay {
@@ -708,30 +763,30 @@
       border-radius: 18px;
       max-width: 540px;
       width: 100%;
-      max-height: 92vh;
+      max-height: 90dvh;
       overflow-y: auto;
-      padding: 18px;
+      padding: 16px;
       box-shadow: 0 10px 28px rgba(0,0,0,0.35);
     }
 
     .modal-title {
-      font-size: 1.32rem;
+      font-size: 1.25rem;
       font-weight: 900;
       color: #c53030;
       text-align: center;
       margin-bottom: 10px;
     }
 
-    .config-section { margin-bottom: 12px; }
+    .config-section { margin-bottom: 10px; }
     .config-label {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 900;
       color: #1e293b;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       display: block;
     }
 
-    .option-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .option-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .option-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 
     .opt-btn {
@@ -744,8 +799,8 @@
     }
 
     .opt-btn.selected { border-color: #c53030; background: #fef2f2; }
-    .opt-title { font-size: 0.86rem; font-weight: 900; color: #0f172a; }
-    .opt-desc { font-size: 0.72rem; color: #475569; margin-top: 2px; line-height: 1.3; }
+    .opt-title { font-size: 0.84rem; font-weight: 900; color: #0f172a; }
+    .opt-desc { font-size: 0.7rem; color: #475569; margin-top: 2px; line-height: 1.3; }
 
     .btn-primary {
       width: 100%;
@@ -767,7 +822,7 @@
       color: #fff;
       border: none;
       border-radius: 12px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 800;
       cursor: pointer;
       margin-top: 8px;
@@ -777,26 +832,26 @@
       background: linear-gradient(135deg, #fffbeb, #fef08a);
       border: 2px solid #eab308;
       border-radius: 14px;
-      padding: 10px;
+      padding: 8px;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .honor-title { font-size: 1.25rem; font-weight: 900; color: #854d0e; }
-    .report-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
-    .kpi-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 8px 4px; text-align: center; }
-    .kpi-val { font-size: 1.15rem; font-weight: 900; color: #14532d; }
-    .kpi-lbl { font-size: 0.7rem; font-weight: 800; color: #166534; margin-top: 2px; }
+    .honor-title { font-size: 1.2rem; font-weight: 900; color: #854d0e; }
+    .report-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
+    .kpi-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 6px 3px; text-align: center; }
+    .kpi-val { font-size: 1.05rem; font-weight: 900; color: #14532d; }
+    .kpi-lbl { font-size: 0.68rem; font-weight: 800; color: #166534; margin-top: 2px; }
 
     .summary-box {
       background: #fffbeb;
       border-left: 4px solid #d97706;
-      padding: 10px 12px;
+      padding: 9px 10px;
       border-radius: 8px;
-      font-size: 0.86rem;
-      line-height: 1.55;
+      font-size: 0.84rem;
+      line-height: 1.5;
       color: #1e293b;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .toggle-details-btn {
@@ -804,21 +859,21 @@
       background: #f1f5f9;
       border: 1.5px solid #cbd5e1;
       color: #334155;
-      padding: 8px;
+      padding: 7px;
       border-radius: 10px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 800;
       cursor: pointer;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .detail-list {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
-      padding: 10px;
-      font-size: 0.8rem;
-      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 0.78rem;
+      margin-bottom: 8px;
     }
 
     .detail-row {
@@ -834,7 +889,7 @@
 </head>
 <body>
 
-  <!-- 正宗永和豆漿紅底白字招牌 -->
+  <!-- 正宗永和豆漿紅底白字招牌（手機直式自動折疊為雙排完整顯示） -->
   <header>
     <div class="header-left">
       <div class="brand-sign">晨光永和豆漿</div>
@@ -847,29 +902,29 @@
     </div>
   </header>
 
-  <div class="banner" id="statusBanner">早市開張！看看三位客人的點單，點擊下方廚房開始備餐。</div>
+  <div class="banner" id="statusBanner">早市開張！看看上方客人點單，點擊下方廚房開始料理。</div>
   <div class="praise-toast" id="praiseToast">✨ 雙鍋齊下！時間管理大師</div>
 
   <main>
-    <!-- 第一層（緊湊 30%）：固定三座位顧客櫃檯 -->
+    <!-- 第一層：固定三座位顧客櫃檯 -->
     <section class="customers-layer">
       <div class="seat-slot" id="seat-0">櫃檯 1 號位</div>
       <div class="seat-slot" id="seat-1">櫃檯 2 號位</div>
       <div class="seat-slot" id="seat-2">櫃檯 3 號位</div>
     </section>
 
-    <!-- 第二層（放大 70%）：開放式大廚房工作區 + 原木出餐台 -->
+    <!-- 第二層：開放式大廚房工作區 + 原木出餐台 -->
     <section class="kitchen-layer">
       <div class="stations-grid">
         <!-- 1. 雙格鐵板煎台 -->
         <div class="station-card st-griddle">
           <div class="st-header">
-            <span>🔥 雙格鐵板煎台</span>
-            <span style="color:#dc2626;">煎製 4秒</span>
+            <span class="st-title-text">🔥 雙格煎台</span>
+            <span style="color:#dc2626;">4秒</span>
           </div>
           <div class="st-slots">
-            <div class="slot-unit slot-griddle" id="griddle-0">鐵板左位</div>
-            <div class="slot-unit slot-griddle" id="griddle-1">鐵板右位</div>
+            <div class="slot-unit slot-griddle" id="griddle-0">左位</div>
+            <div class="slot-unit slot-griddle" id="griddle-1">右位</div>
           </div>
           <div class="st-actions">
             <button class="food-btn" onclick="startCooking('egg_pancake')">
@@ -886,7 +941,7 @@
         <!-- 2. 酥餅飯糰備料區（含視覺化油條保溫櫃） -->
         <div class="station-card st-prep" id="card-prep">
           <div class="st-header">
-            <span>🥖 酥餅飯糰台</span>
+            <span class="st-title-text">🥖 餅糰台</span>
             <div class="youtiao-cabinet" title="油條保溫櫃">
               <div class="youtiao-sticks" id="youtiaoVisualBox"></div>
               <button class="mini-restock-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條</button>
@@ -910,8 +965,8 @@
         <!-- 3. 傳統竹製蒸籠區 -->
         <div class="station-card st-steamer" id="card-steamer">
           <div class="st-header">
-            <span>♨️ 傳統竹製蒸籠</span>
-            <span style="color:#16a34a;">蒸煮 3.5秒</span>
+            <span class="st-title-text">♨️ 竹製蒸籠</span>
+            <span style="color:#16a34a;">3.5秒</span>
           </div>
           <div class="st-slots">
             <div class="slot-unit slot-steamer" id="steamer-0">竹蒸籠空位</div>
@@ -931,8 +986,8 @@
         <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
         <div class="station-card st-drink">
           <div class="st-header">
-            <span>🥤 雙龍頭豆漿機</span>
-            <span style="color:#2563eb;">出杯 2秒</span>
+            <span class="st-title-text">🥤 豆漿機</span>
+            <span style="color:#2563eb;">2秒</span>
           </div>
           <div class="st-slots">
             <div class="slot-unit slot-drink" id="drink-0">不鏽鋼出杯台</div>
@@ -950,16 +1005,16 @@
         </div>
       </div>
 
-      <!-- 右側：原木出餐台 + 3 個立體白瓷盤 -->
+      <!-- 右側／底部：原木出餐台 + 3 個白瓷盤 -->
       <div class="serving-panel">
         <div class="serving-header">
           <span>🍽️ 出餐白瓷盤</span>
           <span id="plateStatusText">0 / 3 盤</span>
         </div>
         <div class="plates-grid">
-          <div class="plate-card" id="plate-0" onclick="handlePlateClick(0)">空瓷盤 1</div>
-          <div class="plate-card" id="plate-1" onclick="handlePlateClick(1)">空瓷盤 2</div>
-          <div class="plate-card" id="plate-2" onclick="handlePlateClick(2)">空瓷盤 3</div>
+          <div class="plate-card" id="plate-0" onclick="handlePlateClick(0)">空盤 1</div>
+          <div class="plate-card" id="plate-1" onclick="handlePlateClick(1)">空盤 2</div>
+          <div class="plate-card" id="plate-2" onclick="handlePlateClick(2)">空盤 3</div>
         </div>
         <button class="trash-btn" id="trashBtn" onclick="handleDiscardSelectedPlate()">
           🗑️ 報廢手上餐點
@@ -1022,10 +1077,10 @@
   <div class="modal-overlay hidden" id="endModal">
     <div class="modal-card">
       <div class="modal-title">🎉 今日順利打烊！</div>
-      <div style="text-align:center; font-size:0.8rem; color:#475569; margin-bottom:8px;" id="reportSubtitle"></div>
+      <div style="text-align:center; font-size:0.78rem; color:#475569; margin-bottom:8px;" id="reportSubtitle"></div>
 
       <div class="honor-badge-box">
-        <div style="font-size:0.78rem; color:#854d0e; font-weight:800;">今日獲得稱號</div>
+        <div style="font-size:0.76rem; color:#854d0e; font-weight:800;">今日獲得稱號</div>
         <div class="honor-title" id="honorTitle">🏆 金牌效率神店長</div>
       </div>
 
@@ -1057,7 +1112,6 @@
   </div>
 
   <script>
-    // 1. 成品完成圖示 SVG（用於訂單氣泡、按鈕、白色瓷盤）
     const DONE_SVGS = {
       egg_pancake: `<svg viewBox="0 0 64 64"><rect x="8" y="18" width="48" height="28" rx="11" fill="#facc15" stroke="#854d0e" stroke-width="3.5"/><path d="M16 27 Q32 20 48 27 M16 37 Q32 30 48 37" stroke="#ca8a04" stroke-width="3" fill="none"/><circle cx="23" cy="26" r="2.6" fill="#16a34a"/><circle cx="40" cy="35" r="2.6" fill="#16a34a"/><circle cx="32" cy="25" r="2.2" fill="#16a34a"/></svg>`,
       radish_cake: `<svg viewBox="0 0 64 64"><rect x="9" y="14" width="28" height="26" rx="5" fill="#fef08a" stroke="#854d0e" stroke-width="3.5"/><rect x="27" y="24" width="28" height="26" rx="5" fill="#fde047" stroke="#854d0e" stroke-width="3.5"/><path d="M33 32 L49 32 M34 41 L46 41" stroke="#c2410c" stroke-width="3.5" stroke-linecap="round"/></svg>`,
@@ -1069,7 +1123,6 @@
       iced_soy:    `<svg viewBox="0 0 64 64"><path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3.5"/><rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#2563eb"/><line x1="36" y1="17" x2="44" y2="5" stroke="#dc2626" stroke-width="3.8" stroke-linecap="round"/><rect x="24" y="29" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/><rect x="33" y="35" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/></svg>`
     };
 
-    // 2. 每道料理「製作中專屬動態 SVG」（呈現烹飪過程：倒麵糊、煎金黃、夾油條、包飯糰、蒸籠冒煙、豆漿機注水）
     const COOKING_SVGS = {
       egg_pancake: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="38" rx="24" ry="13" fill="#fef08a" stroke="#ca8a04" stroke-width="3" class="anim-sizzle"/><circle cx="32" cy="38" r="7" fill="#f97316"/><circle cx="22" cy="35" r="2.5" fill="#16a34a"/><circle cx="42" cy="40" r="2.5" fill="#16a34a"/><path d="M22 20 Q20 12 24 8 M34 18 Q32 10 36 6 M44 20 Q42 12 46 8" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
       radish_cake: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="10" y="24" width="21" height="22" rx="4" fill="#ffffff" stroke="#d97706" stroke-width="3" class="anim-sizzle"/><rect x="33" y="26" width="21" height="22" rx="4" fill="#fef08a" stroke="#d97706" stroke-width="3" class="anim-sizzle"/><path d="M20 18 Q18 11 22 7 M42 18 Q40 11 44 7" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
@@ -1082,14 +1135,14 @@
     };
 
     const STAGE_LABELS = {
-      egg_pancake: '煎蛋餅皮中...',
-      radish_cake: '煎至金黃中...',
-      shaobing:    '燒餅夾油條...',
-      fantuan:     '捏製飯糰中...',
-      xiaolongbao: '大火蒸煮中...',
-      mantou_egg:  '蒸饅頭夾蛋...',
-      hot_soy:     '熱豆漿注杯...',
-      iced_soy:    '冰豆漿注杯...'
+      egg_pancake: '煎蛋餅中',
+      radish_cake: '煎蘿蔔糕',
+      shaobing:    '夾油條中',
+      fantuan:     '包飯糰中',
+      xiaolongbao: '蒸湯包中',
+      mantou_egg:  '蒸饅頭蛋',
+      hot_soy:     '注熱豆漿',
+      iced_soy:    '注冰豆漿'
     };
 
     const MENU = {
@@ -1490,7 +1543,7 @@
       if (!cust || cust.isDone) return;
 
       if (selectedPlateIdx === null) {
-        showBanner('💡 請先點擊右側白瓷盤端起做好的餐點，再點客人出餐！');
+        showBanner('💡 請先點擊下方白瓷盤端起做好的餐點，再點客人出餐！');
         return;
       }
 
@@ -1594,7 +1647,7 @@
             showBanner('🥖 新鮮油條起鍋！保溫櫃補充了 3 根金黃油條。');
             needRender = true;
           } else {
-            document.getElementById('restockBtn').textContent = `🔥 炸油條 ${Math.ceil((RESTOCK_DURATION - restockTimer)/1000)}s`;
+            document.getElementById('restockBtn').textContent = `🔥 ${Math.ceil((RESTOCK_DURATION - restockTimer)/1000)}s`;
           }
         }
 
@@ -1719,24 +1772,23 @@
       URL.revokeObjectURL(url);
     }
 
-    // 渲染透明玻璃油條保溫櫃裡實體金黃油條根數
     function renderYoutiaoCabinet() {
       const box = document.getElementById('youtiaoVisualBox');
       if (restockTimer > 0) {
-        box.innerHTML = `<span style="font-size:0.75rem; font-weight:900; color:#ea580c;" class="anim-sizzle">🫧油鍋翻炸中</span>`;
+        box.innerHTML = `<span style="font-size:0.7rem; font-weight:900; color:#ea580c;" class="anim-sizzle">🫧油炸中</span>`;
         return;
       }
       if (youtiaoStock === 0) {
-        box.innerHTML = `<span style="font-size:0.74rem; font-weight:900; color:#dc2626;">空櫃(0根)</span>`;
+        box.innerHTML = `<span style="font-size:0.7rem; font-weight:900; color:#dc2626;">0根</span>`;
         return;
       }
       let sticksHtml = '';
-      const displayCount = Math.min(youtiaoStock, 5);
+      const displayCount = Math.min(youtiaoStock, 4);
       for (let i = 0; i < displayCount; i++) {
-        sticksHtml += `<svg viewBox="0 0 12 24" style="width:9px; height:18px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
+        sticksHtml += `<svg viewBox="0 0 12 24" style="width:7px; height:16px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
       }
-      if (youtiaoStock > 5) {
-        sticksHtml += `<span style="font-size:0.72rem; font-weight:900; color:#92400e;">+${youtiaoStock - 5}</span>`;
+      if (youtiaoStock > 4) {
+        sticksHtml += `<span style="font-size:0.68rem; font-weight:900; color:#92400e;">+${youtiaoStock - 4}</span>`;
       }
       box.innerHTML = sticksHtml;
     }
@@ -1754,13 +1806,12 @@
 
       const heldFood = selectedPlateIdx !== null ? readyPlates[selectedPlateIdx] : null;
 
-      // 1. 渲染固定三座位
       for (let i = 0; i < 3; i++) {
         const seatEl = document.getElementById(`seat-${i}`);
         const cust = seats[i];
 
         if (!cust) {
-          seatEl.innerHTML = seatCooldowns[i] > 0 ? '🧹 整理桌面中...' : `櫃檯 ${i + 1} 號位`;
+          seatEl.innerHTML = seatCooldowns[i] > 0 ? '🧹 整理中...' : `空位 ${i + 1}`;
           continue;
         }
 
@@ -1779,7 +1830,7 @@
                 ${smSvg}
                 <span class="need-pill-name">${item.name}</span>
               </div>
-              <span style="font-size:0.72rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
+              <span style="font-size:0.7rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
             </div>
           `;
         }).join('');
@@ -1792,7 +1843,7 @@
                 <div class="cust-meta">
                   <div class="cust-name-row">
                     <span class="cust-name">${cust.name}</span>
-                    ${cust.isUrgent && !cust.isDone ? '<span class="urgent-tag">🔥急件</span>' : ''}
+                    ${cust.isUrgent && !cust.isDone ? '<span class="urgent-tag">🔥急</span>' : ''}
                   </div>
                   <div class="patience-track">
                     <div class="patience-fill" id="patience-${cust.id}" style="width:${ratio * 100}%; background:${barColor};"></div>
@@ -1806,14 +1857,12 @@
         `;
       }
 
-      // 2. 渲染四大工作站製作中專屬動畫
-      renderSlot('griddle', 0, '鐵板左位');
-      renderSlot('griddle', 1, '鐵板右位');
-      renderSlot('prep', 0, '備料砧板空位');
+      renderSlot('griddle', 0, '左位');
+      renderSlot('griddle', 1, '右位');
+      renderSlot('prep', 0, '備料空位');
       renderSlot('steamer', 0, '竹蒸籠空位');
-      renderSlot('drink', 0, '不鏽鋼出杯台');
+      renderSlot('drink', 0, '出杯台');
 
-      // 3. 渲染出餐白瓷盤（成品起鍋視覺）
       const readyCount = readyPlates.filter(Boolean).length;
       document.getElementById('plateStatusText').textContent = `${readyCount} / 3 盤`;
 
@@ -1821,16 +1870,16 @@
         const el = document.getElementById(`plate-${idx}`);
         if (!food) {
           el.className = 'plate-card';
-          el.innerHTML = `空瓷盤 ${idx + 1}`;
+          el.innerHTML = `空盤 ${idx + 1}`;
         } else {
           const isSel = selectedPlateIdx === idx;
           const doneSvg = DONE_SVGS[food.menuId].replace('<svg ', '<svg class="svg-anim" ');
           el.className = `plate-card ready ${isSel ? 'selected' : ''}`;
           el.innerHTML = `
             ${doneSvg}
-            <div style="text-align:left;">
-              <div style="font-size:0.86rem; font-weight:900;">${food.name}</div>
-              <div style="font-size:0.7rem; color:${isSel ? '#2563eb' : '#16a34a'};">${isSel ? '端在手上' : '點我端起'}</div>
+            <div style="text-align:left; min-width:0;">
+              <div style="font-size:0.8rem; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${food.name}</div>
+              <div style="font-size:0.65rem; color:${isSel ? '#2563eb' : '#16a34a'};">${isSel ? '端起中' : '點我端'}</div>
             </div>
           `;
         }
