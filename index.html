@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>晨光永和豆漿 V1.0｜認知復健訓練系統</title>
+  <title>晨光永和豆漿 V2.0｜寫實場景與認知復健系統</title>
   <style>
     :root {
       --sign-red: #c53030;
-      --sign-red-dark: #9b2c2c;
-      --wall-tile: #f8f5ee;
-      --wood-dark: #5c3a18;
+      --wall-cream: #f5ebd6;
+      --wood-counter: #b87a44;
+      --wood-dark: #5c3412;
+      --steel-light: #e2e8f0;
+      --steel-dark: #64748b;
       --text-dark: #1a202c;
     }
 
@@ -24,28 +26,25 @@
       padding: 0;
       height: 100dvh;
       font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background-color: var(--wall-tile);
-      background-image:
-        linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
-      background-size: 24px 24px;
+      background-color: var(--wall-cream);
       color: var(--text-dark);
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* 頂部紅底白字招牌列 */
+    /* 頂部正宗永和豆漿紅底白字招牌 */
     header {
-      background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
-      border-bottom: 2.5px solid #7f1d1d;
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+      border-bottom: 3px solid #7f1d1d;
       padding: 5px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 6px;
       flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      z-index: 20;
     }
 
     .header-left {
@@ -60,17 +59,17 @@
       color: #ffffff;
       border: 2px solid #ffffff;
       border-radius: 6px;
-      padding: 2px 9px;
+      padding: 2px 10px;
       font-size: 0.96rem;
       font-weight: 900;
       letter-spacing: 1px;
       white-space: nowrap;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-      box-shadow: 0 0 8px rgba(254, 240, 138, 0.45);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      box-shadow: 0 0 10px rgba(254, 240, 138, 0.5);
     }
 
     .mode-badge {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       border: 1.5px solid #fef08a;
       padding: 2px 7px;
       border-radius: 7px;
@@ -129,22 +128,12 @@
     }
 
     @media (max-width: 640px) {
-      header {
-        flex-wrap: wrap;
-        padding: 4px 8px;
-        gap: 3px;
-      }
-      .header-left, .header-right {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .stat-pill {
-        flex: 1;
-        text-align: center;
-      }
+      header { flex-wrap: wrap; padding: 4px 8px; gap: 3px; }
+      .header-left, .header-right { width: 100%; justify-content: space-between; }
+      .stat-pill { flex: 1; text-align: center; }
     }
 
-    /* 狀態提示條 */
+    /* 動態提示橫幅 */
     .banner {
       background-color: #fffbeb;
       border-bottom: 1.5px solid #fde68a;
@@ -157,6 +146,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      z-index: 15;
     }
 
     .banner.paused-mode { background: #dcfce7; color: #14532d; }
@@ -167,7 +157,7 @@
     /* 正向勳章浮動提示 */
     .praise-toast {
       position: fixed;
-      top: 86px;
+      top: 84px;
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       background: linear-gradient(135deg, #d97706, #b45309);
@@ -177,7 +167,7 @@
       border-radius: 20px;
       font-size: 0.84rem;
       font-weight: 900;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.28);
       z-index: 60;
       opacity: 0;
       pointer-events: none;
@@ -190,302 +180,430 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* 主容器 */
-    main {
+    /* =====================================================================
+       一鏡到底場景主容器：
+       1. 上層：店門口米黃磁磚牆 + 半身顧客與點餐氣泡（去卡片化）
+       2. 中層：實體原木吧檯桌面（直接擺放 3 個立體白瓷盤 + 小廚餘桶）
+       3. 下層：開放式拉絲白鐵廚房工作檯（4 大器具＋多階段烹飪動畫）
+       ===================================================================== */
+    .scene-wrapper {
       flex: 1;
       max-width: 1160px;
       width: 100%;
       margin: 0 auto;
-      padding: 5px 7px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
       min-height: 0;
       overflow: hidden;
+      background: linear-gradient(180deg, #f9f1df 0%, #efe0c2 100%);
+      box-shadow: 0 0 20px rgba(0,0,0,0.08);
     }
 
-    /* =====================================================================
-       第一層：固定三座位顧客櫃檯
-       電腦/平板寬屏：三席並排
-       手機直式（<= 760px）：方案 A「2+1 錯落雙排」，3 人頭像與菜名全露出
-       ===================================================================== */
-    .customers-layer {
-      flex: 0.58;
+    /* 1. 店門口顧客區（半身人物站在吧檯後方，無大卡片外框） */
+    .storefront-customers {
+      flex: 0.72;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 6px;
-      min-height: 104px;
-      max-height: 142px;
+      padding: 6px 8px 0 8px;
+      min-height: 115px;
+      max-height: 165px;
+      position: relative;
+      background-image:
+        linear-gradient(to right, rgba(180,140,90,0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(180,140,90,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
     }
 
-    .seat-slot {
-      background: rgba(255, 255, 255, 0.65);
-      border: 2px dashed #cbd5e1;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #64748b;
-      font-size: 0.76rem;
-      font-weight: 800;
-      text-align: center;
-      padding: 3px;
-      min-height: 0;
-    }
-
-    .customer-card {
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
-      border-bottom: 3.5px solid #94a3b8;
-      border-radius: 12px;
-      padding: 5px 6px;
+    .customer-bay {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+      min-width: 0;
+      min-height: 0;
       cursor: pointer;
-      transition: transform 0.12s, border-color 0.15s;
-      overflow: hidden;
+      border-radius: 12px 12px 0 0;
+      transition: background-color 0.15s;
     }
 
-    .customer-card.urgent {
-      border-color: #dc2626;
-      border-bottom-color: #991b1b;
-      background: #fef2f2;
-    }
-
-    .customer-card.completed {
-      border-color: #16a34a;
-      background: #f0fdf4;
-    }
-
-    .customer-card.assist-target {
-      border: 2.5px solid #2563eb;
-      background: #eff6ff;
-      box-shadow: 0 0 10px rgba(37, 99, 235, 0.45);
-      transform: translateY(-2px);
-    }
-
-    .cust-header-area {
-      min-width: 0;
-    }
-
-    .cust-top {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .cust-avatar {
-      font-size: 1.2rem;
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
+    .customer-bay.empty-bay {
       justify-content: center;
-      flex-shrink: 0;
+      color: #9c7c54;
+      font-size: 0.76rem;
+      font-weight: 800;
+      border: 1.5px dashed rgba(156, 124, 84, 0.35);
+      border-bottom: none;
+      margin-top: 8px;
     }
 
-    .cust-meta {
-      flex: 1;
-      min-width: 0;
+    /* 練習模式下的發光指引 */
+    .customer-bay.assist-target {
+      background: radial-gradient(circle at bottom, rgba(59, 130, 246, 0.28), transparent 75%);
+      box-shadow: inset 0 -4px 12px rgba(37, 99, 235, 0.35);
     }
 
-    .cust-name-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 3px;
-    }
-
-    .cust-name {
-      font-size: 0.78rem;
-      font-weight: 900;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .urgent-tag {
-      background: #dc2626;
-      color: #fff;
-      font-size: 0.62rem;
-      font-weight: 900;
-      padding: 1px 4px;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
-
-    .patience-track {
+    /* 顧客角色與點餐對話氣泡並排組合 */
+    .cust-stage {
       width: 100%;
-      height: 4.5px;
-      background: #e2e8f0;
-      border-radius: 3px;
-      margin-top: 2px;
-      overflow: hidden;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 3px;
     }
 
-    .patience-fill {
+    /* 半身人物插畫容器 */
+    .char-figure-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 64px;
+      position: relative;
+    }
+
+    .char-svg {
+      width: 62px;
+      height: 66px;
+      display: block;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.18));
+      transition: transform 0.2s;
+    }
+
+    .customer-bay:active .char-svg {
+      transform: scale(0.95);
+    }
+
+    /* 頭頂耐性進度條（極簡浮動條） */
+    .char-patience-bar {
+      width: 54px;
+      height: 5px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 2px;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .char-patience-fill {
       height: 100%;
       width: 100%;
       background: #16a34a;
       transition: width 0.15s linear, background-color 0.3s;
     }
 
-    .cust-note {
+    .char-name-tag {
+      background: rgba(30, 41, 59, 0.85);
+      color: #fff;
       font-size: 0.64rem;
-      color: #b91c1c;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 6px;
+      white-space: nowrap;
+      max-width: 72px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 1px;
+    }
+
+    .char-name-tag.urgent-tag {
+      background: #dc2626;
+      animation: pulse 1.2s infinite;
+    }
+
+    /* 立體點餐對話氣泡（無厚重卡片，純淨浮動氣泡） */
+    .speech-bubble {
+      flex: 1;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 4px 5px;
+      margin-bottom: 6px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      position: relative;
+      min-width: 0;
+    }
+
+    .speech-bubble.urgent-bubble {
+      border-color: #dc2626;
+      background: #fff5f5;
+    }
+
+    .speech-bubble.assist-bubble {
+      border: 2.5px solid #2563eb;
+      background: #eff6ff;
+    }
+
+    /* 對話氣泡指向人物的小三角尖角 */
+    .speech-bubble::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      bottom: 14px;
+      border-width: 6px 7px 6px 0;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
+    }
+
+    .speech-bubble.urgent-bubble::before {
+      border-color: transparent #fff5f5 transparent transparent;
+    }
+
+    .bubble-note {
+      font-size: 0.62rem;
       font-weight: 900;
-      margin-top: 2px;
+      color: #dc2626;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .order-needs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
-      margin-top: 3px;
+    .bubble-items {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
 
-    /* 手機直式：方案 A「2+1 錯落雙排」 */
-    @media (max-width: 760px) {
-      .customers-layer {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1.35fr 0.85fr;
-        max-height: 158px;
-        min-height: 136px;
-        gap: 5px;
-      }
-
-      /* 1、2 號座位在第一排，各自寬度充足，單欄完整顯示四字菜名與頭像 */
-      #seat-0 .order-needs,
-      #seat-1 .order-needs {
-        grid-template-columns: 1fr;
-        gap: 2px;
-      }
-
-      /* 3 號座位橫跨第二排全寬（left: 頭像+名字+耐性條 | right: 並排 2 道餐點） */
-      #seat-2 {
-        grid-column: 1 / -1;
-      }
-
-      #seat-2 .customer-card {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        padding: 4px 8px;
-      }
-
-      #seat-2 .cust-header-area {
-        flex: 0.85;
-      }
-
-      #seat-2 .order-needs {
-        flex: 1.35;
-        grid-template-columns: 1fr 1fr;
-        margin-top: 0;
-        gap: 4px;
-      }
-    }
-
-    .need-pill {
+    .order-chip {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 2px 5px;
+      gap: 3px;
+      padding: 2px 4px;
       border-radius: 6px;
-      border: 1.5px solid #cbd5e1;
       background: #f8fafc;
-      font-size: 0.75rem;
+      border: 1px solid #e2e8f0;
+      font-size: 0.74rem;
       font-weight: 900;
       min-width: 0;
     }
 
-    .need-pill-left {
+    .order-chip-left {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       min-width: 0;
     }
 
-    .need-pill-name {
+    .order-chip-name {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .need-pill.done {
+    .order-chip.done {
       background: #dcfce7;
-      border-color: #4ade80;
+      border-color: #86efac;
       color: #166534;
       text-decoration: line-through;
       opacity: 0.75;
     }
 
-    .need-pill.assist-match {
+    .order-chip.assist-match {
       background: #dbeafe;
       border-color: #2563eb;
     }
 
-    /* 第二層：開放式廚房工作區 + 原木出餐台 */
-    .kitchen-layer {
-      flex: 1.65;
-      display: grid;
-      grid-template-columns: 2.4fr 1fr;
-      gap: 8px;
-      min-height: 0;
+    /* 手機直式（<= 760px）：顧客區採用 2+1 錯落吧檯站位，3 位半身人物全露出 */
+    @media (max-width: 760px) {
+      .storefront-customers {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1.25fr 0.85fr;
+        max-height: 175px;
+        min-height: 150px;
+        padding: 4px 6px 0 6px;
+        gap: 4px;
+      }
+
+      #bay-2 {
+        grid-column: 1 / -1;
+      }
+
+      #bay-2 .bubble-items {
+        flex-direction: row;
+      }
+
+      #bay-2 .order-chip {
+        flex: 1;
+      }
+
+      .char-figure-wrap {
+        width: 52px;
+      }
+
+      .char-svg {
+        width: 50px;
+        height: 54px;
+      }
+
+      .speech-bubble {
+        margin-bottom: 4px;
+        padding: 3px 4px;
+      }
+
+      .order-chip {
+        font-size: 0.72rem;
+      }
     }
 
-    /* 電腦與平板寬屏：左側維持 2x2 四大料理台 */
-    .stations-grid {
-      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
-      border: 2.5px solid #475569;
-      border-radius: 14px;
-      padding: 6px;
+    /* =====================================================================
+       2. 中層實體原木點餐吧檯（直接擺放 3 個立體白瓷盤 + 小廚餘桶）
+       ===================================================================== */
+    .wooden-bar-counter {
+      background: linear-gradient(180deg, #d69e66 0%, #b5763c 45%, #8c5220 100%);
+      border-top: 3px solid #f3d1a4;
+      border-bottom: 4px solid #4a280a;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.22);
+      z-index: 10;
+    }
+
+    .bar-label {
+      font-size: 0.74rem;
+      font-weight: 900;
+      color: #fffbeb;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      writing-mode: vertical-rl;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .bar-label {
+        display: none;
+      }
+    }
+
+    .bar-plates-row {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      min-width: 0;
+    }
+
+    /* 立體白瓷盤造型 */
+    .ceramic-plate {
+      height: 44px;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.45) 55%, rgba(255,255,255,0.18) 100%);
+      border: 2px dashed rgba(255, 250, 240, 0.75);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 2px 8px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      color: #fffbeb;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.35);
+      transition: all 0.15s;
+      min-width: 0;
+    }
+
+    .ceramic-plate.ready {
+      background: radial-gradient(ellipse at center, #ffffff 62%, #e2e8f0 95%, #cbd5e1 100%);
+      border: 2.5px solid #16a34a;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 3px #ffffff;
+      color: #0f172a;
+      text-shadow: none;
+      cursor: pointer;
+    }
+
+    .ceramic-plate.selected {
+      background: radial-gradient(ellipse at center, #eff6ff 60%, #bfdbfe 100%);
+      border: 3px solid #2563eb;
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 8px 14px rgba(37, 99, 235, 0.55);
+    }
+
+    .plate-food-name {
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 吧檯右側迷你不鏽鋼廚餘桶（取代原本長條按鈕，節省空間） */
+    .bin-icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f1f5f9, #cbd5e1);
+      border: 2px solid #475569;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+      transition: transform 0.1s;
+    }
+
+    .bin-icon-btn:active { transform: scale(0.92); }
+    .bin-icon-btn.active-bin {
+      background: linear-gradient(180deg, #fee2e2, #fca5a5);
+      border-color: #dc2626;
+      animation: pulse 1.2s infinite;
+    }
+
+    /* =====================================================================
+       3. 下層開放式拉絲白鐵廚房工作檯（放大視覺主舞台）
+       ===================================================================== */
+    .stainless-kitchen {
+      flex: 1.45;
+      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+      padding: 6px 8px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 6px;
       min-height: 0;
-      box-shadow: inset 0 2px 5px rgba(255,255,255,0.8);
     }
 
-    .station-card {
-      background: #ffffff;
-      border: 2px solid #94a3b8;
+    .work-zone {
+      background: rgba(255, 255, 255, 0.92);
+      border: 2px solid #64748b;
       border-radius: 12px;
-      padding: 6px 8px;
+      padding: 5px 7px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       min-height: 0;
-      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
     }
 
-    .st-griddle { border-color: #dc2626; background: #fffafa; }
-    .st-prep    { border-color: #d97706; background: #fffdf7; }
-    .st-steamer { border-color: #16a34a; background: #f7fff9; }
-    .st-drink   { border-color: #2563eb; background: #f7fbff; }
+    .zone-griddle { border-color: #dc2626; }
+    .zone-prep    { border-color: #d97706; }
+    .zone-steamer { border-color: #16a34a; }
+    .zone-drink   { border-color: #2563eb; }
 
-    .station-card.locked {
-      opacity: 0.38;
+    .work-zone.locked {
+      opacity: 0.36;
       pointer-events: none;
     }
 
-    .st-main-row {
+    .zone-main-row {
       display: flex;
       flex-direction: column;
       flex: 1;
       min-height: 0;
     }
 
-    .st-left-group {
+    .zone-appliance-box {
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -493,34 +611,28 @@
       min-width: 0;
     }
 
-    .st-header {
+    .zone-title-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 900;
       color: #0f172a;
-      margin-bottom: 4px;
-      gap: 4px;
+      margin-bottom: 3px;
       flex-shrink: 0;
       white-space: nowrap;
     }
 
-    .st-title-text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* 動畫料理舞台區 */
-    .st-slots {
+    /* 器具烹飪動畫槽 */
+    .appliance-slots {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex: 1;
-      min-height: 32px;
-      margin-bottom: 5px;
+      min-height: 36px;
+      margin-bottom: 4px;
     }
 
-    .slot-unit {
+    .app-slot {
       flex: 1;
       border-radius: 8px;
       display: flex;
@@ -531,40 +643,35 @@
       overflow: hidden;
       font-size: 0.72rem;
       font-weight: 800;
-      transition: all 0.2s;
     }
 
-    .slot-griddle { background: #1e293b; border: 1.5px solid #475569; color: #94a3b8; }
-    .slot-prep    { background: #fef3c7; border: 1.5px dashed #d97706; color: #92400e; }
-    .slot-steamer { background: #ecfdf5; border: 1.5px dashed #10b981; color: #065f46; }
-    .slot-drink   { background: #eff6ff; border: 1.5px dashed #3b82f6; color: #1e40af; }
+    .app-griddle { background: #1e293b; border: 1.5px solid #475569; color: #94a3b8; }
+    .app-prep    { background: #fef3c7; border: 1.5px dashed #d97706; color: #92400e; }
+    .app-steamer { background: #ecfdf5; border: 1.5px dashed #10b981; color: #065f46; }
+    .app-drink   { background: #eff6ff; border: 1.5px dashed #3b82f6; color: #1e40af; }
 
-    .slot-unit.busy {
-      border-style: solid;
-      border-width: 2px;
-    }
+    .app-slot.busy { border-style: solid; border-width: 2px; }
+    .app-griddle.busy { background: #18181b; border-color: #f97316; color: #fef08a; }
+    .app-prep.busy    { background: #fffbeb; border-color: #ea580c; color: #9a3412; }
+    .app-steamer.busy { background: #f0fdf4; border-color: #16a34a; color: #14532d; }
+    .app-drink.busy   { background: #dbeafe; border-color: #2563eb; color: #1e3a8a; }
 
-    .slot-griddle.busy { background: #27272a; border-color: #f97316; color: #fef08a; }
-    .slot-prep.busy    { background: #fffbeb; border-color: #ea580c; color: #9a3412; }
-    .slot-steamer.busy { background: #f0fdf4; border-color: #16a34a; color: #14532d; }
-    .slot-drink.busy   { background: #dbeafe; border-color: #2563eb; color: #1e3a8a; }
-
-    .cooking-anim-wrap {
+    .cook-anim-stage {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       min-width: 0;
     }
 
-    .cooking-stage-text {
-      font-size: 0.7rem;
+    .cook-stage-label {
+      font-size: 0.72rem;
       font-weight: 900;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .slot-progress {
+    .cook-bar {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -573,30 +680,33 @@
       width: 0%;
     }
 
-    /* 關鍵幀動畫 */
-    @keyframes steamRise {
-      0%   { transform: translateY(2px); opacity: 0.4; }
-      50%  { transform: translateY(-2px); opacity: 1; }
-      100% { transform: translateY(-6px); opacity: 0.2; }
+    /* 烹飪動態 CSS Keyframes */
+    @keyframes steamFloat {
+      0%   { transform: translateY(2px); opacity: 0.35; }
+      50%  { transform: translateY(-3px); opacity: 1; }
+      100% { transform: translateY(-7px); opacity: 0.15; }
     }
-
-    @keyframes sizzleWobble {
+    @keyframes panSizzle {
       0%, 100% { transform: scale(1) rotate(0deg); }
-      25%      { transform: scale(1.06) rotate(-3deg); }
-      75%      { transform: scale(1.06) rotate(3deg); }
+      30%      { transform: scale(1.07) rotate(-3deg); }
+      70%      { transform: scale(1.07) rotate(3deg); }
     }
-
-    @keyframes pourStream {
+    @keyframes liquidFlow {
       0%   { stroke-dashoffset: 16; }
       100% { stroke-dashoffset: 0; }
     }
+    @keyframes oilBubble {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-3px) scale(1.15); }
+    }
 
-    .anim-steam { animation: steamRise 1.1s infinite ease-in-out; }
-    .anim-sizzle { animation: sizzleWobble 0.6s infinite ease-in-out; }
-    .anim-pour { stroke-dasharray: 4 4; animation: pourStream 0.5s infinite linear; }
+    .anim-steam  { animation: steamFloat 1.1s infinite ease-in-out; }
+    .anim-sizzle { animation: panSizzle 0.55s infinite ease-in-out; }
+    .anim-pour   { stroke-dasharray: 4 4; animation: liquidFlow 0.45s infinite linear; }
+    .anim-bubble { animation: oilBubble 0.6s infinite ease-in-out; }
 
     /* 食材操作大按鈕 */
-    .st-actions {
+    .zone-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
@@ -604,8 +714,8 @@
       flex-shrink: 0;
     }
 
-    .food-btn {
-      background: #ffffff;
+    .ingredient-btn {
+      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
       border: 2px solid #334155;
       border-bottom-width: 3px;
       border-radius: 9px;
@@ -616,38 +726,37 @@
       gap: 5px;
       cursor: pointer;
       min-width: 0;
-      transition: transform 0.1s, background-color 0.15s;
+      transition: transform 0.1s;
     }
 
-    .food-btn:hover:not(:disabled) { background: #f8fafc; }
-    .food-btn:active:not(:disabled) { transform: scale(0.96); }
-    .food-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+    .ingredient-btn:active:not(:disabled) { transform: scale(0.95); }
+    .ingredient-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
-    .food-btn-text-col {
+    .ing-text-wrap {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      line-height: 1.12;
+      line-height: 1.1;
       min-width: 0;
     }
 
-    .food-btn-label {
+    .ing-name {
       font-size: 0.82rem;
       font-weight: 900;
       color: #0f172a;
       white-space: nowrap;
     }
 
-    .food-btn-req {
-      font-size: 0.64rem;
+    .ing-sub {
+      font-size: 0.62rem;
       font-weight: 900;
       color: #c2410c;
       white-space: nowrap;
     }
 
-    /* 緊貼在「備料台」正下方的油條保溫櫃橫條 */
-    .youtiao-sub-bar {
-      margin-top: 5px;
+    /* 緊貼在「備料台」正下方的油條保溫櫃與現炸區 */
+    .youtiao-tray-row {
+      margin-top: 4px;
       padding-top: 4px;
       border-top: 1.5px dashed #f59e0b;
       display: flex;
@@ -657,10 +766,10 @@
       flex-shrink: 0;
     }
 
-    .youtiao-cabinet-inline {
+    .youtiao-glass-box {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       background: #fef3c7;
       border: 1.5px solid #f59e0b;
       border-radius: 7px;
@@ -670,7 +779,7 @@
       min-width: 0;
     }
 
-    .youtiao-fry-btn {
+    .fry-youtiao-btn {
       background: linear-gradient(180deg, #f97316, #ea580c);
       color: #ffffff;
       border: 1.5px solid #9a3412;
@@ -682,233 +791,57 @@
       cursor: pointer;
       white-space: nowrap;
       flex-shrink: 0;
-      transition: transform 0.1s;
     }
 
-    .youtiao-fry-btn:active:not(:disabled) { transform: scale(0.95); }
-    .youtiao-fry-btn:disabled { background: #94a3b8; border-color: #64748b; cursor: default; }
-    .youtiao-fry-btn.assist-flash {
+    .fry-youtiao-btn:disabled { background: #94a3b8; border-color: #64748b; cursor: default; }
+    .fry-youtiao-btn.assist-flash {
       background: #dc2626;
       border-color: #7f1d1d;
       animation: pulse 1.2s infinite;
     }
 
-    /* 原木出餐台 + 3 個白瓷盤 */
-    .serving-panel {
-      background: linear-gradient(180deg, #deb887 0%, #c89d6c 100%);
-      border: 2.5px solid var(--wood-dark);
-      border-radius: 14px;
-      padding: 6px 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 0;
-      box-shadow: inset 0 2px 5px rgba(255,255,255,0.45);
-    }
-
-    .serving-header {
-      font-size: 0.78rem;
-      font-weight: 900;
-      color: #3e220d;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      flex-shrink: 0;
-    }
-
-    .plates-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-      justify-content: center;
-      min-height: 0;
-    }
-
-    .plate-card {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.5);
-      border: 2px dashed #6b4226;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 4px 6px;
-      font-size: 0.76rem;
-      font-weight: 800;
-      color: #4a2c11;
-      transition: all 0.15s;
-      min-width: 0;
-    }
-
-    .plate-card.ready {
-      background: radial-gradient(circle, #ffffff 70%, #f1f5f9 100%);
-      border: 2px solid #16a34a;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-      cursor: pointer;
-      color: #0f172a;
-    }
-
-    .plate-card.selected {
-      background: #dbeafe;
-      border: 2.5px solid #2563eb;
-      transform: scale(1.03);
-      box-shadow: 0 0 12px rgba(37, 99, 235, 0.7);
-    }
-
-    .trash-btn {
-      margin-top: 5px;
-      width: 100%;
-      padding: 6px;
-      border-radius: 9px;
-      border: 1.5px solid #64748b;
-      background: #f8fafc;
-      color: #334155;
-      font-size: 0.78rem;
-      font-weight: 900;
-      cursor: pointer;
-      text-align: center;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .trash-btn.active-trash {
-      background: #fee2e2;
-      border-color: #dc2626;
-      color: #991b1b;
-    }
-
-    /* =====================================================================
-       手機直式（<= 760px）全自適應：
-       四層橫向工作帶（油條保溫櫃緊貼在第二條「備料台」正下方）
-       ===================================================================== */
+    /* 手機直式（<= 760px）：白鐵廚房改為四層橫向工作帶 */
     @media (max-width: 760px) {
-      .kitchen-layer {
+      .stainless-kitchen {
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-        gap: 5px;
-      }
-
-      .stations-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: 0.92fr 1.32fr 0.92fr 0.92fr;
+        grid-template-rows: 0.92fr 1.35fr 0.92fr 0.92fr;
         gap: 4px;
-        padding: 4px;
+        padding: 5px 6px;
       }
 
-      .station-card {
-        padding: 3px 6px;
-      }
-
-      .st-main-row {
-        flex-direction: row;
-        align-items: stretch;
-        gap: 6px;
-      }
-
-      .st-left-group {
-        flex: 0.85;
-        justify-content: space-between;
-      }
-
-      .st-header {
-        margin-bottom: 1px;
-        font-size: 0.7rem;
-      }
-
-      .st-slots {
-        margin-bottom: 0;
-        min-height: 0;
-        gap: 4px;
-      }
-
-      .slot-unit {
-        font-size: 0.66rem;
-        padding: 1px 2px;
-      }
-
-      .st-actions {
-        flex: 1.35;
-        height: auto;
-        gap: 5px;
-      }
-
-      .food-btn {
-        padding: 0 4px;
-        gap: 4px;
-      }
-
-      .food-btn-label {
-        font-size: 0.76rem;
-      }
-
-      .food-btn-req {
-        font-size: 0.6rem;
-      }
-
-      .youtiao-sub-bar {
-        margin-top: 3px;
-        padding-top: 3px;
-      }
-
-      .youtiao-cabinet-inline {
-        height: 22px;
-        padding: 1px 6px;
-      }
-
-      .youtiao-fry-btn {
-        padding: 2px 8px;
-        font-size: 0.72rem;
-      }
-
-      .plates-grid {
-        flex-direction: row;
-        height: 40px;
-        flex: none;
-      }
-
-      .serving-panel {
-        padding: 4px 8px;
-      }
-
-      .serving-header {
-        margin-bottom: 3px;
-        font-size: 0.74rem;
-      }
-
-      .trash-btn {
-        margin-top: 4px;
-        padding: 4px;
-        font-size: 0.74rem;
-      }
-
-      .svg-btn {
-        width: 19px;
-        height: 19px;
-      }
-
-      .svg-anim {
-        width: 22px;
-        height: 22px;
-      }
-
-      .cooking-stage-text {
-        font-size: 0.62rem;
-      }
+      .work-zone { padding: 3px 6px; }
+      .zone-main-row { flex-direction: row; align-items: stretch; gap: 6px; }
+      .zone-appliance-box { flex: 0.85; justify-content: space-between; }
+      .zone-title-bar { margin-bottom: 1px; font-size: 0.7rem; }
+      .appliance-slots { margin-bottom: 0; min-height: 0; gap: 4px; }
+      .app-slot { font-size: 0.66rem; padding: 1px 2px; }
+      .zone-buttons { flex: 1.35; height: auto; gap: 5px; }
+      .ingredient-btn { padding: 0 4px; gap: 4px; }
+      .ing-name { font-size: 0.76rem; }
+      .ing-sub { font-size: 0.58rem; }
+      .youtiao-tray-row { margin-top: 3px; padding-top: 3px; }
+      .youtiao-glass-box { height: 22px; padding: 1px 6px; }
+      .fry-youtiao-btn { padding: 2px 8px; font-size: 0.72rem; }
+      .svg-btn { width: 20px; height: 20px; }
+      .svg-anim { width: 24px; height: 24px; }
+      .cook-stage-label { font-size: 0.62rem; }
     }
 
-    /* 預設（電腦/平板）SVG 尺寸 */
-    .svg-anim { width: 32px; height: 32px; flex-shrink: 0; }
-    .svg-btn  { width: 24px; height: 24px; flex-shrink: 0; }
-    .svg-sm   { width: 16px; height: 16px; flex-shrink: 0; }
+    .svg-anim { width: 34px; height: 34px; flex-shrink: 0; }
+    .svg-btn  { width: 25px; height: 25px; flex-shrink: 0; }
+    .svg-sm   { width: 17px; height: 17px; flex-shrink: 0; }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+      70% { box-shadow: 0 0 0 7px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
 
     /* 彈窗樣式 */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.72);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -936,14 +869,7 @@
     }
 
     .config-section { margin-bottom: 10px; }
-    .config-label {
-      font-size: 0.84rem;
-      font-weight: 900;
-      color: #1e293b;
-      margin-bottom: 5px;
-      display: block;
-    }
-
+    .config-label { font-size: 0.84rem; font-weight: 900; color: #1e293b; margin-bottom: 5px; display: block; }
     .option-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .option-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 
@@ -1060,151 +986,160 @@
     </div>
   </header>
 
-  <div class="banner" id="statusBanner">早市開張！看看上方客人點單，點擊下方廚房開始料理。</div>
+  <div class="banner" id="statusBanner">早市開張！看看吧檯前三位客人的點單，點擊下方廚房開始料理。</div>
   <div class="praise-toast" id="praiseToast">✨ 雙鍋齊下！時間管理大師</div>
 
-  <main>
-    <!-- 第一層：固定三座位顧客櫃檯（手機直式為 2+1 錯落雙排，3 人頭像全露出） -->
-    <section class="customers-layer">
-      <div class="seat-slot" id="seat-0">櫃檯 1 號位</div>
-      <div class="seat-slot" id="seat-1">櫃檯 2 號位</div>
-      <div class="seat-slot" id="seat-2">櫃檯 3 號位</div>
+  <!-- 一鏡到底豆漿店場景 -->
+  <div class="scene-wrapper">
+    <!-- 1. 上層：店門口半身顧客區（無大卡片外框，手機直式為 2+1 錯落站位） -->
+    <section class="storefront-customers">
+      <div class="customer-bay empty-bay" id="bay-0">1 號吧檯位</div>
+      <div class="customer-bay empty-bay" id="bay-1">2 號吧檯位</div>
+      <div class="customer-bay empty-bay" id="bay-2">3 號吧檯位</div>
     </section>
 
-    <!-- 第二層：四大工作站 + 原木出餐台 -->
-    <section class="kitchen-layer">
-      <div class="stations-grid">
-        <!-- 1. 雙格鐵板煎台 -->
-        <div class="station-card st-griddle">
-          <div class="st-main-row">
-            <div class="st-left-group">
-              <div class="st-header">
-                <span class="st-title-text">🔥 雙格煎台</span>
-                <span style="color:#dc2626;">4秒</span>
-              </div>
-              <div class="st-slots">
-                <div class="slot-unit slot-griddle" id="griddle-0">左位</div>
-                <div class="slot-unit slot-griddle" id="griddle-1">右位</div>
-              </div>
+    <!-- 2. 中層：實體原木吧檯桌面（直接擺放 3 個立體白瓷盤 + 小廚餘桶） -->
+    <section class="wooden-bar-counter">
+      <div class="bar-label">出餐吧檯</div>
+      <div class="bar-plates-row">
+        <div class="ceramic-plate" id="plate-0" onclick="handlePlateClick(0)">空瓷盤 1</div>
+        <div class="ceramic-plate" id="plate-1" onclick="handlePlateClick(1)">空瓷盤 2</div>
+        <div class="ceramic-plate" id="plate-2" onclick="handlePlateClick(2)">空瓷盤 3</div>
+      </div>
+      <button class="bin-icon-btn" id="trashBtn" onclick="handleDiscardSelectedPlate()" title="報廢手上餐點">
+        <span style="font-size:1.1rem; line-height:1;">🗑️</span>
+        <span style="font-size:0.6rem; font-weight:900; color:#334155;">報廢</span>
+      </button>
+    </section>
+
+    <!-- 3. 下層：開放式白鐵廚房操作檯 -->
+    <section class="stainless-kitchen">
+      <!-- 1. 雙格鐵板煎台 -->
+      <div class="work-zone zone-griddle">
+        <div class="zone-main-row">
+          <div class="zone-appliance-box">
+            <div class="zone-title-bar">
+              <span>🔥 雙格黑鐵煎台</span>
+              <span style="color:#dc2626;">4秒</span>
             </div>
-            <div class="st-actions">
-              <button class="food-btn" onclick="startCooking('egg_pancake')">
-                <span id="icon-btn-egg_pancake"></span>
-                <span class="food-btn-label">原味蛋餅</span>
-              </button>
-              <button class="food-btn" onclick="startCooking('radish_cake')">
-                <span id="icon-btn-radish_cake"></span>
-                <span class="food-btn-label">蘿蔔糕</span>
-              </button>
+            <div class="appliance-slots">
+              <div class="app-slot app-griddle" id="griddle-0">左煎板</div>
+              <div class="app-slot app-griddle" id="griddle-1">右煎板</div>
             </div>
           </div>
-        </div>
-
-        <!-- 2. 備料台（按鈕標示 (需油條)，且油條保溫櫃緊貼在正下方） -->
-        <div class="station-card st-prep" id="card-prep">
-          <div class="st-main-row">
-            <div class="st-left-group">
-              <div class="st-header">
-                <span class="st-title-text">🍙 備料台</span>
-                <span style="color:#d97706;">3秒</span>
+          <div class="zone-buttons">
+            <button class="ingredient-btn" onclick="startCooking('egg_pancake')">
+              <span id="icon-btn-egg_pancake"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">原味蛋餅</span>
               </div>
-              <div class="st-slots">
-                <div class="slot-unit slot-prep" id="prep-0">備料空位</div>
+            </button>
+            <button class="ingredient-btn" onclick="startCooking('radish_cake')">
+              <span id="icon-btn-radish_cake"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">蘿蔔糕</span>
               </div>
-            </div>
-            <div class="st-actions">
-              <button class="food-btn" onclick="startCooking('shaobing')">
-                <span id="icon-btn-shaobing"></span>
-                <div class="food-btn-text-col">
-                  <span class="food-btn-label">燒餅油條</span>
-                  <span class="food-btn-req">(需油條)</span>
-                </div>
-              </button>
-              <button class="food-btn" onclick="startCooking('fantuan')">
-                <span id="icon-btn-fantuan"></span>
-                <div class="food-btn-text-col">
-                  <span class="food-btn-label">傳統飯糰</span>
-                  <span class="food-btn-req">(需油條)</span>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <!-- 緊貼在備料台正下方的油條保溫櫃與現炸區 -->
-          <div class="youtiao-sub-bar" id="youtiaoStationBox">
-            <div class="youtiao-cabinet-inline" id="youtiaoVisualBox"></div>
-            <button class="youtiao-fry-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條 (+3根)</button>
-          </div>
-        </div>
-
-        <!-- 3. 傳統竹製蒸籠區 -->
-        <div class="station-card st-steamer" id="card-steamer">
-          <div class="st-main-row">
-            <div class="st-left-group">
-              <div class="st-header">
-                <span class="st-title-text">♨️ 竹製蒸籠</span>
-                <span style="color:#16a34a;">3.5秒</span>
-              </div>
-              <div class="st-slots">
-                <div class="slot-unit slot-steamer" id="steamer-0">蒸籠空位</div>
-              </div>
-            </div>
-            <div class="st-actions">
-              <button class="food-btn" onclick="startCooking('xiaolongbao')">
-                <span id="icon-btn-xiaolongbao"></span>
-                <span class="food-btn-label">小籠包</span>
-              </button>
-              <button class="food-btn" onclick="startCooking('mantou_egg')">
-                <span id="icon-btn-mantou_egg"></span>
-                <span class="food-btn-label">饅頭夾蛋</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
-        <div class="station-card st-drink">
-          <div class="st-main-row">
-            <div class="st-left-group">
-              <div class="st-header">
-                <span class="st-title-text">🥤 豆漿機</span>
-                <span style="color:#2563eb;">2秒</span>
-              </div>
-              <div class="st-slots">
-                <div class="slot-unit slot-drink" id="drink-0">出杯台</div>
-              </div>
-            </div>
-            <div class="st-actions">
-              <button class="food-btn" onclick="startCooking('hot_soy')">
-                <span id="icon-btn-hot_soy"></span>
-                <span class="food-btn-label">熱豆漿</span>
-              </button>
-              <button class="food-btn" onclick="startCooking('iced_soy')">
-                <span id="icon-btn-iced_soy"></span>
-                <span class="food-btn-label">冰豆漿</span>
-              </button>
-            </div>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- 原木出餐台 + 3 個白瓷盤 -->
-      <div class="serving-panel">
-        <div class="serving-header">
-          <span>🍽️ 出餐白瓷盤</span>
-          <span id="plateStatusText">0 / 3 盤</span>
+      <!-- 2. 備料台（按鈕加註 (需油條)，油條保溫櫃與現炸區緊貼正下方） -->
+      <div class="work-zone zone-prep" id="card-prep">
+        <div class="zone-main-row">
+          <div class="zone-appliance-box">
+            <div class="zone-title-bar">
+              <span>🍙 備料台</span>
+              <span style="color:#d97706;">3秒</span>
+            </div>
+            <div class="appliance-slots">
+              <div class="app-slot app-prep" id="prep-0">木質備料板</div>
+            </div>
+          </div>
+          <div class="zone-buttons">
+            <button class="ingredient-btn" onclick="startCooking('shaobing')">
+              <span id="icon-btn-shaobing"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">燒餅油條</span>
+                <span class="ing-sub">(需油條)</span>
+              </div>
+            </button>
+            <button class="ingredient-btn" onclick="startCooking('fantuan')">
+              <span id="icon-btn-fantuan"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">傳統飯糰</span>
+                <span class="ing-sub">(需油條)</span>
+              </div>
+            </button>
+          </div>
         </div>
-        <div class="plates-grid">
-          <div class="plate-card" id="plate-0" onclick="handlePlateClick(0)">空盤 1</div>
-          <div class="plate-card" id="plate-1" onclick="handlePlateClick(1)">空盤 2</div>
-          <div class="plate-card" id="plate-2" onclick="handlePlateClick(2)">空盤 3</div>
+
+        <!-- 緊貼在備料台正下方的透明油條保溫櫃與現炸區 -->
+        <div class="youtiao-tray-row" id="youtiaoStationBox">
+          <div class="youtiao-glass-box" id="youtiaoVisualBox"></div>
+          <button class="fry-youtiao-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條 (+3根)</button>
         </div>
-        <button class="trash-btn" id="trashBtn" onclick="handleDiscardSelectedPlate()">
-          🗑️ 報廢手上餐點
-        </button>
+      </div>
+
+      <!-- 3. 傳統竹製蒸籠 -->
+      <div class="work-zone zone-steamer" id="card-steamer">
+        <div class="zone-main-row">
+          <div class="zone-appliance-box">
+            <div class="zone-title-bar">
+              <span>♨️ 竹製蒸籠</span>
+              <span style="color:#16a34a;">3.5秒</span>
+            </div>
+            <div class="appliance-slots">
+              <div class="app-slot app-steamer" id="steamer-0">蒸籠空位</div>
+            </div>
+          </div>
+          <div class="zone-buttons">
+            <button class="ingredient-btn" onclick="startCooking('xiaolongbao')">
+              <span id="icon-btn-xiaolongbao"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">小籠包</span>
+              </div>
+            </button>
+            <button class="ingredient-btn" onclick="startCooking('mantou_egg')">
+              <span id="icon-btn-mantou_egg"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">饅頭夾蛋</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
+      <div class="work-zone zone-drink">
+        <div class="zone-main-row">
+          <div class="zone-appliance-box">
+            <div class="zone-title-bar">
+              <span>🥤 豆漿機</span>
+              <span style="color:#2563eb;">2秒</span>
+            </div>
+            <div class="appliance-slots">
+              <div class="app-slot app-drink" id="drink-0">雙龍頭出杯口</div>
+            </div>
+          </div>
+          <div class="zone-buttons">
+            <button class="ingredient-btn" onclick="startCooking('hot_soy')">
+              <span id="icon-btn-hot_soy"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">熱豆漿</span>
+              </div>
+            </button>
+            <button class="ingredient-btn" onclick="startCooking('iced_soy')">
+              <span id="icon-btn-iced_soy"></span>
+              <div class="ing-text-wrap">
+                <span class="ing-name">冰豆漿</span>
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
-  </main>
+  </div>
 
   <!-- 設定彈窗 -->
   <div class="modal-overlay" id="setupModal">
@@ -1295,38 +1230,280 @@
   </div>
 
   <script>
+    // =========================================================================
+    // 1. 12 位寫實光影半身顧客插畫庫（台灣早市多元人物角色）
+    // =========================================================================
+    const CHARACTER_POOL = [
+      {
+        id: 'grandma', name: '陳阿嬤', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <defs><linearGradient id="g-skin1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde6d2"/><stop offset="100%" stop-color="#f3c6a5"/></linearGradient></defs>
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#9f1239"/>
+            <path d="M26 64 L40 78 L54 64 Z" fill="#fbcfe8"/>
+            <circle cx="40" cy="14" r="11" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+            <path d="M20 38 C18 20, 62 20, 60 38 Z" fill="#f1f5f9"/>
+            <ellipse cx="40" cy="40" rx="18" ry="20" fill="url(#g-skin1)"/>
+            <circle cx="33" cy="39" r="5.5" fill="none" stroke="#b45309" stroke-width="1.8"/>
+            <circle cx="47" cy="39" r="5.5" fill="none" stroke="#b45309" stroke-width="1.8"/>
+            <line x1="38.5" y1="39" x2="41.5" y2="39" stroke="#b45309" stroke-width="1.8"/>
+            <circle cx="33" cy="39" r="1.8" fill="#1e293b"/>
+            <circle cx="47" cy="39" r="1.8" fill="#1e293b"/>
+            ${mood === 'happy' ? '<path d="M34 49 Q40 55 46 49" stroke="#be123c" stroke-width="2.2" fill="none" stroke-linecap="round"/>' :
+              mood === 'sweat' ? '<path d="M35 51 Q40 48 45 51" stroke="#475569" stroke-width="2" fill="none"/><path d="M56 28 Q59 33 56 36 Q53 33 56 28" fill="#38bdf8"/>' :
+              '<path d="M35 48 Q40 53 45 48" stroke="#be123c" stroke-width="2" fill="none" stroke-linecap="round"/>'}
+          </svg>`
+      },
+      {
+        id: 'grandpa', name: '王伯伯', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M12 86 C12 61, 68 61, 68 86 Z" fill="#0369a1"/>
+            <path d="M24 62 L30 86 L37 86 L31 62 Z" fill="#ffffff"/>
+            <path d="M56 62 L50 86 L43 86 L49 62 Z" fill="#ffffff"/>
+            <ellipse cx="40" cy="39" rx="18" ry="20" fill="#f5cbb0"/>
+            <path d="M22 33 C22 18, 58 18, 58 33 C52 25, 28 25, 22 33 Z" fill="#cbd5e1"/>
+            <path d="M28 33 L36 34 M44 34 L52 33" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="33" cy="39" r="2" fill="#1e293b"/>
+            <circle cx="47" cy="39" r="2" fill="#1e293b"/>
+            ${mood === 'sweat' ? '<path d="M35 50 L45 50" stroke="#475569" stroke-width="2"/><path d="M56 28 Q59 33 56 36 Q53 33 56 28" fill="#38bdf8"/>' :
+              '<path d="M34 48 Q40 53 46 48" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>'}
+          </svg>`
+      },
+      {
+        id: 'delivery', name: '外送急單', isUrgentRole: true,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M12 86 C12 61, 68 61, 68 86 Z" fill="#db2777"/>
+            <rect x="25" y="64" width="6" height="22" fill="#fde047"/>
+            <rect x="49" y="64" width="6" height="22" fill="#fde047"/>
+            <ellipse cx="40" cy="42" rx="17" ry="18" fill="#fbd3b6"/>
+            <path d="M19 36 C19 15, 61 15, 61 36 Z" fill="#be185d"/>
+            <rect x="23" y="29" width="34" height="9" rx="4" fill="#38bdf8" opacity="0.65"/>
+            <circle cx="34" cy="43" r="2" fill="#0f172a"/>
+            <circle cx="46" cy="43" r="2" fill="#0f172a"/>
+            <path d="M35 51 Q40 48 45 51" stroke="#9f1239" stroke-width="2" fill="none"/>
+            <circle cx="62" cy="54" r="7" fill="#fef08a" stroke="#b45309" stroke-width="1.5"/>
+            <path d="M62 50 L62 54 L65 54" stroke="#b45309" stroke-width="1.5" fill="none"/>
+          </svg>`
+      },
+      {
+        id: 'office_lady', name: '林小姐', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#475569"/>
+            <path d="M32 63 L40 77 L48 63 Z" fill="#ffffff"/>
+            <path d="M20 48 C18 18, 62 18, 60 48 L56 54 L24 54 Z" fill="#3b2314"/>
+            <ellipse cx="40" cy="40" rx="16" ry="18" fill="#fde6d2"/>
+            <path d="M24 34 Q40 24 56 34" fill="#3b2314"/>
+            <circle cx="34" cy="40" r="2" fill="#1e293b"/>
+            <circle cx="46" cy="40" r="2" fill="#1e293b"/>
+            <circle cx="29" cy="44" r="2.5" fill="#fda4af" opacity="0.6"/>
+            <circle cx="51" cy="44" r="2.5" fill="#fda4af" opacity="0.6"/>
+            <path d="M35 48 Q40 53 45 48" stroke="#e11d48" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>`
+      },
+      {
+        id: 'student', name: '趕車學生', isUrgentRole: true,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#fef3c7"/>
+            <path d="M25 63 L52 86" stroke="#1e3a8a" stroke-width="6"/>
+            <ellipse cx="40" cy="40" rx="17" ry="18" fill="#fbd3b6"/>
+            <path d="M22 36 C21 17, 59 17, 58 36 L52 28 L40 31 L28 28 Z" fill="#1e293b"/>
+            <circle cx="34" cy="40" r="2.2" fill="#0f172a"/>
+            <circle cx="46" cy="40" r="2.2" fill="#0f172a"/>
+            <path d="M35 49 Q40 53 45 49" stroke="#b91c1c" stroke-width="2" fill="none"/>
+          </svg>`
+      },
+      {
+        id: 'worker', name: '工地大哥', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M10 86 C10 60, 70 60, 70 86 Z" fill="#1d4ed8"/>
+            <ellipse cx="40" cy="42" rx="18" ry="19" fill="#e5a97c"/>
+            <path d="M18 33 C18 14, 62 14, 62 33 Z" fill="#eab308"/>
+            <rect x="15" y="31" width="50" height="4" rx="2" fill="#ca8a04"/>
+            <circle cx="33" cy="42" r="2.2" fill="#1e293b"/>
+            <circle cx="47" cy="42" r="2.2" fill="#1e293b"/>
+            <path d="M33 50 Q40 56 47 50" stroke="#7c2d12" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>`
+      },
+      {
+        id: 'mom', name: '買菜李媽媽', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#15803d"/>
+            <rect x="26" y="65" width="28" height="21" fill="#fef08a"/>
+            <circle cx="40" cy="36" r="21" fill="#451a03"/>
+            <ellipse cx="40" cy="41" rx="16" ry="18" fill="#fde6d2"/>
+            <circle cx="34" cy="41" r="2" fill="#1e293b"/>
+            <circle cx="46" cy="41" r="2" fill="#1e293b"/>
+            <path d="M35 49 Q40 54 45 49" stroke="#be123c" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>`
+      },
+      {
+        id: 'nurse', name: '夜班護理師', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#0284c7"/>
+            <rect x="46" y="70" width="10" height="12" rx="2" fill="#ffffff"/>
+            <circle cx="56" cy="24" r="8" fill="#1e293b"/>
+            <ellipse cx="40" cy="40" rx="16" ry="18" fill="#fde6d2"/>
+            <path d="M24 35 C24 20, 56 20, 56 35 L40 27 Z" fill="#1e293b"/>
+            <circle cx="34" cy="40" r="2" fill="#1e293b"/>
+            <circle cx="46" cy="40" r="2" fill="#1e293b"/>
+            <path d="M35 48 Q40 53 45 48" stroke="#e11d48" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>`
+      },
+      {
+        id: 'teacher', name: '退休周爺爺', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#78350f"/>
+            <ellipse cx="40" cy="41" rx="17" ry="19" fill="#f5cbb0"/>
+            <path d="M20 29 C22 16, 62 16, 58 29 Z" fill="#334155"/>
+            <circle cx="34" cy="41" r="2" fill="#1e293b"/>
+            <circle cx="46" cy="41" r="2" fill="#1e293b"/>
+            <path d="M34 49 Q40 53 46 49" stroke="#9a3412" stroke-width="2" fill="none"/>
+          </svg>`
+      },
+      {
+        id: 'coach', name: '健身阿豪', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M12 86 C12 61, 68 61, 68 86 Z" fill="#ea580c"/>
+            <path d="M28 62 L40 76 L52 62 Z" fill="#e5a97c"/>
+            <ellipse cx="40" cy="40" rx="17" ry="19" fill="#e5a97c"/>
+            <rect x="23" y="26" width="34" height="5" rx="2" fill="#dc2626"/>
+            <circle cx="34" cy="40" r="2.2" fill="#0f172a"/>
+            <circle cx="46" cy="40" r="2.2" fill="#0f172a"/>
+            <path d="M34 49 Q40 55 46 49" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          </svg>`
+      },
+      {
+        id: 'dad', name: '吳爸爸', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M13 86 C13 62, 67 62, 67 86 Z" fill="#4f46e5"/>
+            <ellipse cx="40" cy="41" rx="17" ry="18" fill="#fbd3b6"/>
+            <path d="M22 30 C22 17, 58 17, 58 30 Z" fill="#1e293b"/>
+            <rect x="22" y="28" width="44" height="4" rx="2" fill="#334155"/>
+            <circle cx="34" cy="41" r="2" fill="#0f172a"/>
+            <circle cx="46" cy="41" r="2" fill="#0f172a"/>
+            <path d="M35 49 Q40 54 45 49" stroke="#9a3412" stroke-width="2" fill="none"/>
+          </svg>`
+      },
+      {
+        id: 'college', name: '大學生小美', isUrgentRole: false,
+        render: (mood) => `
+          <svg viewBox="0 0 80 86" class="char-svg">
+            <path d="M14 86 C14 62, 66 62, 66 86 Z" fill="#2563eb"/>
+            <path d="M19 56 C18 18, 62 18, 61 56 Z" fill="#451a03"/>
+            <ellipse cx="40" cy="40" rx="16" ry="18" fill="#fde6d2"/>
+            <rect x="20" y="34" width="5" height="11" rx="2" fill="#f43f5e"/>
+            <rect x="55" y="34" width="5" height="11" rx="2" fill="#f43f5e"/>
+            <circle cx="34" cy="40" r="2" fill="#1e293b"/>
+            <circle cx="46" cy="40" r="2" fill="#1e293b"/>
+            <path d="M35 48 Q40 53 45 48" stroke="#e11d48" stroke-width="2" fill="none"/>
+          </svg>`
+      }
+    ];
+
+    // =========================================================================
+    // 2. 寫實光影立體食物插畫（成品起鍋圖示）
+    // =========================================================================
     const DONE_SVGS = {
-      egg_pancake: `<svg viewBox="0 0 64 64"><rect x="8" y="18" width="48" height="28" rx="11" fill="#facc15" stroke="#854d0e" stroke-width="3.5"/><path d="M16 27 Q32 20 48 27 M16 37 Q32 30 48 37" stroke="#ca8a04" stroke-width="3" fill="none"/><circle cx="23" cy="26" r="2.6" fill="#16a34a"/><circle cx="40" cy="35" r="2.6" fill="#16a34a"/><circle cx="32" cy="25" r="2.2" fill="#16a34a"/></svg>`,
-      radish_cake: `<svg viewBox="0 0 64 64"><rect x="9" y="14" width="28" height="26" rx="5" fill="#fef08a" stroke="#854d0e" stroke-width="3.5"/><rect x="27" y="24" width="28" height="26" rx="5" fill="#fde047" stroke="#854d0e" stroke-width="3.5"/><path d="M33 32 L49 32 M34 41 L46 41" stroke="#c2410c" stroke-width="3.5" stroke-linecap="round"/></svg>`,
-      shaobing:    `<svg viewBox="0 0 64 64"><rect x="11" y="13" width="42" height="16" rx="6" fill="#f97316" stroke="#7c2d12" stroke-width="3.5"/><rect x="7" y="27" width="50" height="10" rx="5" fill="#fbbf24" stroke="#9a3412" stroke-width="3"/><rect x="11" y="36" width="42" height="15" rx="6" fill="#ea580c" stroke="#7c2d12" stroke-width="3.5"/><circle cx="23" cy="20" r="1.8" fill="#fff"/><circle cx="34" cy="19" r="1.8" fill="#fff"/><circle cx="43" cy="21" r="1.8" fill="#fff"/></svg>`,
-      fantuan:     `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="33" rx="23" ry="16" fill="#334155" stroke="#0f172a" stroke-width="3.5"/><ellipse cx="32" cy="33" rx="12" ry="8" fill="#f97316"/><circle cx="28" cy="32" r="2.8" fill="#dc2626"/><circle cx="37" cy="34" r="2.8" fill="#16a34a"/></svg>`,
-      xiaolongbao: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="43" rx="25" ry="10" fill="#d97706" stroke="#78350f" stroke-width="3.5"/><circle cx="23" cy="34" r="9.5" fill="#fffbeb" stroke="#64748b" stroke-width="2.2"/><circle cx="41" cy="34" r="9.5" fill="#fffbeb" stroke="#64748b" stroke-width="2.2"/><circle cx="32" cy="26" r="9.5" fill="#ffffff" stroke="#64748b" stroke-width="2.2"/><path d="M32 20 L32 24 M29 22 L35 22" stroke="#64748b" stroke-width="2"/></svg>`,
-      mantou_egg:  `<svg viewBox="0 0 64 64"><path d="M13 28 C13 15, 51 15, 51 28 Z" fill="#b45309" stroke="#78350f" stroke-width="3.5"/><ellipse cx="32" cy="33" rx="22" ry="6.5" fill="#ffffff" stroke="#eab308" stroke-width="2.8"/><circle cx="32" cy="33" r="4.5" fill="#facc15"/><rect x="13" y="38" width="38" height="12" rx="4" fill="#b45309" stroke="#78350f" stroke-width="3.5"/></svg>`,
-      hot_soy:     `<svg viewBox="0 0 64 64"><path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#fffbeb" stroke="#dc2626" stroke-width="3.5"/><rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#dc2626"/><path d="M24 12 Q22 7 25 4 M32 12 Q30 7 33 4 M40 12 Q38 7 41 4" stroke="#dc2626" stroke-width="2.8" fill="none" stroke-linecap="round"/><circle cx="32" cy="37" r="6.5" fill="#fecaca"/></svg>`,
-      iced_soy:    `<svg viewBox="0 0 64 64"><path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3.5"/><rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#2563eb"/><line x1="36" y1="17" x2="44" y2="5" stroke="#dc2626" stroke-width="3.8" stroke-linecap="round"/><rect x="24" y="29" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/><rect x="33" y="35" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/></svg>`
+      egg_pancake: `<svg viewBox="0 0 64 64">
+        <defs><linearGradient id="g-egg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fef08a"/><stop offset="60%" stop-color="#facc15"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs>
+        <ellipse cx="32" cy="46" rx="25" ry="7" fill="rgba(0,0,0,0.15)"/>
+        <rect x="7" y="18" width="50" height="28" rx="12" fill="url(#g-egg)" stroke="#854d0e" stroke-width="3"/>
+        <path d="M15 27 Q32 20 49 27 M15 37 Q32 30 49 37" stroke="#a16207" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="22" cy="26" r="2.8" fill="#15803d"/><circle cx="33" cy="24" r="2.4" fill="#16a34a"/><circle cx="41" cy="35" r="2.8" fill="#15803d"/><circle cx="26" cy="36" r="2.2" fill="#16a34a"/>
+      </svg>`,
+      radish_cake: `<svg viewBox="0 0 64 64">
+        <defs><linearGradient id="g-rad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fffbeb"/><stop offset="65%" stop-color="#fef08a"/><stop offset="100%" stop-color="#d97706"/></linearGradient></defs>
+        <rect x="8" y="13" width="29" height="27" rx="5" fill="url(#g-rad)" stroke="#92400e" stroke-width="3"/>
+        <rect x="27" y="23" width="29" height="27" rx="5" fill="url(#g-rad)" stroke="#92400e" stroke-width="3"/>
+        <path d="M33 31 L49 31 M34 39 L47 39 M36 45 L44 45" stroke="#b45309" stroke-width="3" stroke-linecap="round"/>
+      </svg>`,
+      shaobing: `<svg viewBox="0 0 64 64">
+        <defs><linearGradient id="g-shao" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdba74"/><stop offset="50%" stop-color="#ea580c"/><stop offset="100%" stop-color="#9a3412"/></linearGradient></defs>
+        <rect x="10" y="12" width="44" height="16" rx="6" fill="url(#g-shao)" stroke="#7c2d12" stroke-width="3"/>
+        <rect x="6" y="26" width="52" height="11" rx="5.5" fill="#fbbf24" stroke="#b45309" stroke-width="2.8"/>
+        <rect x="10" y="36" width="44" height="16" rx="6" fill="url(#g-shao)" stroke="#7c2d12" stroke-width="3"/>
+        <circle cx="22" cy="19" r="1.8" fill="#fffbeb"/><circle cx="32" cy="18" r="1.8" fill="#fffbeb"/><circle cx="42" cy="20" r="1.8" fill="#fffbeb"/>
+      </svg>`,
+      fantuan: `<svg viewBox="0 0 64 64">
+        <defs><radialGradient id="g-rice" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#475569"/><stop offset="70%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0f172a"/></radialGradient></defs>
+        <ellipse cx="32" cy="34" rx="24" ry="17" fill="url(#g-rice)" stroke="#020617" stroke-width="3"/>
+        <ellipse cx="32" cy="34" rx="12" ry="8" fill="#f59e0b"/>
+        <circle cx="28" cy="33" r="3" fill="#dc2626"/><circle cx="37" cy="35" r="3" fill="#16a34a"/>
+      </svg>`,
+      xiaolongbao: `<svg viewBox="0 0 64 64">
+        <ellipse cx="32" cy="44" rx="26" ry="11" fill="#d97706" stroke="#78350f" stroke-width="3"/>
+        <circle cx="22" cy="34" r="10" fill="#fffbeb" stroke="#94a3b8" stroke-width="2.2"/>
+        <circle cx="42" cy="34" r="10" fill="#fffbeb" stroke="#94a3b8" stroke-width="2.2"/>
+        <circle cx="32" cy="26" r="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2.2"/>
+        <path d="M32 20 L32 24 M29 22 L35 22" stroke="#64748b" stroke-width="2"/>
+      </svg>`,
+      mantou_egg: `<svg viewBox="0 0 64 64">
+        <path d="M12 28 C12 14, 52 14, 52 28 Z" fill="#92400e" stroke="#451a03" stroke-width="3"/>
+        <ellipse cx="32" cy="33" rx="23" ry="6.5" fill="#ffffff" stroke="#eab308" stroke-width="2.8"/>
+        <circle cx="32" cy="33" r="5" fill="#f59e0b"/>
+        <rect x="12" y="38" width="40" height="12" rx="4" fill="#92400e" stroke="#451a03" stroke-width="3"/>
+      </svg>`,
+      hot_soy: `<svg viewBox="0 0 64 64">
+        <path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#fffbeb" stroke="#dc2626" stroke-width="3.2"/>
+        <rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#dc2626"/>
+        <path d="M24 12 Q22 7 25 4 M32 12 Q30 7 33 4 M40 12 Q38 7 41 4" stroke="#dc2626" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <circle cx="32" cy="37" r="7" fill="#fecaca"/>
+      </svg>`,
+      iced_soy: `<svg viewBox="0 0 64 64">
+        <path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3.2"/>
+        <rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#2563eb"/>
+        <line x1="36" y1="17" x2="44" y2="5" stroke="#dc2626" stroke-width="3.8" stroke-linecap="round"/>
+        <rect x="24" y="29" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/>
+        <rect x="33" y="35" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/>
+      </svg>`
     };
 
-    const COOKING_SVGS = {
-      egg_pancake: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="38" rx="24" ry="13" fill="#fef08a" stroke="#ca8a04" stroke-width="3" class="anim-sizzle"/><circle cx="32" cy="38" r="7" fill="#f97316"/><circle cx="22" cy="35" r="2.5" fill="#16a34a"/><circle cx="42" cy="40" r="2.5" fill="#16a34a"/><path d="M22 20 Q20 12 24 8 M34 18 Q32 10 36 6 M44 20 Q42 12 46 8" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
-      radish_cake: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="10" y="24" width="21" height="22" rx="4" fill="#ffffff" stroke="#d97706" stroke-width="3" class="anim-sizzle"/><rect x="33" y="26" width="21" height="22" rx="4" fill="#fef08a" stroke="#d97706" stroke-width="3" class="anim-sizzle"/><path d="M20 18 Q18 11 22 7 M42 18 Q40 11 44 7" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
-      shaobing:    `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="14" width="40" height="13" rx="5" fill="#f97316" stroke="#7c2d12" stroke-width="2.5" class="anim-steam"/><rect x="8" y="30" width="48" height="10" rx="5" fill="#facc15" stroke="#b45309" stroke-width="2.5"/><rect x="12" y="42" width="40" height="13" rx="5" fill="#ea580c" stroke="#7c2d12" stroke-width="2.5"/></svg>`,
-      fantuan:     `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="36" rx="24" ry="16" fill="#475569" stroke="#0f172a" stroke-width="3" class="anim-sizzle"/><rect x="20" y="31" width="24" height="8" rx="4" fill="#facc15"/><circle cx="26" cy="35" r="3" fill="#dc2626"/><circle cx="38" cy="35" r="3" fill="#16a34a"/></svg>`,
-      xiaolongbao: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="45" rx="25" ry="10" fill="#d97706" stroke="#78350f" stroke-width="3"/><circle cx="23" cy="36" r="8.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/><circle cx="41" cy="36" r="8.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/><path d="M20 22 Q18 14 22 8 M32 20 Q30 12 34 6 M44 22 Q42 14 46 8" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
-      mantou_egg:  `<svg viewBox="0 0 64 64" class="svg-anim"><path d="M14 25 C14 14, 50 14, 50 25 Z" fill="#b45309" stroke="#78350f" stroke-width="2.5" class="anim-steam"/><ellipse cx="32" cy="34" rx="21" ry="6" fill="#ffffff" stroke="#eab308" stroke-width="2.5"/><circle cx="32" cy="34" r="4.5" fill="#facc15"/><rect x="14" y="42" width="36" height="11" rx="4" fill="#b45309" stroke="#78350f" stroke-width="2.5"/></svg>`,
-      hot_soy:     `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="6" width="40" height="10" rx="3" fill="#94a3b8" stroke="#475569" stroke-width="2"/><path d="M32 16 L32 34" stroke="#dc2626" stroke-width="4" class="anim-pour"/><path d="M20 32 L44 32 L41 56 L23 56 Z" fill="#fffbeb" stroke="#dc2626" stroke-width="3"/><path d="M24 27 Q22 22 25 19 M40 27 Q38 22 41 19" stroke="#dc2626" stroke-width="2.5" fill="none" class="anim-steam"/></svg>`,
-      iced_soy:    `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="6" width="40" height="10" rx="3" fill="#94a3b8" stroke="#475569" stroke-width="2"/><path d="M32 16 L32 34" stroke="#2563eb" stroke-width="4" class="anim-pour"/><path d="M20 32 L44 32 L41 56 L23 56 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/><rect x="26" y="40" width="6" height="6" fill="#93c5fd"/><rect x="33" y="45" width="6" height="6" fill="#93c5fd"/></svg>`
-    };
-
-    const STAGE_LABELS = {
-      egg_pancake: '煎蛋餅',
-      radish_cake: '煎蘿蔔',
-      shaobing:    '夾油條',
-      fantuan:     '包飯糰',
-      xiaolongbao: '蒸湯包',
-      mantou_egg:  '蒸饅頭',
-      hot_soy:     '注熱漿',
-      iced_soy:    '注冰漿'
-    };
+    // =========================================================================
+    // 3. 多階段寫實烹飪動畫（前半段生料下鍋 -> 後半段金黃熟透起鍋）
+    // =========================================================================
+    function getCookingStageVisual(menuId, progressRatio) {
+      const isSecondHalf = progressRatio >= 0.5;
+      switch (menuId) {
+        case 'egg_pancake':
+          return isSecondHalf
+            ? { label: '捲餅撒蔥花', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="8" y="24" width="48" height="22" rx="9" fill="#facc15" stroke="#ca8a04" stroke-width="3" class="anim-sizzle"/><circle cx="24" cy="32" r="2.8" fill="#16a34a"/><circle cx="38" cy="36" r="2.8" fill="#16a34a"/><path d="M22 18 Q20 10 24 6 M36 16 Q34 8 38 4" stroke="#ffffff" stroke-width="3" fill="none" class="anim-steam"/></svg>` }
+            : { label: '淋蛋液煎皮', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="40" rx="24" ry="12" fill="#fef9c3" stroke="#eab308" stroke-width="2.5" class="anim-sizzle"/><circle cx="32" cy="40" r="8" fill="#f97316"/><path d="M26 22 Q24 14 28 10" stroke="#ffffff" stroke-width="2.5" fill="none" class="anim-steam"/></svg>` };
+        case 'radish_cake':
+          return isSecondHalf
+            ? { label: '煎出焦脆殼', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="10" y="24" width="21" height="22" rx="4" fill="#fde047" stroke="#b45309" stroke-width="3" class="anim-sizzle"/><rect x="33" y="26" width="21" height="22" rx="4" fill="#facc15" stroke="#b45309" stroke-width="3" class="anim-sizzle"/><path d="M20 17 Q18 10 22 6 M42 17 Q40 10 44 6" stroke="#ffffff" stroke-width="3" fill="none" class="anim-steam"/></svg>` }
+            : { label: '白糕下油鍋', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="10" y="25" width="21" height="21" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="2.5" class="anim-sizzle"/><rect x="33" y="27" width="21" height="21" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="2.5" class="anim-sizzle"/></svg>` };
+        case 'shaobing':
+          return isSecondHalf
+            ? { label: '合攏酥燒餅', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="11" y="15" width="42" height="14" rx="5" fill="#ea580c" stroke="#7c2d12" stroke-width="2.5"/><rect x="8" y="28" width="48" height="10" rx="5" fill="#fbbf24" stroke="#b45309" stroke-width="2.5"/><rect x="11" y="37" width="42" height="14" rx="5" fill="#ea580c" stroke="#7c2d12" stroke-width="2.5"/></svg>` }
+            : { label: '夾入金黃油條', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="10" width="40" height="12" rx="5" fill="#f97316" stroke="#7c2d12" stroke-width="2" class="anim-steam"/><rect x="8" y="30" width="48" height="10" rx="5" fill="#facc15" stroke="#b45309" stroke-width="2.5"/><rect x="12" y="44" width="40" height="12" rx="5" fill="#ea580c" stroke="#7c2d12" stroke-width="2"/></svg>` };
+        case 'fantuan':
+          return isSecondHalf
+            ? { label: '揉捏成飯糰', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="35" rx="23" ry="15" fill="#1e293b" stroke="#020617" stroke-width="3" class="anim-sizzle"/><ellipse cx="32" cy="35" rx="10" ry="6" fill="#f59e0b"/></svg>` }
+            : { label: '鋪紫米放料', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="10" y="24" width="44" height="24" rx="10" fill="#334155"/><rect x="18" y="31" width="28" height="8" rx="4" fill="#facc15"/><circle cx="24" cy="35" r="3" fill="#dc2626"/><circle cx="38" cy="35" r="3" fill="#16a34a"/></svg>` };
+        case 'xiaolongbao':
+          return isSecondHalf
+            ? { label: '湯包膨脹熟透', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="45" rx="25" ry="10" fill="#d97706" stroke="#78350f" stroke-width="3"/><circle cx="23" cy="35" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/><circle cx="41" cy="35" r="9" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/><path d="M22 20 Q20 12 24 6 M34 18 Q32 10 36 4 M44 20 Q42 12 46 6" stroke="#16a34a" stroke-width="3" fill="none" class="anim-steam"/></svg>` }
+            : { label: '大火蒸氣上升', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="44" rx="24" ry="11" fill="#b45309"/><path d="M20 28 Q18 18 22 12 M32 26 Q30 16 34 10 M44 28 Q42 18 46 12" stroke="#16a34a" stroke-width="3.5" fill="none" class="anim-steam"/></svg>` };
+        case 'mantou_egg':
+          return isSecondHalf
+            ? { label: '夾入現煎荷包蛋', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><path d="M14 26 C14 14, 50 14, 50 26 Z" fill="#92400e"/><ellipse cx="32" cy="34" rx="22" ry="6" fill="#ffffff" stroke="#eab308" stroke-width="2.5"/><circle cx="32" cy="34" r="4.5" fill="#facc15"/><rect x="14" y="40" width="36" height="11" rx="4" fill="#92400e"/></svg>` }
+            : { label: '蒸熱黑糖饅頭', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><path d="M14 44 C14 22, 50 22, 50 44 Z" fill="#92400e"/><path d="M24 18 Q22 10 26 6 M40 18 Q38 10 42 6" stroke="#16a34a" stroke-width="3" fill="none" class="anim-steam"/></svg>` };
+        case 'hot_soy':
+          return { label: isSecondHalf ? '熱氣封杯中' : '熱豆漿注杯', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="14" y="6" width="36" height="9" rx="3" fill="#64748b"/><path d="M32 15 L32 34" stroke="#dc2626" stroke-width="4.5" class="anim-pour"/><path d="M20 32 L44 32 L41 56 L23 56 Z" fill="#fffbeb" stroke="#dc2626" stroke-width="3"/><path d="M24 27 Q22 21 25 18 M40 27 Q38 21 41 18" stroke="#dc2626" stroke-width="2.5" fill="none" class="anim-steam"/></svg>` };
+        case 'iced_soy':
+          return { label: isSecondHalf ? '加冰插吸管' : '冰豆漿注杯', svg: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="14" y="6" width="36" height="9" rx="3" fill="#64748b"/><path d="M32 15 L32 34" stroke="#2563eb" stroke-width="4.5" class="anim-pour"/><path d="M20 32 L44 32 L41 56 L23 56 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/><rect x="26" y="40" width="6" height="6" fill="#93c5fd"/><rect x="33" y="45" width="6" height="6" fill="#93c5fd"/></svg>` };
+      }
+    }
 
     const MENU = {
       egg_pancake: { id: 'egg_pancake', name: '原味蛋餅', station: 'griddle', duration: 4000, needYoutiao: false },
@@ -1340,16 +1517,13 @@
     };
 
     const FIXED_SCRIPT = [
-      { name: '1號・陳阿嬤', avatar: '👵', urgent: false, items: ['egg_pancake', 'hot_soy'] },
-      { name: '2號・王伯伯', avatar: '👴', urgent: false, items: ['egg_pancake', 'shaobing'] },
-      { name: '3號・外送急單', avatar: '🛵', urgent: true,  items: ['fantuan', 'iced_soy'] },
-      { name: '4號・林小姐', avatar: '👩', urgent: false, items: ['xiaolongbao', 'hot_soy'], changeTo: { idx: 1, newId: 'iced_soy' } },
-      { name: '5號・趕車學生', avatar: '🧑‍🎓', urgent: true, items: ['radish_cake', 'mantou_egg'] },
-      { name: '6號・張先生', avatar: '👨', urgent: false, items: ['shaobing', 'radish_cake'] }
+      { charIdx: 0, urgent: false, items: ['egg_pancake', 'hot_soy'] },
+      { charIdx: 1, urgent: false, items: ['egg_pancake', 'shaobing'] },
+      { charIdx: 2, urgent: true,  items: ['fantuan', 'iced_soy'] },
+      { charIdx: 3, urgent: false, items: ['xiaolongbao', 'hot_soy'], changeTo: { idx: 1, newId: 'iced_soy' } },
+      { charIdx: 4, urgent: true,  items: ['radish_cake', 'mantou_egg'] },
+      { charIdx: 5, urgent: false, items: ['shaobing', 'radish_cake'] }
     ];
-
-    const AVATARS = ['👵', '👴', '👩', '👨', '🛵', '👩‍💼', '👨‍🔧', '🧑'];
-    const NAMES = ['陳阿嬤', '王伯伯', '林小姐', '張先生', '外送急件', '趕車學生', '工地大哥', '李媽媽'];
 
     let assistMode = 'high';
     let scenarioMode = 'L2';
@@ -1361,6 +1535,7 @@
     let gameLoopId = null;
     let lastTick = 0;
     let praiseTimeout = null;
+    let shuffledChars = [];
 
     let youtiaoStock = 2;
     let restockTimer = 0;
@@ -1463,6 +1638,11 @@
       applyScenarioLocks();
       resetMetrics();
 
+      // 洗牌 12 位顧客角色庫，確保每次營業遇見不同的人
+      const normalPool = CHARACTER_POOL.filter(c => !c.isUrgentRole).sort(() => Math.random() - 0.5);
+      const urgentPool = CHARACTER_POOL.filter(c => c.isUrgentRole).sort(() => Math.random() - 0.5);
+      shuffledChars = { normal: normalPool, urgent: urgentPool };
+
       completedCount = 0;
       totalGenerated = 0;
       youtiaoStock = 2;
@@ -1481,7 +1661,7 @@
         spawnCustomerToSeat(2);
       }
 
-      showBanner('早市開張！看看上方客人點單，點擊下方廚房開始料理。');
+      showBanner('早市開張！看看吧檯前客人的對話氣泡，點擊下方廚房開始料理。');
 
       lastTick = performance.now();
       if (gameLoopId) cancelAnimationFrame(gameLoopId);
@@ -1496,13 +1676,14 @@
 
       if (scenarioMode === 'FIXED') {
         const script = FIXED_SCRIPT[idx];
+        const charObj = CHARACTER_POOL[script.charIdx];
         if (script.urgent) metrics.urgentTotal++;
         const maxPatience = (script.urgent ? 28000 : 45000) * patienceScale;
         seats[seatIdx] = {
           id: totalGenerated,
           seatIdx,
-          name: script.name,
-          avatar: script.avatar,
+          charObj,
+          name: `${totalGenerated}號・${charObj.name}`,
           isUrgent: script.urgent,
           note: '',
           maxPatience,
@@ -1518,9 +1699,12 @@
           isUrgent = true;
           metrics.urgentTotal++;
         }
+        const charObj = isUrgent
+          ? shuffledChars.urgent[idx % shuffledChars.urgent.length]
+          : shuffledChars.normal[idx % shuffledChars.normal.length];
+
         const maxPatience = (isUrgent ? 28000 : 45000) * patienceScale;
-        const avatar = isUrgent ? '🛵' : AVATARS[idx % AVATARS.length];
-        const name = isUrgent ? `${totalGenerated}號・外送急單` : `${totalGenerated}號・${NAMES[idx % NAMES.length]}`;
+        const name = isUrgent ? `${totalGenerated}號・${charObj.name}` : `${totalGenerated}號・${charObj.name}`;
 
         let availableKeys = ['egg_pancake', 'radish_cake', 'hot_soy', 'iced_soy'];
         if (scenarioMode !== 'L1') availableKeys.push('shaobing', 'fantuan');
@@ -1544,8 +1728,8 @@
         seats[seatIdx] = {
           id: totalGenerated,
           seatIdx,
+          charObj,
           name,
-          avatar,
           isUrgent,
           note: '',
           maxPatience,
@@ -1573,7 +1757,7 @@
           const oldName = target.name;
           const newMenu = MENU[cust4.changeRule.newId];
           Object.assign(target, { ...newMenu, done: false });
-          cust4.note = `改單！${oldName} 改 ${newMenu.name}`;
+          cust4.note = `改單！${oldName}改${newMenu.name}`;
           showBanner(`🔔 ${cust4.name} 臨時改單：「${oldName}」改成「${newMenu.name}」！`, 'alert-mode');
           renderAll();
         }
@@ -1586,7 +1770,7 @@
           const pool = Object.values(MENU).filter(m => m.id !== target.id);
           const newMenu = pool[Math.floor(Math.random() * pool.length)];
           Object.assign(target, { ...newMenu, done: false });
-          candidate.note = `改單！${oldName} 改 ${newMenu.name}`;
+          candidate.note = `改單！${oldName}改${newMenu.name}`;
           showBanner(`🔔 ${candidate.name} 臨時改單：「${oldName}」改成「${newMenu.name}」！`, 'alert-mode');
           renderAll();
         }
@@ -1611,7 +1795,7 @@
       } else {
         btn.textContent = '⏸ 暫停思考';
         btn.classList.remove('is-paused');
-        showBanner('🔥 廚房營業中！點擊工作站製作餐點，做好後點白瓷盤端給客人');
+        showBanner('🔥 廚房營業中！點擊工作站料理，起鍋後點吧檯白瓷盤遞給客人');
       }
     }
 
@@ -1643,7 +1827,7 @@
       const readyCount = readyPlates.filter(Boolean).length;
       if (activeJobsCount + readyCount >= 5) {
         metrics.errFullStation++;
-        showBanner('💡 出餐瓷盤快放滿囉，先把做好的餐點端給客人吧！', 'alert-mode');
+        showBanner('💡 吧檯白瓷盤快放滿囉，先把做好的餐點端給客人吧！', 'alert-mode');
         return;
       }
 
@@ -1661,9 +1845,9 @@
       if (food.station === 'griddle' && slots[0] !== null && slots[1] !== null) {
         metrics.parallelGriddle++;
         showPraiseToast('✨ 雙鍋齊下！善用煎台雙格太聰明了');
-        showBanner('✨ 雙格鐵板同時開煎，效率加倍！', 'praise-mode');
+        showBanner('✨ 雙格黑鐵煎板同時開煎，效率加倍！', 'praise-mode');
       } else {
-        showBanner(`👨‍🍳 正在用心製作【${food.name}】...`);
+        showBanner(`👨‍🍳 正在用心料理【${food.name}】...`);
       }
 
       checkAndTriggerOrderChange();
@@ -1697,27 +1881,27 @@
 
       if (selectedPlateIdx === idx) {
         selectedPlateIdx = null;
-        document.getElementById('trashBtn').classList.remove('active-trash');
-        showBanner('已放下瓷盤。');
+        document.getElementById('trashBtn').classList.remove('active-bin');
+        showBanner('已將瓷盤放回吧檯。');
       } else {
         selectedPlateIdx = idx;
-        document.getElementById('trashBtn').classList.add('active-trash');
-        showBanner(`🍽️ 手上端著【${food.name}】，請點擊上方需要的客人出餐！`, 'holding-mode');
+        document.getElementById('trashBtn').classList.add('active-bin');
+        showBanner(`🍽️ 手上端著【${food.name}】，請點擊上方需要的客人遞餐！`, 'holding-mode');
       }
       renderAll();
     }
 
     function handleDiscardSelectedPlate() {
       if (selectedPlateIdx === null || !readyPlates[selectedPlateIdx]) {
-        showBanner('💡 請先點擊要清理的白瓷盤端起，再點報廢按鈕喔！');
+        showBanner('💡 請先點擊吧檯上的白瓷盤端起，再點廚餘桶報廢喔！');
         return;
       }
       const discardedName = readyPlates[selectedPlateIdx].name;
       readyPlates[selectedPlateIdx] = null;
       selectedPlateIdx = null;
       metrics.errDiscard++;
-      document.getElementById('trashBtn').classList.remove('active-trash');
-      showBanner(`🗑️ 已整理清空【${discardedName}】，空出了一個出餐瓷盤。`);
+      document.getElementById('trashBtn').classList.remove('active-bin');
+      showBanner(`🗑️ 已倒掉清理【${discardedName}】，空出了一個吧檯白瓷盤。`);
       renderAll();
     }
 
@@ -1726,7 +1910,7 @@
       if (!cust || cust.isDone) return;
 
       if (selectedPlateIdx === null) {
-        showBanner('💡 請先點擊下方白瓷盤端起做好的餐點，再點客人出餐！');
+        showBanner('💡 請先點擊吧檯上的白瓷盤端起做好的餐點，再點客人遞餐！');
         return;
       }
 
@@ -1736,14 +1920,14 @@
       const matchItem = cust.items.find(i => !i.done && i.id === foodOnPlate.menuId);
       if (!matchItem) {
         metrics.errWrongCustomer++;
-        showBanner(`💡 ${cust.name} 沒有點【${foodOnPlate.name}】喔，請看看另外兩位客人的點單！`, 'alert-mode');
+        showBanner(`💡 ${cust.name} 沒有點【${foodOnPlate.name}】喔，請看看另外兩位客人的氣泡點單！`, 'alert-mode');
         return;
       }
 
       matchItem.done = true;
       readyPlates[selectedPlateIdx] = null;
       selectedPlateIdx = null;
-      document.getElementById('trashBtn').classList.remove('active-trash');
+      document.getElementById('trashBtn').classList.remove('active-bin');
 
       if (cust.items.every(i => i.done)) {
         cust.isDone = true;
@@ -1752,14 +1936,14 @@
         let praiseMsg = `🎉 ${cust.name} 餐點全齊，開心離開了！`;
         if (!cust.timedOut) {
           metrics.satisfiedCustomers++;
-          praiseMsg = `⭐ 獲得五星好評！${cust.name} 對出餐速度非常滿意！`;
+          praiseMsg = `⭐ 獲得五星好評！${cust.name} 開心地比了個讚！`;
         }
 
         if (cust.isUrgent) {
           const otherWaitingNormals = seats.filter(c => c && !c.isDone && !c.isUrgent);
           if (otherWaitingNormals.length > 0) {
             metrics.urgentPriorityWins++;
-            showPraiseToast('⚡ 急件神救援！優先幫外送急單出餐');
+            showPraiseToast('⚡ 急件神救援！優先幫急單客人出餐');
           }
         }
 
@@ -1837,7 +2021,10 @@
         ['griddle', 'prep', 'steamer', 'drink'].forEach(stKey => {
           stations[stKey].forEach((slot, idx) => {
             if (slot) {
+              const prevHalf = slot.elapsed >= slot.duration * 0.5;
               slot.elapsed += dt;
+              const currHalf = slot.elapsed >= slot.duration * 0.5;
+
               if (slot.elapsed >= slot.duration) {
                 const emptyPlate = readyPlates.findIndex(p => p === null);
                 if (emptyPlate !== -1) {
@@ -1847,10 +2034,13 @@
                 } else {
                   slot.elapsed = slot.duration;
                 }
+              } else if (!prevHalf && currHalf) {
+                // 進度過半時切換為第二階段寫實烹飪動畫
+                needRender = true;
               } else {
                 const slotEl = document.getElementById(`${stKey}-${idx}`);
                 if (slotEl) {
-                  const prog = slotEl.querySelector('.slot-progress');
+                  const prog = slotEl.querySelector('.cook-bar');
                   if (prog) prog.style.width = `${(slot.elapsed / slot.duration) * 100}%`;
                 }
               }
@@ -1958,7 +2148,7 @@
     function renderYoutiaoCabinet() {
       const box = document.getElementById('youtiaoVisualBox');
       if (restockTimer > 0) {
-        box.innerHTML = `<span style="font-size:0.72rem; font-weight:900; color:#ea580c;" class="anim-sizzle">🫧 油鍋翻炸中...</span>`;
+        box.innerHTML = `<span style="font-size:0.72rem; font-weight:900; color:#ea580c;" class="anim-bubble">🫧 金黃油鍋翻炸中...</span>`;
         return;
       }
       if (youtiaoStock === 0) {
@@ -1968,7 +2158,7 @@
       let sticksHtml = `<span style="font-size:0.7rem; font-weight:900; color:#92400e;">🥖 油條:</span>`;
       const displayCount = Math.min(youtiaoStock, 4);
       for (let i = 0; i < displayCount; i++) {
-        sticksHtml += `<svg viewBox="0 0 12 24" style="width:7px; height:15px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
+        sticksHtml += `<svg viewBox="0 0 12 24" style="width:8px; height:16px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
       }
       sticksHtml += `<span style="font-size:0.72rem; font-weight:900; color:#92400e; margin-left:2px;">剩${youtiaoStock}根</span>`;
       box.innerHTML = sticksHtml;
@@ -1987,81 +2177,81 @@
 
       const heldFood = selectedPlateIdx !== null ? readyPlates[selectedPlateIdx] : null;
 
+      // 1. 渲染店門口半身顧客（去卡片外框，直接呈現半身人物＋頭頂耐性條＋對話氣泡）
       for (let i = 0; i < 3; i++) {
-        const seatEl = document.getElementById(`seat-${i}`);
+        const bayEl = document.getElementById(`bay-${i}`);
         const cust = seats[i];
 
         if (!cust) {
-          seatEl.innerHTML = seatCooldowns[i] > 0 ? '🧹 整理中...' : `空位 ${i + 1}`;
+          bayEl.className = 'customer-bay empty-bay';
+          bayEl.onclick = null;
+          bayEl.innerHTML = seatCooldowns[i] > 0 ? '🧹 整理吧檯中...' : `${i + 1} 號吧檯位`;
           continue;
         }
 
         const hasMatch = heldFood && !cust.isDone && cust.items.some(item => !item.done && item.id === heldFood.menuId);
         const showAssistGlow = assistMode === 'high' && hasMatch;
 
+        bayEl.className = `customer-bay ${showAssistGlow ? 'assist-target' : ''}`;
+        bayEl.onclick = () => handleSeatClick(i);
+
         const ratio = cust.patience / cust.maxPatience;
         const barColor = ratio > 0.5 ? '#16a34a' : (ratio > 0.25 ? '#eab308' : '#dc2626');
+        const mood = cust.isDone ? 'happy' : (cust.timedOut ? 'sweat' : 'normal');
 
         const itemsHtml = cust.items.map(item => {
           const isAssistMatch = assistMode === 'high' && heldFood && !item.done && item.id === heldFood.menuId;
           const smSvg = DONE_SVGS[item.id].replace('<svg ', '<svg class="svg-sm" ');
           return `
-            <div class="need-pill ${item.done ? 'done' : ''} ${isAssistMatch ? 'assist-match' : ''}">
-              <div class="need-pill-left">
+            <div class="order-chip ${item.done ? 'done' : ''} ${isAssistMatch ? 'assist-match' : ''}">
+              <div class="order-chip-left">
                 ${smSvg}
-                <span class="need-pill-name">${item.name}</span>
+                <span class="order-chip-name">${item.name}</span>
               </div>
-              <span style="font-size:0.7rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
+              <span style="font-size:0.68rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
             </div>
           `;
         }).join('');
 
-        seatEl.innerHTML = `
-          <div class="customer-card ${cust.isUrgent ? 'urgent' : ''} ${cust.isDone ? 'completed' : ''} ${showAssistGlow ? 'assist-target' : ''}" onclick="handleSeatClick(${i})">
-            <div class="cust-header-area">
-              <div class="cust-top">
-                <div class="cust-avatar">${cust.avatar}</div>
-                <div class="cust-meta">
-                  <div class="cust-name-row">
-                    <span class="cust-name">${cust.name}</span>
-                    ${cust.isUrgent && !cust.isDone ? '<span class="urgent-tag">🔥急</span>' : ''}
-                  </div>
-                  <div class="patience-track">
-                    <div class="patience-fill" id="patience-${cust.id}" style="width:${ratio * 100}%; background:${barColor};"></div>
-                  </div>
-                </div>
+        bayEl.innerHTML = `
+          <div class="cust-stage">
+            <div class="char-figure-wrap">
+              <div class="char-name-tag ${cust.isUrgent && !cust.isDone ? 'urgent-tag' : ''}">
+                ${cust.isUrgent && !cust.isDone ? '🔥' : ''}${cust.name}
               </div>
-              ${cust.note ? `<div class="cust-note">${cust.note}</div>` : ''}
+              <div class="char-patience-bar">
+                <div class="char-patience-fill" id="patience-${cust.id}" style="width:${ratio * 100}%; background:${barColor};"></div>
+              </div>
+              ${cust.charObj.render(mood)}
             </div>
-            <div class="order-needs">${itemsHtml}</div>
+            <div class="speech-bubble ${cust.isUrgent ? 'urgent-bubble' : ''} ${showAssistGlow ? 'assist-bubble' : ''}">
+              ${cust.note ? `<div class="bubble-note">${cust.note}</div>` : ''}
+              <div class="bubble-items">${itemsHtml}</div>
+            </div>
           </div>
         `;
       }
 
-      renderSlot('griddle', 0, '左位');
-      renderSlot('griddle', 1, '右位');
-      renderSlot('prep', 0, '備料空位');
-      renderSlot('steamer', 0, '竹蒸籠空位');
-      renderSlot('drink', 0, '出杯台');
+      // 2. 渲染四大器具烹飪動畫槽
+      renderSlot('griddle', 0, '左煎板');
+      renderSlot('griddle', 1, '右煎板');
+      renderSlot('prep', 0, '木質備料板');
+      renderSlot('steamer', 0, '蒸籠空位');
+      renderSlot('drink', 0, '雙龍頭出杯口');
 
-      const readyCount = readyPlates.filter(Boolean).length;
-      document.getElementById('plateStatusText').textContent = `${readyCount} / 3 盤`;
-
+      // 3. 渲染吧檯桌面上的立體白瓷盤
       readyPlates.forEach((food, idx) => {
         const el = document.getElementById(`plate-${idx}`);
         if (!food) {
-          el.className = 'plate-card';
-          el.innerHTML = `空盤 ${idx + 1}`;
+          el.className = 'ceramic-plate';
+          el.innerHTML = `空瓷盤 ${idx + 1}`;
         } else {
           const isSel = selectedPlateIdx === idx;
-          const doneSvg = DONE_SVGS[food.menuId].replace('<svg ', '<svg class="svg-anim" ');
-          el.className = `plate-card ready ${isSel ? 'selected' : ''}`;
+          const doneSvg = DONE_SVGS[food.menuId].replace('<svg ', '<svg class="svg-btn" ');
+          el.className = `ceramic-plate ready ${isSel ? 'selected' : ''}`;
           el.innerHTML = `
             ${doneSvg}
-            <div style="text-align:left; min-width:0;">
-              <div style="font-size:0.8rem; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${food.name}</div>
-              <div style="font-size:0.65rem; color:${isSel ? '#2563eb' : '#16a34a'};">${isSel ? '端起中' : '點我端'}</div>
-            </div>
+            <span class="plate-food-name">${food.name}</span>
           `;
         }
       });
@@ -2071,17 +2261,18 @@
       const el = document.getElementById(`${stKey}-${idx}`);
       const job = stations[stKey][idx];
       if (!job) {
-        el.className = `slot-unit slot-${stKey}`;
+        el.className = `app-slot app-${stKey}`;
         el.innerHTML = emptyLabel;
       } else {
         const pct = Math.min(100, (job.elapsed / job.duration) * 100);
-        el.className = `slot-unit slot-${stKey} busy`;
+        const stage = getCookingStageVisual(job.menuId, job.elapsed / job.duration);
+        el.className = `app-slot app-${stKey} busy`;
         el.innerHTML = `
-          <div class="cooking-anim-wrap">
-            ${COOKING_SVGS[job.menuId]}
-            <span class="cooking-stage-text">${STAGE_LABELS[job.menuId]}</span>
+          <div class="cook-anim-stage">
+            ${stage.svg}
+            <span class="cook-stage-label">${stage.label}</span>
           </div>
-          <div class="slot-progress" style="width:${pct}%"></div>
+          <div class="cook-bar" style="width:${pct}%"></div>
         `;
       }
     }
