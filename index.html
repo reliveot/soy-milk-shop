@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>晨光永和豆漿 V0.6｜全料理動畫與認知復健系統</title>
+  <style>
+    :root {
+      --sign-red: #c53030;
+      --sign-red-dark: #9b2c2c;
+      --wall-tile: #f8f5ee;
+      --steel-top: #e2e8f0;
+      --steel-mid: #cbd5e1;
+      --steel-border: #64748b;
+      --wood-counter: #c89d6c;
+      --wood-dark: #5c3a18;
+      --text-dark: #1a202c;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background-color: var(--wall-tile);
+      background-image:
+        linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--text-dark);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 正宗永和豆漿：紅底白字發光招牌列 */
+    header {
+      background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+      border-bottom: 3px solid #7f1d1d;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-sign {
+      background: #c53030;
+      color: #ffffff;
+      border: 2.5px solid #ffffff;
+      border-radius: 6px;
+      padding: 3px 12px;
+      font-size: 1.08rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+      box-shadow: 0 0 10px rgba(254, 240, 138, 0.45);
+    }
+
+    .mode-badge {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1.5px solid #fef08a;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 900;
+      color: #7f1d1d;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .stat-pill {
+      background: #fef08a;
+      border: 1.5px solid #ca8a04;
+      color: #713f12;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .btn-pause {
+      background-color: #1e293b;
+      color: #fff;
+      border: 1.5px solid #94a3b8;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-pause.is-paused {
+      background-color: #15803d;
+      border-color: #86efac;
+      animation: pulse 1.5s infinite;
+    }
+
+    .btn-menu {
+      background: #ffffff;
+      border: 1.5px solid #fecaca;
+      color: #991b1b;
+      border-radius: 10px;
+      padding: 5px 9px;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* 狀態提示條 */
+    .banner {
+      background-color: #fffbeb;
+      border-bottom: 1.5px solid #fde68a;
+      color: #78350f;
+      padding: 4px 10px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 0.84rem;
+      flex-shrink: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .banner.paused-mode { background: #dcfce7; color: #14532d; }
+    .banner.holding-mode { background: #dbeafe; color: #1e3a8a; }
+    .banner.praise-mode  { background: #fef9c3; color: #713f12; }
+    .banner.alert-mode   { background: #fee2e2; color: #7f1d1d; }
+
+    /* 正向勳章浮動提示 */
+    .praise-toast {
+      position: fixed;
+      top: 86px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      background: linear-gradient(135deg, #d97706, #b45309);
+      color: #fff;
+      border: 2px solid #fef08a;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 900;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      z-index: 60;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: nowrap;
+    }
+
+    .praise-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 主容器：上層顧客（緊湊 30%） + 下層開放式大廚房（70%） */
+    main {
+      flex: 1;
+      max-width: 1160px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 6px 10px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    /* 第一層（緊湊 30%）：固定三座位顧客櫃檯 */
+    .customers-layer {
+      flex: 0.65;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      min-height: 118px;
+      max-height: 155px;
+    }
+
+    .seat-slot {
+      background: rgba(255, 255, 255, 0.65);
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #64748b;
+      font-size: 0.82rem;
+      font-weight: 800;
+      min-height: 0;
+    }
+
+    .customer-card {
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-bottom: 4px solid #94a3b8;
+      border-radius: 14px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.12s, border-color 0.15s;
+    }
+
+    .customer-card.urgent {
+      border-color: #dc2626;
+      border-bottom-color: #991b1b;
+      background: #fef2f2;
+    }
+
+    .customer-card.completed {
+      border-color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    .customer-card.assist-target {
+      border: 3px solid #2563eb;
+      background: #eff6ff;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .cust-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cust-avatar {
+      font-size: 1.3rem;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cust-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cust-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .cust-name {
+      font-size: 0.82rem;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .urgent-tag {
+      background: #dc2626;
+      color: #fff;
+      font-size: 0.66rem;
+      font-weight: 900;
+      padding: 1px 5px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .patience-track {
+      width: 100%;
+      height: 5px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      margin-top: 3px;
+      overflow: hidden;
+    }
+
+    .patience-fill {
+      height: 100%;
+      width: 100%;
+      background: #16a34a;
+      transition: width 0.15s linear, background-color 0.3s;
+    }
+
+    .cust-note {
+      font-size: 0.7rem;
+      color: #b91c1c;
+      font-weight: 900;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 緊湊雙欄點餐氣泡（節省垂直高度） */
+    .order-needs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      margin-top: 4px;
+    }
+
+    .need-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 6px;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      font-size: 0.8rem;
+      font-weight: 900;
+      min-width: 0;
+    }
+
+    .need-pill-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .need-pill-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .need-pill.done {
+      background: #dcfce7;
+      border-color: #4ade80;
+      color: #166534;
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+
+    .need-pill.assist-match {
+      background: #dbeafe;
+      border-color: #2563eb;
+    }
+
+    /* 第二層（放大為 70% 視覺主舞台）：開放式白鐵廚房 + 原木出餐台 */
+    .kitchen-layer {
+      flex: 1.55;
+      display: grid;
+      grid-template-columns: 2.5fr 1fr;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    @media (max-width: 760px) {
+      .kitchen-layer {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 不鏽鋼白鐵廚房工作台 */
+    .stations-grid {
+      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+      border: 3px solid #475569;
+      border-radius: 16px;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 8px;
+      min-height: 0;
+      box-shadow: inset 0 2px 6px rgba(255,255,255,0.8);
+    }
+
+    .station-card {
+      background: #ffffff;
+      border: 2px solid #94a3b8;
+      border-radius: 14px;
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .st-griddle { border-color: #dc2626; background: #fffafa; }
+    .st-prep    { border-color: #d97706; background: #fffdf7; }
+    .st-steamer { border-color: #16a34a; background: #f7fff9; }
+    .st-drink   { border-color: #2563eb; background: #f7fbff; }
+
+    .station-card.locked {
+      opacity: 0.38;
+      pointer-events: none;
+    }
+
+    .st-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    /* 視覺化透明玻璃油條保溫櫃 + 炸油條鈕 */
+    .youtiao-cabinet {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fffbeb;
+      border: 1.5px solid #f59e0b;
+      border-radius: 8px;
+      padding: 2px 6px;
+    }
+
+    .youtiao-sticks {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      min-width: 46px;
+      height: 18px;
+    }
+
+    .mini-restock-btn {
+      background: #ea580c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .mini-restock-btn:disabled {
+      background: #94a3b8;
+      cursor: default;
+    }
+
+    .mini-restock-btn.assist-flash {
+      background: #dc2626;
+      animation: pulse 1.2s infinite;
+    }
+
+    /* 放大版動畫料理舞台區（佔工作站 48% 高度，清楚呈現烹飪動態） */
+    .st-slots {
+      display: flex;
+      gap: 8px;
+      flex: 1.25;
+      min-height: 54px;
+      margin-bottom: 6px;
+    }
+
+    .slot-unit {
+      flex: 1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      position: relative;
+      overflow: hidden;
+      font-size: 0.76rem;
+      font-weight: 800;
+      transition: all 0.2s;
+    }
+
+    /* 各工作站專屬器具底色 */
+    .slot-griddle { background: #1e293b; border: 2px solid #475569; color: #94a3b8; }
+    .slot-prep    { background: #fef3c7; border: 2px dashed #d97706; color: #92400e; }
+    .slot-steamer { background: #ecfdf5; border: 2px dashed #10b981; color: #065f46; }
+    .slot-drink   { background: #eff6ff; border: 2px dashed #3b82f6; color: #1e40af; }
+
+    .slot-unit.busy {
+      border-style: solid;
+      border-width: 2.5px;
+      box-shadow: inset 0 0 12px rgba(245, 158, 11, 0.35);
+    }
+
+    .slot-griddle.busy { background: #27272a; border-color: #f97316; color: #fef08a; }
+    .slot-prep.busy    { background: #fffbeb; border-color: #ea580c; color: #9a3412; }
+    .slot-steamer.busy { background: #f0fdf4; border-color: #16a34a; color: #14532d; }
+    .slot-drink.busy   { background: #dbeafe; border-color: #2563eb; color: #1e3a8a; }
+
+    .cooking-anim-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cooking-stage-text {
+      font-size: 0.75rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .slot-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      width: 0%;
+    }
+
+    /* 關鍵幀動畫：冒熱氣、煎烤滋滋、豆漿注水、油鍋翻滾 */
+    @keyframes steamRise {
+      0%   { transform: translateY(2px); opacity: 0.4; }
+      50%  { transform: translateY(-3px); opacity: 1; }
+      100% { transform: translateY(-7px); opacity: 0.2; }
+    }
+
+    @keyframes sizzleWobble {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25%      { transform: scale(1.06) rotate(-3deg); }
+      75%      { transform: scale(1.06) rotate(3deg); }
+    }
+
+    @keyframes pourStream {
+      0%   { stroke-dashoffset: 16; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    .anim-steam { animation: steamRise 1.1s infinite ease-in-out; }
+    .anim-sizzle { animation: sizzleWobble 0.6s infinite ease-in-out; }
+    .anim-pour { stroke-dasharray: 4 4; animation: pourStream 0.5s infinite linear; }
+
+    /* 下半部：寬敞單行食材按鈕（徹底杜絕文字溢位） */
+    .st-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .food-btn {
+      background: #ffffff;
+      border: 2px solid #334155;
+      border-bottom-width: 3.5px;
+      border-radius: 10px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      min-width: 0;
+      overflow: hidden;
+      transition: transform 0.1s, background-color 0.15s;
+    }
+
+    .food-btn:hover:not(:disabled) { background: #f8fafc; }
+    .food-btn:active:not(:disabled) { transform: scale(0.96); }
+    .food-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    .food-btn-label {
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+
+    /* 右側：原木出餐台 + 3 個立體白瓷盤 + 報廢桶 */
+    .serving-panel {
+      background: linear-gradient(180deg, #deb887 0%, #c89d6c 100%);
+      border: 3px solid var(--wood-dark);
+      border-radius: 16px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 0;
+      box-shadow: inset 0 2px 5px rgba(255,255,255,0.45);
+    }
+
+    .serving-header {
+      font-size: 0.84rem;
+      font-weight: 900;
+      color: #3e220d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .plates-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    @media (max-width: 760px) {
+      .plates-grid {
+        flex-direction: row;
+      }
+    }
+
+    .plate-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.45);
+      border: 2px dashed #6b4226;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #4a2c11;
+      transition: all 0.15s;
+    }
+
+    .plate-card.ready {
+      background: radial-gradient(circle, #ffffff 70%, #f1f5f9 100%);
+      border: 2.5px solid #16a34a;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.16);
+      cursor: pointer;
+      color: #0f172a;
+    }
+
+    .plate-card.selected {
+      background: #dbeafe;
+      border: 3px solid #2563eb;
+      transform: scale(1.03);
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.7);
+    }
+
+    .trash-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 8px;
+      border-radius: 10px;
+      border: 2px solid #64748b;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .trash-btn.active-trash {
+      background: #fee2e2;
+      border-color: #dc2626;
+      color: #991b1b;
+    }
+
+    /* SVG 尺寸控制 */
+    .svg-anim { width: 42px; height: 42px; flex-shrink: 0; }
+    .svg-btn  { width: 26px; height: 26px; flex-shrink: 0; }
+    .svg-sm   { width: 19px; height: 19px; flex-shrink: 0; }
+
+    /* 彈窗樣式 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 18px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 18px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+    }
+
+    .modal-title {
+      font-size: 1.32rem;
+      font-weight: 900;
+      color: #c53030;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .config-section { margin-bottom: 12px; }
+    .config-label {
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: #1e293b;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .option-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .option-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+
+    .opt-btn {
+      padding: 8px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .opt-btn.selected { border-color: #c53030; background: #fef2f2; }
+    .opt-title { font-size: 0.86rem; font-weight: 900; color: #0f172a; }
+    .opt-desc { font-size: 0.72rem; color: #475569; margin-top: 2px; line-height: 1.3; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: #c53030;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 10px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .honor-badge-box {
+      background: linear-gradient(135deg, #fffbeb, #fef08a);
+      border: 2px solid #eab308;
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .honor-title { font-size: 1.25rem; font-weight: 900; color: #854d0e; }
+    .report-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+    .kpi-card { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 8px 4px; text-align: center; }
+    .kpi-val { font-size: 1.15rem; font-weight: 900; color: #14532d; }
+    .kpi-lbl { font-size: 0.7rem; font-weight: 800; color: #166534; margin-top: 2px; }
+
+    .summary-box {
+      background: #fffbeb;
+      border-left: 4px solid #d97706;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    .toggle-details-btn {
+      width: 100%;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      padding: 8px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+
+    .detail-list {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid #edf2f7;
+      font-weight: 700;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- 正宗永和豆漿紅底白字招牌 -->
+  <header>
+    <div class="header-left">
+      <div class="brand-sign">晨光永和豆漿</div>
+      <div class="mode-badge" id="headerModeBadge">L2 庫存｜練習提示</div>
+    </div>
+    <div class="header-right">
+      <div class="stat-pill" id="progressPill">完成 0/6｜好評 0</div>
+      <button class="btn-pause" id="pauseBtn" onclick="toggleManualPause()">⏸ 暫停思考</button>
+      <button class="btn-menu" onclick="openSetupModal()">⚙️ 設定</button>
+    </div>
+  </header>
+
+  <div class="banner" id="statusBanner">早市開張！看看三位客人的點單，點擊下方廚房開始備餐。</div>
+  <div class="praise-toast" id="praiseToast">✨ 雙鍋齊下！時間管理大師</div>
+
+  <main>
+    <!-- 第一層（緊湊 30%）：固定三座位顧客櫃檯 -->
+    <section class="customers-layer">
+      <div class="seat-slot" id="seat-0">櫃檯 1 號位</div>
+      <div class="seat-slot" id="seat-1">櫃檯 2 號位</div>
+      <div class="seat-slot" id="seat-2">櫃檯 3 號位</div>
+    </section>
+
+    <!-- 第二層（放大 70%）：開放式大廚房工作區 + 原木出餐台 -->
+    <section class="kitchen-layer">
+      <div class="stations-grid">
+        <!-- 1. 雙格鐵板煎台 -->
+        <div class="station-card st-griddle">
+          <div class="st-header">
+            <span>🔥 雙格鐵板煎台</span>
+            <span style="color:#dc2626;">煎製 4秒</span>
+          </div>
+          <div class="st-slots">
+            <div class="slot-unit slot-griddle" id="griddle-0">鐵板左位</div>
+            <div class="slot-unit slot-griddle" id="griddle-1">鐵板右位</div>
+          </div>
+          <div class="st-actions">
+            <button class="food-btn" onclick="startCooking('egg_pancake')">
+              <span id="icon-btn-egg_pancake"></span>
+              <span class="food-btn-label">原味蛋餅</span>
+            </button>
+            <button class="food-btn" onclick="startCooking('radish_cake')">
+              <span id="icon-btn-radish_cake"></span>
+              <span class="food-btn-label">蘿蔔糕</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. 酥餅飯糰備料區（含視覺化油條保溫櫃） -->
+        <div class="station-card st-prep" id="card-prep">
+          <div class="st-header">
+            <span>🥖 酥餅飯糰台</span>
+            <div class="youtiao-cabinet" title="油條保溫櫃">
+              <div class="youtiao-sticks" id="youtiaoVisualBox"></div>
+              <button class="mini-restock-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條</button>
+            </div>
+          </div>
+          <div class="st-slots">
+            <div class="slot-unit slot-prep" id="prep-0">備料砧板空位</div>
+          </div>
+          <div class="st-actions">
+            <button class="food-btn" onclick="startCooking('shaobing')">
+              <span id="icon-btn-shaobing"></span>
+              <span class="food-btn-label">燒餅油條</span>
+            </button>
+            <button class="food-btn" onclick="startCooking('fantuan')">
+              <span id="icon-btn-fantuan"></span>
+              <span class="food-btn-label">傳統飯糰</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. 傳統竹製蒸籠區 -->
+        <div class="station-card st-steamer" id="card-steamer">
+          <div class="st-header">
+            <span>♨️ 傳統竹製蒸籠</span>
+            <span style="color:#16a34a;">蒸煮 3.5秒</span>
+          </div>
+          <div class="st-slots">
+            <div class="slot-unit slot-steamer" id="steamer-0">竹蒸籠空位</div>
+          </div>
+          <div class="st-actions">
+            <button class="food-btn" onclick="startCooking('xiaolongbao')">
+              <span id="icon-btn-xiaolongbao"></span>
+              <span class="food-btn-label">小籠包</span>
+            </button>
+            <button class="food-btn" onclick="startCooking('mantou_egg')">
+              <span id="icon-btn-mantou_egg"></span>
+              <span class="food-btn-label">饅頭夾蛋</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
+        <div class="station-card st-drink">
+          <div class="st-header">
+            <span>🥤 雙龍頭豆漿機</span>
+            <span style="color:#2563eb;">出杯 2秒</span>
+          </div>
+          <div class="st-slots">
+            <div class="slot-unit slot-drink" id="drink-0">不鏽鋼出杯台</div>
+          </div>
+          <div class="st-actions">
+            <button class="food-btn" onclick="startCooking('hot_soy')">
+              <span id="icon-btn-hot_soy"></span>
+              <span class="food-btn-label">熱豆漿</span>
+            </button>
+            <button class="food-btn" onclick="startCooking('iced_soy')">
+              <span id="icon-btn-iced_soy"></span>
+              <span class="food-btn-label">冰豆漿</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右側：原木出餐台 + 3 個立體白瓷盤 -->
+      <div class="serving-panel">
+        <div class="serving-header">
+          <span>🍽️ 出餐白瓷盤</span>
+          <span id="plateStatusText">0 / 3 盤</span>
+        </div>
+        <div class="plates-grid">
+          <div class="plate-card" id="plate-0" onclick="handlePlateClick(0)">空瓷盤 1</div>
+          <div class="plate-card" id="plate-1" onclick="handlePlateClick(1)">空瓷盤 2</div>
+          <div class="plate-card" id="plate-2" onclick="handlePlateClick(2)">空瓷盤 3</div>
+        </div>
+        <button class="trash-btn" id="trashBtn" onclick="handleDiscardSelectedPlate()">
+          🗑️ 報廢手上餐點
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 設定彈窗 -->
+  <div class="modal-overlay" id="setupModal">
+    <div class="modal-card">
+      <div class="modal-title">🌅 晨光永和豆漿店｜認知訓練與表現觀察</div>
+      <div class="config-section">
+        <span class="config-label">1. 選擇遊戲內提示程度（鷹架輔助）：</span>
+        <div class="option-row">
+          <button class="opt-btn selected" id="assist-high" onclick="selectAssist('high')">
+            <div class="opt-title">💡 練習模式（高提示）</div>
+            <div class="opt-desc">端盤時對應客人發藍光提示、耐性較寬鬆、缺油條閃爍提醒。</div>
+          </button>
+          <button class="opt-btn" id="assist-none" onclick="selectAssist('none')">
+            <div class="opt-title">🧠 觀察／挑戰（零提示）</div>
+            <div class="opt-desc">取消發光指引，需自行看單配對與監控庫存，可主動按暫停思考。</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <span class="config-label">2. 選擇營業情境與難度（每局 6 組客人）：</span>
+        <div class="option-grid-3" style="margin-bottom:6px;">
+          <button class="opt-btn" id="scen-1" onclick="selectScenario('L1')">
+            <div class="opt-title">L1 基礎並行</div>
+            <div class="opt-desc">4品項｜雙格煎台與豆漿</div>
+          </button>
+          <button class="opt-btn selected" id="scen-2" onclick="selectScenario('L2')">
+            <div class="opt-title">L2 庫存預判</div>
+            <div class="opt-desc">6品項｜油條庫存與補炸</div>
+          </button>
+          <button class="opt-btn" id="scen-3" onclick="selectScenario('L3')">
+            <div class="opt-title">L3 急件優先</div>
+            <div class="opt-desc">8品項｜全工作站＋急單</div>
+          </button>
+        </div>
+        <div class="option-row">
+          <button class="opt-btn" id="scen-4" onclick="selectScenario('L4')">
+            <div class="opt-title">L4 綜合改單挑戰</div>
+            <div class="opt-desc">8品項｜含急件＋客人臨時改單轉送</div>
+          </button>
+          <button class="opt-btn" id="scen-fixed" onclick="selectScenario('FIXED')">
+            <div class="opt-title" style="color:#2563eb;">📋 固定情境觀察組</div>
+            <div class="opt-desc">前後測專用！固定 6 組客人順序與事件</div>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="startGame()">開店營業！</button>
+    </div>
+  </div>
+
+  <!-- 正向結算報表彈窗 -->
+  <div class="modal-overlay hidden" id="endModal">
+    <div class="modal-card">
+      <div class="modal-title">🎉 今日順利打烊！</div>
+      <div style="text-align:center; font-size:0.8rem; color:#475569; margin-bottom:8px;" id="reportSubtitle"></div>
+
+      <div class="honor-badge-box">
+        <div style="font-size:0.78rem; color:#854d0e; font-weight:800;">今日獲得稱號</div>
+        <div class="honor-title" id="honorTitle">🏆 金牌效率神店長</div>
+      </div>
+
+      <div class="report-kpi-grid">
+        <div class="kpi-card"><div class="kpi-val" id="kpiCompleted">6/6</div><div class="kpi-lbl">完成訂單</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="kpiSatisfaction">6/6</div><div class="kpi-lbl">獲得五星好評</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="kpiParallel">0次</div><div class="kpi-lbl">雙鍋並行效率</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="kpiSmartMoves">0次</div><div class="kpi-lbl">預判與急件救援</div></div>
+      </div>
+
+      <div class="summary-box" id="reportSummaryText"></div>
+
+      <button class="toggle-details-btn" onclick="toggleDetailPanel()">
+        📋 展開詳細操作分析（臨床觀察與自我檢視用） ▾
+      </button>
+      <div class="detail-list hidden" id="clinicalDetailPanel">
+        <div class="detail-row"><span>主動暫停思考策略</span><span id="detPause">0 次</span></div>
+        <div class="detail-row"><span>油條庫存應對表現</span><span id="detYoutiao">-</span></div>
+        <div class="detail-row"><span>急件優先出餐表現</span><span id="detUrgent">-</span></div>
+        <div class="detail-row"><span>分類 A：資源預判失誤（缺料點擊）</span><span id="errNoStock">0 次</span></div>
+        <div class="detail-row"><span>分類 B：空間監控失誤（工作站滿載）</span><span id="errFull">0 次</span></div>
+        <div class="detail-row"><span>分類 C：分配匹配失誤（送錯客人）</span><span id="errWrongCust">0 次</span></div>
+        <div class="detail-row" style="border-bottom:none;"><span>分類 D：多餘製作清理（報廢次數）</span><span id="errDiscard">0 次</span></div>
+      </div>
+
+      <button class="btn-secondary" onclick="exportCSV()">📥 匯出本次觀察紀錄 (CSV)</button>
+      <button class="btn-primary" onclick="openSetupModal()">返回設定 / 再玩一局</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. 成品完成圖示 SVG（用於訂單氣泡、按鈕、白色瓷盤）
+    const DONE_SVGS = {
+      egg_pancake: `<svg viewBox="0 0 64 64"><rect x="8" y="18" width="48" height="28" rx="11" fill="#facc15" stroke="#854d0e" stroke-width="3.5"/><path d="M16 27 Q32 20 48 27 M16 37 Q32 30 48 37" stroke="#ca8a04" stroke-width="3" fill="none"/><circle cx="23" cy="26" r="2.6" fill="#16a34a"/><circle cx="40" cy="35" r="2.6" fill="#16a34a"/><circle cx="32" cy="25" r="2.2" fill="#16a34a"/></svg>`,
+      radish_cake: `<svg viewBox="0 0 64 64"><rect x="9" y="14" width="28" height="26" rx="5" fill="#fef08a" stroke="#854d0e" stroke-width="3.5"/><rect x="27" y="24" width="28" height="26" rx="5" fill="#fde047" stroke="#854d0e" stroke-width="3.5"/><path d="M33 32 L49 32 M34 41 L46 41" stroke="#c2410c" stroke-width="3.5" stroke-linecap="round"/></svg>`,
+      shaobing:    `<svg viewBox="0 0 64 64"><rect x="11" y="13" width="42" height="16" rx="6" fill="#f97316" stroke="#7c2d12" stroke-width="3.5"/><rect x="7" y="27" width="50" height="10" rx="5" fill="#fbbf24" stroke="#9a3412" stroke-width="3"/><rect x="11" y="36" width="42" height="15" rx="6" fill="#ea580c" stroke="#7c2d12" stroke-width="3.5"/><circle cx="23" cy="20" r="1.8" fill="#fff"/><circle cx="34" cy="19" r="1.8" fill="#fff"/><circle cx="43" cy="21" r="1.8" fill="#fff"/></svg>`,
+      fantuan:     `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="33" rx="23" ry="16" fill="#334155" stroke="#0f172a" stroke-width="3.5"/><ellipse cx="32" cy="33" rx="12" ry="8" fill="#f97316"/><circle cx="28" cy="32" r="2.8" fill="#dc2626"/><circle cx="37" cy="34" r="2.8" fill="#16a34a"/></svg>`,
+      xiaolongbao: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="43" rx="25" ry="10" fill="#d97706" stroke="#78350f" stroke-width="3.5"/><circle cx="23" cy="34" r="9.5" fill="#fffbeb" stroke="#64748b" stroke-width="2.2"/><circle cx="41" cy="34" r="9.5" fill="#fffbeb" stroke="#64748b" stroke-width="2.2"/><circle cx="32" cy="26" r="9.5" fill="#ffffff" stroke="#64748b" stroke-width="2.2"/><path d="M32 20 L32 24 M29 22 L35 22" stroke="#64748b" stroke-width="2"/></svg>`,
+      mantou_egg:  `<svg viewBox="0 0 64 64"><path d="M13 28 C13 15, 51 15, 51 28 Z" fill="#b45309" stroke="#78350f" stroke-width="3.5"/><ellipse cx="32" cy="33" rx="22" ry="6.5" fill="#ffffff" stroke="#eab308" stroke-width="2.8"/><circle cx="32" cy="33" r="4.5" fill="#facc15"/><rect x="13" y="38" width="38" height="12" rx="4" fill="#b45309" stroke="#78350f" stroke-width="3.5"/></svg>`,
+      hot_soy:     `<svg viewBox="0 0 64 64"><path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#fffbeb" stroke="#dc2626" stroke-width="3.5"/><rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#dc2626"/><path d="M24 12 Q22 7 25 4 M32 12 Q30 7 33 4 M40 12 Q38 7 41 4" stroke="#dc2626" stroke-width="2.8" fill="none" stroke-linecap="round"/><circle cx="32" cy="37" r="6.5" fill="#fecaca"/></svg>`,
+      iced_soy:    `<svg viewBox="0 0 64 64"><path d="M17 21 L47 21 L43 53 L21 53 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3.5"/><rect x="15" y="17" width="34" height="5.5" rx="2.5" fill="#2563eb"/><line x1="36" y1="17" x2="44" y2="5" stroke="#dc2626" stroke-width="3.8" stroke-linecap="round"/><rect x="24" y="29" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/><rect x="33" y="35" width="7.5" height="7.5" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.8"/></svg>`
+    };
+
+    // 2. 每道料理「製作中專屬動態 SVG」（呈現烹飪過程：倒麵糊、煎金黃、夾油條、包飯糰、蒸籠冒煙、豆漿機注水）
+    const COOKING_SVGS = {
+      egg_pancake: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="38" rx="24" ry="13" fill="#fef08a" stroke="#ca8a04" stroke-width="3" class="anim-sizzle"/><circle cx="32" cy="38" r="7" fill="#f97316"/><circle cx="22" cy="35" r="2.5" fill="#16a34a"/><circle cx="42" cy="40" r="2.5" fill="#16a34a"/><path d="M22 20 Q20 12 24 8 M34 18 Q32 10 36 6 M44 20 Q42 12 46 8" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
+      radish_cake: `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="10" y="24" width="21" height="22" rx="4" fill="#ffffff" stroke="#d97706" stroke-width="3" class="anim-sizzle"/><rect x="33" y="26" width="21" height="22" rx="4" fill="#fef08a" stroke="#d97706" stroke-width="3" class="anim-sizzle"/><path d="M20 18 Q18 11 22 7 M42 18 Q40 11 44 7" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
+      shaobing:    `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="14" width="40" height="13" rx="5" fill="#f97316" stroke="#7c2d12" stroke-width="2.5" class="anim-steam"/><rect x="8" y="30" width="48" height="10" rx="5" fill="#facc15" stroke="#b45309" stroke-width="2.5"/><rect x="12" y="42" width="40" height="13" rx="5" fill="#ea580c" stroke="#7c2d12" stroke-width="2.5"/></svg>`,
+      fantuan:     `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="36" rx="24" ry="16" fill="#475569" stroke="#0f172a" stroke-width="3" class="anim-sizzle"/><rect x="20" y="31" width="24" height="8" rx="4" fill="#facc15"/><circle cx="26" cy="35" r="3" fill="#dc2626"/><circle cx="38" cy="35" r="3" fill="#16a34a"/></svg>`,
+      xiaolongbao: `<svg viewBox="0 0 64 64" class="svg-anim"><ellipse cx="32" cy="45" rx="25" ry="10" fill="#d97706" stroke="#78350f" stroke-width="3"/><circle cx="23" cy="36" r="8.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/><circle cx="41" cy="36" r="8.5" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/><path d="M20 22 Q18 14 22 8 M32 20 Q30 12 34 6 M44 22 Q42 14 46 8" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" class="anim-steam"/></svg>`,
+      mantou_egg:  `<svg viewBox="0 0 64 64" class="svg-anim"><path d="M14 25 C14 14, 50 14, 50 25 Z" fill="#b45309" stroke="#78350f" stroke-width="2.5" class="anim-steam"/><ellipse cx="32" cy="34" rx="21" ry="6" fill="#ffffff" stroke="#eab308" stroke-width="2.5"/><circle cx="32" cy="34" r="4.5" fill="#facc15"/><rect x="14" y="42" width="36" height="11" rx="4" fill="#b45309" stroke="#78350f" stroke-width="2.5"/></svg>`,
+      hot_soy:     `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="6" width="40" height="10" rx="3" fill="#94a3b8" stroke="#475569" stroke-width="2"/><path d="M32 16 L32 34" stroke="#dc2626" stroke-width="4" class="anim-pour"/><path d="M20 32 L44 32 L41 56 L23 56 Z" fill="#fffbeb" stroke="#dc2626" stroke-width="3"/><path d="M24 27 Q22 22 25 19 M40 27 Q38 22 41 19" stroke="#dc2626" stroke-width="2.5" fill="none" class="anim-steam"/></svg>`,
+      iced_soy:    `<svg viewBox="0 0 64 64" class="svg-anim"><rect x="12" y="6" width="40" height="10" rx="3" fill="#94a3b8" stroke="#475569" stroke-width="2"/><path d="M32 16 L32 34" stroke="#2563eb" stroke-width="4" class="anim-pour"/><path d="M20 32 L44 32 L41 56 L23 56 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/><rect x="26" y="40" width="6" height="6" fill="#93c5fd"/><rect x="33" y="45" width="6" height="6" fill="#93c5fd"/></svg>`
+    };
+
+    const STAGE_LABELS = {
+      egg_pancake: '煎蛋餅皮中...',
+      radish_cake: '煎至金黃中...',
+      shaobing:    '燒餅夾油條...',
+      fantuan:     '捏製飯糰中...',
+      xiaolongbao: '大火蒸煮中...',
+      mantou_egg:  '蒸饅頭夾蛋...',
+      hot_soy:     '熱豆漿注杯...',
+      iced_soy:    '冰豆漿注杯...'
+    };
+
+    const MENU = {
+      egg_pancake: { id: 'egg_pancake', name: '原味蛋餅', station: 'griddle', duration: 4000, needYoutiao: false },
+      radish_cake: { id: 'radish_cake', name: '蘿蔔糕',   station: 'griddle', duration: 4000, needYoutiao: false },
+      shaobing:    { id: 'shaobing',    name: '燒餅油條', station: 'prep',    duration: 3000, needYoutiao: true },
+      fantuan:     { id: 'fantuan',     name: '傳統飯糰', station: 'prep',    duration: 3000, needYoutiao: true },
+      xiaolongbao: { id: 'xiaolongbao', name: '小籠包',   station: 'steamer', duration: 3500, needYoutiao: false },
+      mantou_egg:  { id: 'mantou_egg',  name: '饅頭夾蛋', station: 'steamer', duration: 3500, needYoutiao: false },
+      hot_soy:     { id: 'hot_soy',     name: '熱豆漿',   station: 'drink',   duration: 2000, needYoutiao: false },
+      iced_soy:    { id: 'iced_soy',    name: '冰豆漿',   station: 'drink',   duration: 2000, needYoutiao: false }
+    };
+
+    const FIXED_SCRIPT = [
+      { name: '1號・陳阿嬤', avatar: '👵', urgent: false, items: ['egg_pancake', 'hot_soy'] },
+      { name: '2號・王伯伯', avatar: '👴', urgent: false, items: ['egg_pancake', 'shaobing'] },
+      { name: '3號・外送急單', avatar: '🛵', urgent: true,  items: ['fantuan', 'iced_soy'] },
+      { name: '4號・林小姐', avatar: '👩', urgent: false, items: ['xiaolongbao', 'hot_soy'], changeTo: { idx: 1, newId: 'iced_soy' } },
+      { name: '5號・趕車學生', avatar: '🧑‍🎓', urgent: true, items: ['radish_cake', 'mantou_egg'] },
+      { name: '6號・張先生', avatar: '👨', urgent: false, items: ['shaobing', 'radish_cake'] }
+    ];
+
+    const AVATARS = ['👵', '👴', '👩', '👨', '🛵', '👩‍💼', '👨‍🔧', '🧑'];
+    const NAMES = ['陳阿嬤', '王伯伯', '林小姐', '張先生', '外送急件', '趕車學生', '工地大哥', '李媽媽'];
+
+    let assistMode = 'high';
+    let scenarioMode = 'L2';
+
+    const TARGET_CUSTOMERS = 6;
+    let completedCount = 0;
+    let totalGenerated = 0;
+    let isManualPaused = false;
+    let gameLoopId = null;
+    let lastTick = 0;
+    let praiseTimeout = null;
+
+    let youtiaoStock = 2;
+    let restockTimer = 0;
+    const RESTOCK_DURATION = 3000;
+
+    let seats = [null, null, null];
+    let seatCooldowns = [0, 0, 0];
+
+    let stations = {
+      griddle: [null, null],
+      prep: [null],
+      steamer: [null],
+      drink: [null]
+    };
+
+    let readyPlates = [null, null, null];
+    let selectedPlateIdx = null;
+    let metrics = {};
+
+    function resetMetrics() {
+      metrics = {
+        satisfiedCustomers: 0,
+        parallelGriddle: 0,
+        manualPauseCount: 0,
+        proactiveRestock: 0,
+        reactiveRestock: 0,
+        urgentTotal: 0,
+        urgentPriorityWins: 0,
+        errNoStock: 0,
+        errFullStation: 0,
+        errWrongCustomer: 0,
+        errDiscard: 0,
+        orderChangeDone: false
+      };
+    }
+
+    function initStaticIcons() {
+      Object.keys(DONE_SVGS).forEach(key => {
+        const el = document.getElementById(`icon-btn-${key}`);
+        if (el) {
+          el.innerHTML = DONE_SVGS[key].replace('<svg ', '<svg class="svg-btn" ');
+        }
+      });
+    }
+
+    function showPraiseToast(text) {
+      const toast = document.getElementById('praiseToast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      if (praiseTimeout) clearTimeout(praiseTimeout);
+      praiseTimeout = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function selectAssist(mode) {
+      assistMode = mode;
+      document.getElementById('assist-high').classList.toggle('selected', mode === 'high');
+      document.getElementById('assist-none').classList.toggle('selected', mode === 'none');
+    }
+
+    function selectScenario(scen) {
+      scenarioMode = scen;
+      ['L1', 'L2', 'L3', 'L4', 'FIXED'].forEach(s => {
+        const id = s === 'FIXED' ? 'scen-fixed' : `scen-${s.replace('L', '')}`;
+        document.getElementById(id).classList.toggle('selected', s === scen);
+      });
+    }
+
+    function openSetupModal() {
+      if (gameLoopId) cancelAnimationFrame(gameLoopId);
+      document.getElementById('endModal').classList.add('hidden');
+      document.getElementById('setupModal').classList.remove('hidden');
+    }
+
+    function toggleDetailPanel() {
+      document.getElementById('clinicalDetailPanel').classList.toggle('hidden');
+    }
+
+    function applyScenarioLocks() {
+      const hasPrep = scenarioMode !== 'L1';
+      const hasSteamer = ['L3', 'L4', 'FIXED'].includes(scenarioMode);
+
+      document.getElementById('card-prep').classList.toggle('locked', !hasPrep);
+      document.getElementById('card-steamer').classList.toggle('locked', !hasSteamer);
+
+      const scenLabel = {
+        L1: 'L1 基礎並行',
+        L2: 'L2 庫存預判',
+        L3: 'L3 急件優先',
+        L4: 'L4 綜合改單',
+        FIXED: '📋 固定觀察組'
+      }[scenarioMode];
+      const assistLabel = assistMode === 'high' ? '練習提示' : '零提示觀察';
+      document.getElementById('headerModeBadge').textContent = `${scenLabel}｜${assistLabel}`;
+    }
+
+    function startGame() {
+      document.getElementById('setupModal').classList.add('hidden');
+      document.getElementById('endModal').classList.add('hidden');
+      document.getElementById('clinicalDetailPanel').classList.add('hidden');
+      applyScenarioLocks();
+      resetMetrics();
+
+      completedCount = 0;
+      totalGenerated = 0;
+      youtiaoStock = 2;
+      restockTimer = 0;
+      seats = [null, null, null];
+      seatCooldowns = [0, 0, 0];
+      stations = { griddle: [null, null], prep: [null], steamer: [null], drink: [null] };
+      readyPlates = [null, null, null];
+      selectedPlateIdx = null;
+      isManualPaused = false;
+
+      updatePauseUI();
+      spawnCustomerToSeat(0);
+      spawnCustomerToSeat(1);
+      if (['L3', 'L4', 'FIXED'].includes(scenarioMode)) {
+        spawnCustomerToSeat(2);
+      }
+
+      showBanner('早市開張！看看上方客人點單，點擊下方廚房開始料理。');
+
+      lastTick = performance.now();
+      if (gameLoopId) cancelAnimationFrame(gameLoopId);
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    function spawnCustomerToSeat(seatIdx) {
+      if (totalGenerated >= TARGET_CUSTOMERS || seats[seatIdx] !== null) return;
+      totalGenerated++;
+      const idx = totalGenerated - 1;
+      const patienceScale = assistMode === 'high' ? 1.35 : 1.0;
+
+      if (scenarioMode === 'FIXED') {
+        const script = FIXED_SCRIPT[idx];
+        if (script.urgent) metrics.urgentTotal++;
+        const maxPatience = (script.urgent ? 28000 : 45000) * patienceScale;
+        seats[seatIdx] = {
+          id: totalGenerated,
+          seatIdx,
+          name: script.name,
+          avatar: script.avatar,
+          isUrgent: script.urgent,
+          note: '',
+          maxPatience,
+          patience: maxPatience,
+          timedOut: false,
+          changeRule: script.changeTo || null,
+          items: script.items.map(id => ({ ...MENU[id], done: false })),
+          isDone: false
+        };
+      } else {
+        let isUrgent = false;
+        if (['L3', 'L4'].includes(scenarioMode) && (totalGenerated === 2 || totalGenerated === 5)) {
+          isUrgent = true;
+          metrics.urgentTotal++;
+        }
+        const maxPatience = (isUrgent ? 28000 : 45000) * patienceScale;
+        const avatar = isUrgent ? '🛵' : AVATARS[idx % AVATARS.length];
+        const name = isUrgent ? `${totalGenerated}號・外送急單` : `${totalGenerated}號・${NAMES[idx % NAMES.length]}`;
+
+        let availableKeys = ['egg_pancake', 'radish_cake', 'hot_soy', 'iced_soy'];
+        if (scenarioMode !== 'L1') availableKeys.push('shaobing', 'fantuan');
+        if (['L3', 'L4'].includes(scenarioMode)) availableKeys.push('xiaolongbao', 'mantou_egg');
+
+        let items = [];
+        if (totalGenerated <= 2 && scenarioMode === 'L1') {
+          items.push({ ...MENU.egg_pancake, done: false });
+          items.push({ ...MENU[totalGenerated === 1 ? 'hot_soy' : 'iced_soy'], done: false });
+        } else if (totalGenerated <= 3 && scenarioMode !== 'L1') {
+          const p = totalGenerated % 2 === 1 ? MENU.shaobing : MENU.fantuan;
+          const o = totalGenerated % 2 === 1 ? MENU.hot_soy : MENU.egg_pancake;
+          items.push({ ...p, done: false }, { ...o, done: false });
+        } else {
+          const k1 = availableKeys[Math.floor(Math.random() * availableKeys.length)];
+          let k2 = availableKeys[Math.floor(Math.random() * availableKeys.length)];
+          if (k2 === k1) k2 = 'hot_soy';
+          items.push({ ...MENU[k1], done: false }, { ...MENU[k2], done: false });
+        }
+
+        seats[seatIdx] = {
+          id: totalGenerated,
+          seatIdx,
+          name,
+          avatar,
+          isUrgent,
+          note: '',
+          maxPatience,
+          patience: maxPatience,
+          timedOut: false,
+          changeRule: null,
+          items,
+          isDone: false
+        };
+      }
+
+      renderAll();
+    }
+
+    function checkAndTriggerOrderChange() {
+      if (metrics.orderChangeDone) return;
+      if (scenarioMode !== 'L4' && scenarioMode !== 'FIXED') return;
+
+      const activeList = seats.filter(Boolean);
+      if (scenarioMode === 'FIXED') {
+        const cust4 = activeList.find(c => c.id === 4 && !c.isDone && c.changeRule);
+        if (cust4) {
+          metrics.orderChangeDone = true;
+          const target = cust4.items[cust4.changeRule.idx];
+          const oldName = target.name;
+          const newMenu = MENU[cust4.changeRule.newId];
+          Object.assign(target, { ...newMenu, done: false });
+          cust4.note = `改單！${oldName} 改 ${newMenu.name}`;
+          showBanner(`🔔 ${cust4.name} 臨時改單：「${oldName}」改成「${newMenu.name}」！`, 'alert-mode');
+          renderAll();
+        }
+      } else if (scenarioMode === 'L4' && totalGenerated >= 3 && Math.random() < 0.4) {
+        const candidate = activeList.find(c => !c.isDone && c.items.some(i => !i.done));
+        if (candidate) {
+          metrics.orderChangeDone = true;
+          const target = candidate.items.find(i => !i.done);
+          const oldName = target.name;
+          const pool = Object.values(MENU).filter(m => m.id !== target.id);
+          const newMenu = pool[Math.floor(Math.random() * pool.length)];
+          Object.assign(target, { ...newMenu, done: false });
+          candidate.note = `改單！${oldName} 改 ${newMenu.name}`;
+          showBanner(`🔔 ${candidate.name} 臨時改單：「${oldName}」改成「${newMenu.name}」！`, 'alert-mode');
+          renderAll();
+        }
+      }
+    }
+
+    function toggleManualPause() {
+      isManualPaused = !isManualPaused;
+      if (isManualPaused) {
+        metrics.manualPauseCount++;
+        showPraiseToast('🧠 冷靜暫停思考！整理好步驟再出發');
+      }
+      updatePauseUI();
+    }
+
+    function updatePauseUI() {
+      const btn = document.getElementById('pauseBtn');
+      if (isManualPaused) {
+        btn.textContent = '▶ 繼續營業';
+        btn.classList.add('is-paused');
+        showBanner('⏸ 已暫停耐性倒數（思考整理中），想好順序後按「繼續營業」', 'paused-mode');
+      } else {
+        btn.textContent = '⏸ 暫停思考';
+        btn.classList.remove('is-paused');
+        showBanner('🔥 廚房營業中！點擊工作站製作餐點，做好後點白瓷盤端給客人');
+      }
+    }
+
+    function startCooking(menuId) {
+      if (isManualPaused) {
+        isManualPaused = false;
+        updatePauseUI();
+      }
+
+      const food = MENU[menuId];
+      if (!food) return;
+
+      if (food.needYoutiao && youtiaoStock <= 0) {
+        metrics.errNoStock++;
+        showBanner('💡 油條保溫櫃空囉！請先點「🔥 炸油條」補貨再製作吧！', 'alert-mode');
+        renderAll();
+        return;
+      }
+
+      const slots = stations[food.station];
+      const emptyIdx = slots.findIndex(s => s === null);
+      if (emptyIdx === -1) {
+        metrics.errFullStation++;
+        showBanner('💡 這個爐台正在料理中，先安排其他工作站或稍等一下喔！', 'alert-mode');
+        return;
+      }
+
+      const activeJobsCount = [...stations.griddle, ...stations.prep, ...stations.steamer, ...stations.drink].filter(Boolean).length;
+      const readyCount = readyPlates.filter(Boolean).length;
+      if (activeJobsCount + readyCount >= 5) {
+        metrics.errFullStation++;
+        showBanner('💡 出餐瓷盤快放滿囉，先把做好的餐點端給客人吧！', 'alert-mode');
+        return;
+      }
+
+      if (food.needYoutiao) {
+        youtiaoStock--;
+      }
+
+      slots[emptyIdx] = {
+        menuId: food.id,
+        name: food.name,
+        duration: food.duration,
+        elapsed: 0
+      };
+
+      if (food.station === 'griddle' && slots[0] !== null && slots[1] !== null) {
+        metrics.parallelGriddle++;
+        showPraiseToast('✨ 雙鍋齊下！善用煎台雙格太聰明了');
+        showBanner('✨ 雙格鐵板同時開煎，效率加倍！', 'praise-mode');
+      } else {
+        showBanner(`👨‍🍳 正在用心製作【${food.name}】...`);
+      }
+
+      checkAndTriggerOrderChange();
+      renderAll();
+    }
+
+    function startRestockYoutiao() {
+      if (scenarioMode === 'L1' || restockTimer > 0) return;
+      if (isManualPaused) {
+        isManualPaused = false;
+        updatePauseUI();
+      }
+
+      if (youtiaoStock > 0) {
+        metrics.proactiveRestock++;
+        showPraiseToast('👍 未雨綢繆！油條用完前就提早補炸');
+        showBanner('👍 提前補炸油條，完全不會卡單！', 'praise-mode');
+      } else {
+        metrics.reactiveRestock++;
+        showPraiseToast('👌 及時發現補炸油條！');
+        showBanner('🔥 油鍋起泡現炸油條中（需 3 秒），同時可以操作其他爐台！');
+      }
+
+      restockTimer = 1;
+      renderAll();
+    }
+
+    function handlePlateClick(idx) {
+      const food = readyPlates[idx];
+      if (!food) return;
+
+      if (selectedPlateIdx === idx) {
+        selectedPlateIdx = null;
+        document.getElementById('trashBtn').classList.remove('active-trash');
+        showBanner('已放下瓷盤。');
+      } else {
+        selectedPlateIdx = idx;
+        document.getElementById('trashBtn').classList.add('active-trash');
+        showBanner(`🍽️ 手上端著【${food.name}】，請點擊上方需要的客人出餐！`, 'holding-mode');
+      }
+      renderAll();
+    }
+
+    function handleDiscardSelectedPlate() {
+      if (selectedPlateIdx === null || !readyPlates[selectedPlateIdx]) {
+        showBanner('💡 請先點擊要清理的白瓷盤端起，再點報廢按鈕喔！');
+        return;
+      }
+      const discardedName = readyPlates[selectedPlateIdx].name;
+      readyPlates[selectedPlateIdx] = null;
+      selectedPlateIdx = null;
+      metrics.errDiscard++;
+      document.getElementById('trashBtn').classList.remove('active-trash');
+      showBanner(`🗑️ 已整理清空【${discardedName}】，空出了一個出餐瓷盤。`);
+      renderAll();
+    }
+
+    function handleSeatClick(seatIdx) {
+      const cust = seats[seatIdx];
+      if (!cust || cust.isDone) return;
+
+      if (selectedPlateIdx === null) {
+        showBanner('💡 請先點擊右側白瓷盤端起做好的餐點，再點客人出餐！');
+        return;
+      }
+
+      const foodOnPlate = readyPlates[selectedPlateIdx];
+      if (!foodOnPlate) return;
+
+      const matchItem = cust.items.find(i => !i.done && i.id === foodOnPlate.menuId);
+      if (!matchItem) {
+        metrics.errWrongCustomer++;
+        showBanner(`💡 ${cust.name} 沒有點【${foodOnPlate.name}】喔，請看看另外兩位客人的點單！`, 'alert-mode');
+        return;
+      }
+
+      matchItem.done = true;
+      readyPlates[selectedPlateIdx] = null;
+      selectedPlateIdx = null;
+      document.getElementById('trashBtn').classList.remove('active-trash');
+
+      if (cust.items.every(i => i.done)) {
+        cust.isDone = true;
+        completedCount++;
+
+        let praiseMsg = `🎉 ${cust.name} 餐點全齊，開心離開了！`;
+        if (!cust.timedOut) {
+          metrics.satisfiedCustomers++;
+          praiseMsg = `⭐ 獲得五星好評！${cust.name} 對出餐速度非常滿意！`;
+        }
+
+        if (cust.isUrgent) {
+          const otherWaitingNormals = seats.filter(c => c && !c.isDone && !c.isUrgent);
+          if (otherWaitingNormals.length > 0) {
+            metrics.urgentPriorityWins++;
+            showPraiseToast('⚡ 急件神救援！優先幫外送急單出餐');
+          }
+        }
+
+        showBanner(praiseMsg, 'praise-mode');
+
+        setTimeout(() => {
+          seats[seatIdx] = null;
+          if (completedCount >= TARGET_CUSTOMERS) {
+            endGame();
+          } else {
+            seatCooldowns[seatIdx] = 1200;
+            renderAll();
+          }
+        }, 700);
+      } else {
+        showBanner(`✅ 已將【${foodOnPlate.name}】遞給 ${cust.name}！`);
+      }
+
+      renderAll();
+    }
+
+    function showBanner(msg, cls = '') {
+      const el = document.getElementById('statusBanner');
+      el.className = 'banner';
+      if (cls) el.classList.add(cls);
+      el.textContent = msg;
+    }
+
+    function gameLoop(now) {
+      const dt = now - lastTick;
+      lastTick = now;
+
+      if (!isManualPaused) {
+        let needRender = false;
+
+        for (let i = 0; i < 3; i++) {
+          if (seats[i] === null && seatCooldowns[i] > 0) {
+            seatCooldowns[i] = Math.max(0, seatCooldowns[i] - dt);
+            if (seatCooldowns[i] === 0 && totalGenerated < TARGET_CUSTOMERS) {
+              spawnCustomerToSeat(i);
+              needRender = true;
+            }
+          }
+        }
+
+        seats.forEach(cust => {
+          if (cust && !cust.isDone && cust.patience > 0) {
+            cust.patience = Math.max(0, cust.patience - dt);
+            if (cust.patience === 0 && !cust.timedOut) {
+              cust.timedOut = true;
+              cust.note = cust.note || '久候提醒（照常完成即可）';
+              needRender = true;
+            }
+            const barEl = document.getElementById(`patience-${cust.id}`);
+            if (barEl) {
+              const ratio = cust.patience / cust.maxPatience;
+              barEl.style.width = `${ratio * 100}%`;
+              barEl.style.backgroundColor = ratio > 0.5 ? '#16a34a' : (ratio > 0.25 ? '#eab308' : '#dc2626');
+            }
+          }
+        });
+
+        if (restockTimer > 0) {
+          restockTimer += dt;
+          if (restockTimer >= RESTOCK_DURATION) {
+            restockTimer = 0;
+            youtiaoStock += 3;
+            showBanner('🥖 新鮮油條起鍋！保溫櫃補充了 3 根金黃油條。');
+            needRender = true;
+          } else {
+            document.getElementById('restockBtn').textContent = `🔥 炸油條 ${Math.ceil((RESTOCK_DURATION - restockTimer)/1000)}s`;
+          }
+        }
+
+        ['griddle', 'prep', 'steamer', 'drink'].forEach(stKey => {
+          stations[stKey].forEach((slot, idx) => {
+            if (slot) {
+              slot.elapsed += dt;
+              if (slot.elapsed >= slot.duration) {
+                const emptyPlate = readyPlates.findIndex(p => p === null);
+                if (emptyPlate !== -1) {
+                  readyPlates[emptyPlate] = { menuId: slot.menuId, name: slot.name };
+                  stations[stKey][idx] = null;
+                  needRender = true;
+                } else {
+                  slot.elapsed = slot.duration;
+                }
+              } else {
+                const slotEl = document.getElementById(`${stKey}-${idx}`);
+                if (slotEl) {
+                  const prog = slotEl.querySelector('.slot-progress');
+                  if (prog) prog.style.width = `${(slot.elapsed / slot.duration) * 100}%`;
+                }
+              }
+            }
+          });
+        });
+
+        if (needRender) renderAll();
+      }
+
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    function generatePositiveSummary() {
+      const smartTotal = metrics.proactiveRestock + metrics.urgentPriorityWins;
+      let praise = `太棒了！你順利服務完所有 ${completedCount} 位客人，並獲得了 ${metrics.satisfiedCustomers} 顆五星好評！`;
+
+      if (metrics.parallelGriddle >= 2) {
+        praise += `你非常擅長「雙鍋齊下」同時料理（共 ${metrics.parallelGriddle} 次），展現了很棒的組織與時間安排能力。`;
+      } else if (smartTotal >= 1) {
+        praise += `你在過程中展現了很好的預判與急件優先處理能力，能靈活分辨輕重緩急。`;
+      } else if (metrics.manualPauseCount >= 1) {
+        praise += `你在忙碌時懂得主動按「暫停思考」整理順序，是非常成熟的自我監控策略。`;
+      }
+
+      let tip = ' 下次營業時，可以試著多利用雙格煎台同時煎兩份餐點，或先瞄一眼保溫櫃裡的油條數量再動手，出餐會更從容順手喔！';
+      if (metrics.parallelGriddle >= 2 && metrics.errNoStock === 0 && metrics.errWrongCustomer === 0) {
+        tip = ' 整場操作幾乎零失誤、節奏非常流暢，已經具備金牌店長的實力，歡迎挑戰更高難度或零提示模式！';
+      }
+
+      return praise + tip;
+    }
+
+    function endGame() {
+      cancelAnimationFrame(gameLoopId);
+      const smartMoves = metrics.proactiveRestock + metrics.urgentPriorityWins;
+
+      let honor = '🌟 穩健經營好手';
+      if (metrics.satisfiedCustomers >= 5 && metrics.parallelGriddle >= 2) {
+        honor = '🏆 金牌效率神店長';
+      } else if (smartMoves >= 2) {
+        honor = '🎖️ 細心神算大掌櫃';
+      } else if (metrics.satisfiedCustomers >= 5) {
+        honor = '😊 親切五星好老闆';
+      }
+
+      document.getElementById('honorTitle').textContent = honor;
+      document.getElementById('reportSubtitle').textContent = `${document.getElementById('headerModeBadge').textContent}｜${new Date().toLocaleString('zh-TW')}`;
+      document.getElementById('kpiCompleted').textContent = `${completedCount} / ${TARGET_CUSTOMERS}`;
+      document.getElementById('kpiSatisfaction').textContent = `${metrics.satisfiedCustomers} / ${TARGET_CUSTOMERS}`;
+      document.getElementById('kpiParallel').textContent = `${metrics.parallelGriddle} 次`;
+      document.getElementById('kpiSmartMoves').textContent = `${smartMoves} 次`;
+
+      document.getElementById('detPause').textContent = `${metrics.manualPauseCount} 次`;
+      document.getElementById('detYoutiao').textContent = scenarioMode === 'L1'
+        ? '本關無油條機制'
+        : `提前主動補貨 ${metrics.proactiveRestock} 次 / 歸零後自行補貨 ${metrics.reactiveRestock} 次`;
+      document.getElementById('detUrgent').textContent = metrics.urgentTotal > 0
+        ? `優先完成 ${metrics.urgentPriorityWins} / ${metrics.urgentTotal} 組`
+        : '本關無急件';
+      document.getElementById('errNoStock').textContent = `${metrics.errNoStock} 次`;
+      document.getElementById('errFull').textContent = `${metrics.errFullStation} 次`;
+      document.getElementById('errWrongCust').textContent = `${metrics.errWrongCustomer} 次`;
+      document.getElementById('errDiscard').textContent = `${metrics.errDiscard} 次`;
+
+      document.getElementById('reportSummaryText').innerHTML = `<strong>💬 今日營業鼓勵與觀察：</strong><br>${generatePositiveSummary()}`;
+      document.getElementById('endModal').classList.remove('hidden');
+    }
+
+    function exportCSV() {
+      const headers = [
+        '日期時間', '情境模式', '提示層級', '店長稱號', '完成訂單數', '獲得好評數',
+        '雙格煎台並行次數', '主動暫停思考次數', '提前主動補貨次數', '歸零後自行補貨次數',
+        '急件優先完成數', '錯誤A_缺料點擊', '錯誤B_滿載點擊', '錯誤C_送錯客人', '錯誤D_報廢次數', '觀察摘要'
+      ];
+      const row = [
+        `"${new Date().toLocaleString('zh-TW')}"`,
+        `"${scenarioMode}"`,
+        `"${assistMode === 'high' ? '練習模式(高提示)' : '觀察挑戰(零提示)'}"`,
+        `"${document.getElementById('honorTitle').textContent}"`,
+        completedCount,
+        metrics.satisfiedCustomers,
+        metrics.parallelGriddle,
+        metrics.manualPauseCount,
+        metrics.proactiveRestock,
+        metrics.reactiveRestock,
+        metrics.urgentPriorityWins,
+        metrics.errNoStock,
+        metrics.errFullStation,
+        metrics.errWrongCustomer,
+        metrics.errDiscard,
+        `"${generatePositiveSummary()}"`
+      ];
+
+      const csvContent = '\uFEFF' + headers.join(',') + '\n' + row.join(',');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `晨光永和豆漿_認知表現紀錄_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // 渲染透明玻璃油條保溫櫃裡實體金黃油條根數
+    function renderYoutiaoCabinet() {
+      const box = document.getElementById('youtiaoVisualBox');
+      if (restockTimer > 0) {
+        box.innerHTML = `<span style="font-size:0.75rem; font-weight:900; color:#ea580c;" class="anim-sizzle">🫧油鍋翻炸中</span>`;
+        return;
+      }
+      if (youtiaoStock === 0) {
+        box.innerHTML = `<span style="font-size:0.74rem; font-weight:900; color:#dc2626;">空櫃(0根)</span>`;
+        return;
+      }
+      let sticksHtml = '';
+      const displayCount = Math.min(youtiaoStock, 5);
+      for (let i = 0; i < displayCount; i++) {
+        sticksHtml += `<svg viewBox="0 0 12 24" style="width:9px; height:18px;"><rect x="2" y="2" width="8" height="20" rx="4" fill="#f59e0b" stroke="#92400e" stroke-width="1.5"/></svg>`;
+      }
+      if (youtiaoStock > 5) {
+        sticksHtml += `<span style="font-size:0.72rem; font-weight:900; color:#92400e;">+${youtiaoStock - 5}</span>`;
+      }
+      box.innerHTML = sticksHtml;
+    }
+
+    function renderAll() {
+      document.getElementById('progressPill').textContent = `完成 ${completedCount}/${TARGET_CUSTOMERS}｜好評 ${metrics.satisfiedCustomers}`;
+
+      renderYoutiaoCabinet();
+      const restockBtn = document.getElementById('restockBtn');
+      restockBtn.disabled = restockTimer > 0;
+      restockBtn.classList.toggle('assist-flash', assistMode === 'high' && scenarioMode !== 'L1' && youtiaoStock === 0 && restockTimer === 0);
+      if (restockTimer === 0) {
+        restockBtn.textContent = '🔥 炸油條';
+      }
+
+      const heldFood = selectedPlateIdx !== null ? readyPlates[selectedPlateIdx] : null;
+
+      // 1. 渲染固定三座位
+      for (let i = 0; i < 3; i++) {
+        const seatEl = document.getElementById(`seat-${i}`);
+        const cust = seats[i];
+
+        if (!cust) {
+          seatEl.innerHTML = seatCooldowns[i] > 0 ? '🧹 整理桌面中...' : `櫃檯 ${i + 1} 號位`;
+          continue;
+        }
+
+        const hasMatch = heldFood && !cust.isDone && cust.items.some(item => !item.done && item.id === heldFood.menuId);
+        const showAssistGlow = assistMode === 'high' && hasMatch;
+
+        const ratio = cust.patience / cust.maxPatience;
+        const barColor = ratio > 0.5 ? '#16a34a' : (ratio > 0.25 ? '#eab308' : '#dc2626');
+
+        const itemsHtml = cust.items.map(item => {
+          const isAssistMatch = assistMode === 'high' && heldFood && !item.done && item.id === heldFood.menuId;
+          const smSvg = DONE_SVGS[item.id].replace('<svg ', '<svg class="svg-sm" ');
+          return `
+            <div class="need-pill ${item.done ? 'done' : ''} ${isAssistMatch ? 'assist-match' : ''}">
+              <div class="need-pill-left">
+                ${smSvg}
+                <span class="need-pill-name">${item.name}</span>
+              </div>
+              <span style="font-size:0.72rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
+            </div>
+          `;
+        }).join('');
+
+        seatEl.innerHTML = `
+          <div class="customer-card ${cust.isUrgent ? 'urgent' : ''} ${cust.isDone ? 'completed' : ''} ${showAssistGlow ? 'assist-target' : ''}" onclick="handleSeatClick(${i})">
+            <div>
+              <div class="cust-top">
+                <div class="cust-avatar">${cust.avatar}</div>
+                <div class="cust-meta">
+                  <div class="cust-name-row">
+                    <span class="cust-name">${cust.name}</span>
+                    ${cust.isUrgent && !cust.isDone ? '<span class="urgent-tag">🔥急件</span>' : ''}
+                  </div>
+                  <div class="patience-track">
+                    <div class="patience-fill" id="patience-${cust.id}" style="width:${ratio * 100}%; background:${barColor};"></div>
+                  </div>
+                </div>
+              </div>
+              ${cust.note ? `<div class="cust-note">${cust.note}</div>` : ''}
+            </div>
+            <div class="order-needs">${itemsHtml}</div>
+          </div>
+        `;
+      }
+
+      // 2. 渲染四大工作站製作中專屬動畫
+      renderSlot('griddle', 0, '鐵板左位');
+      renderSlot('griddle', 1, '鐵板右位');
+      renderSlot('prep', 0, '備料砧板空位');
+      renderSlot('steamer', 0, '竹蒸籠空位');
+      renderSlot('drink', 0, '不鏽鋼出杯台');
+
+      // 3. 渲染出餐白瓷盤（成品起鍋視覺）
+      const readyCount = readyPlates.filter(Boolean).length;
+      document.getElementById('plateStatusText').textContent = `${readyCount} / 3 盤`;
+
+      readyPlates.forEach((food, idx) => {
+        const el = document.getElementById(`plate-${idx}`);
+        if (!food) {
+          el.className = 'plate-card';
+          el.innerHTML = `空瓷盤 ${idx + 1}`;
+        } else {
+          const isSel = selectedPlateIdx === idx;
+          const doneSvg = DONE_SVGS[food.menuId].replace('<svg ', '<svg class="svg-anim" ');
+          el.className = `plate-card ready ${isSel ? 'selected' : ''}`;
+          el.innerHTML = `
+            ${doneSvg}
+            <div style="text-align:left;">
+              <div style="font-size:0.86rem; font-weight:900;">${food.name}</div>
+              <div style="font-size:0.7rem; color:${isSel ? '#2563eb' : '#16a34a'};">${isSel ? '端在手上' : '點我端起'}</div>
+            </div>
+          `;
+        }
+      });
+    }
+
+    function renderSlot(stKey, idx, emptyLabel) {
+      const el = document.getElementById(`${stKey}-${idx}`);
+      const job = stations[stKey][idx];
+      if (!job) {
+        el.className = `slot-unit slot-${stKey}`;
+        el.innerHTML = emptyLabel;
+      } else {
+        const pct = Math.min(100, (job.elapsed / job.duration) * 100);
+        el.className = `slot-unit slot-${stKey} busy`;
+        el.innerHTML = `
+          <div class="cooking-anim-wrap">
+            ${COOKING_SVGS[job.menuId]}
+            <span class="cooking-stage-text">${STAGE_LABELS[job.menuId]}</span>
+          </div>
+          <div class="slot-progress" style="width:${pct}%"></div>
+        `;
+      }
+    }
+
+    initStaticIcons();
+  </script>
+</body>
+</html>
