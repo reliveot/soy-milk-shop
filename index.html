@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>晨光永和豆漿 V2.2｜認知復健訓練系統</title>
+  <title>晨光永和豆漿 V3.0｜雙視角認知復健訓練系統</title>
   <style>
     :root {
       --paper: #f7f3ea;
@@ -35,7 +35,7 @@
       flex-direction: column;
     }
 
-    /* 頂部紅底白字招牌列 */
+    /* 頂部正宗永和豆漿紅底白字招牌列 */
     header {
       background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
       border-bottom: 3px solid #7f1d1d;
@@ -138,10 +138,10 @@
       background-color: #fffbeb;
       border-bottom: 1.5px solid #fde68a;
       color: #78350f;
-      padding: 3px 8px;
+      padding: 4px 8px;
       text-align: center;
       font-weight: 800;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       flex-shrink: 0;
       white-space: nowrap;
       overflow: hidden;
@@ -156,7 +156,7 @@
     /* 正向讚美浮動勳章 */
     .praise-toast {
       position: fixed;
-      top: 84px;
+      top: 86px;
       left: 50%;
       transform: translateX(-50%) translateY(-10px);
       background: linear-gradient(135deg, #d97706, #b45309);
@@ -179,29 +179,43 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* 全螢幕自適應主舞台 */
-    .scene-wrapper {
+    /* 主舞台容器 */
+    .stage-container {
       flex: 1;
-      max-width: 1160px;
+      max-width: 1020px;
       width: 100%;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
       min-height: 0;
       overflow: hidden;
+      position: relative;
       background: linear-gradient(180deg, #f9f1df 0%, #efe0c2 100%);
     }
 
-    /* 1. 店門口半身顧客區（固定 3 站位，手機直式為 2+1 錯落站位） */
-    .storefront-customers {
-      flex: 0.68;
+    /* 視角切換狀態 */
+    .view-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .view-panel.hidden-view {
+      display: none !important;
+    }
+
+    /* =====================================================================
+       【畫面 A】：店門口櫃檯與出餐區（寬敞顧客立繪 + 點餐氣泡 + 出餐白瓷盤 + 單點調味）
+       ===================================================================== */
+    .counter-customers-zone {
+      flex: 1.25;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      padding: 5px 8px 0 8px;
-      min-height: 110px;
-      max-height: 162px;
-      position: relative;
+      gap: 8px;
+      padding: 8px 10px 0 10px;
+      min-height: 0;
     }
 
     .customer-bay {
@@ -213,98 +227,38 @@
       min-width: 0;
       min-height: 0;
       cursor: pointer;
-      border-radius: 12px 12px 0 0;
+      border-radius: 16px 16px 0 0;
+      padding: 4px;
       transition: background-color 0.15s;
     }
 
     .customer-bay.empty-bay {
       justify-content: center;
       color: #9c7c54;
-      font-size: 0.76rem;
+      font-size: 0.85rem;
       font-weight: 800;
-      border: 1.5px dashed rgba(156, 124, 84, 0.35);
+      border: 2px dashed rgba(156, 124, 84, 0.35);
       border-bottom: none;
-      margin-top: 6px;
+      margin-top: 12px;
     }
 
     .customer-bay.assist-target {
-      background: radial-gradient(circle at bottom, rgba(59, 130, 246, 0.28), transparent 75%);
-      box-shadow: inset 0 -4px 12px rgba(37, 99, 235, 0.35);
+      background: radial-gradient(circle at bottom, rgba(59, 130, 246, 0.28), transparent 78%);
+      box-shadow: inset 0 -6px 14px rgba(37, 99, 235, 0.35);
     }
 
-    .cust-stage {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      gap: 5px;
-      padding: 0 3px;
-    }
-
-    .char-figure-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-shrink: 0;
-      width: 62px;
-    }
-
-    .char-img {
-      width: 60px;
-      height: 64px;
-      object-fit: contain;
-      display: block;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.16));
-    }
-
-    .char-patience-bar {
-      width: 52px;
-      height: 5px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 2px;
-      border: 1px solid rgba(255,255,255,0.7);
-    }
-
-    .char-patience-fill {
-      height: 100%;
-      width: 100%;
-      background: #16a34a;
-      transition: width 0.15s linear, background-color 0.3s;
-    }
-
-    .char-name-tag {
-      background: rgba(67, 57, 47, 0.88);
-      color: #fff;
-      font-size: 0.62rem;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 6px;
-      white-space: nowrap;
-      max-width: 70px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 1px;
-    }
-
-    .char-name-tag.urgent-tag {
-      background: #dc2626;
-    }
-
-    /* 白色立體點餐對話氣泡 */
+    /* 櫃檯區充裕空間：上方點餐氣泡 + 下方完整半身水彩人物 */
     .speech-bubble {
-      flex: 1;
+      width: 100%;
       background: #ffffff;
       border: 2px solid #d6caba;
-      border-radius: 12px;
-      padding: 4px 5px;
-      margin-bottom: 5px;
-      box-shadow: 0 3px 8px rgba(107,80,54,0.12);
+      border-radius: 14px;
+      padding: 6px 8px;
+      margin-bottom: 6px;
+      box-shadow: 0 4px 10px rgba(107,80,54,0.14);
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
       position: relative;
       min-width: 0;
     }
@@ -320,30 +274,22 @@
     }
 
     .bubble-note {
-      font-size: 0.62rem;
+      font-size: 0.7rem;
       font-weight: 900;
       color: #dc2626;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .bubble-items {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      text-align: center;
     }
 
     .order-chip {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 3px;
-      padding: 2px 4px;
-      border-radius: 6px;
+      gap: 4px;
+      padding: 4px 6px;
+      border-radius: 8px;
       background: #faf6ee;
-      border: 1px solid #e5dacb;
-      font-size: 0.74rem;
+      border: 1.5px solid #e5dacb;
+      font-size: 0.82rem;
       font-weight: 900;
       min-width: 0;
     }
@@ -351,13 +297,13 @@
     .order-chip-left {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       min-width: 0;
     }
 
     .order-chip-icon {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       object-fit: contain;
       flex-shrink: 0;
     }
@@ -368,12 +314,29 @@
       text-overflow: ellipsis;
     }
 
+    .mod-tag {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      font-size: 0.66rem;
+      padding: 1px 4px;
+      border-radius: 5px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .mod-tag.mod-cut {
+      background: #e0f2fe;
+      color: #0369a1;
+      border-color: #7dd3fc;
+    }
+
     .order-chip.done {
       background: #dcfce7;
       border-color: #86efac;
       color: #166534;
       text-decoration: line-through;
-      opacity: 0.75;
+      opacity: 0.72;
     }
 
     .order-chip.assist-match {
@@ -381,59 +344,93 @@
       border-color: #2563eb;
     }
 
-    /* 手機直式：2+1 錯落站位 */
-    @media (max-width: 760px) {
-      .storefront-customers {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1.25fr 0.85fr;
-        max-height: 168px;
-        min-height: 142px;
-        padding: 4px 6px 0 6px;
-        gap: 4px;
-      }
-      #bay-2 { grid-column: 1 / -1; }
-      #bay-2 .bubble-items { flex-direction: row; }
-      #bay-2 .order-chip { flex: 1; }
-      .char-figure-wrap { width: 50px; }
-      .char-img { width: 48px; height: 52px; }
-      .speech-bubble { margin-bottom: 4px; padding: 3px 4px; }
-      .order-chip { font-size: 0.72rem; }
+    .char-figure-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
     }
 
-    /* 2. 中層實體原木吧檯桌面（直接擺放 3 個立體白瓷盤 + 小廚餘桶） */
-    .wooden-bar-counter {
+    .char-name-tag {
+      background: rgba(67, 57, 47, 0.9);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+      margin-bottom: 3px;
+    }
+
+    .char-name-tag.urgent-tag {
+      background: #dc2626;
+    }
+
+    .char-patience-bar {
+      width: 72px;
+      height: 6px;
+      background: rgba(0,0,0,0.22);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3px;
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+
+    .char-patience-fill {
+      height: 100%;
+      width: 100%;
+      background: #16a34a;
+      transition: width 0.15s linear, background-color 0.3s;
+    }
+
+    .char-img {
+      width: 96px;
+      height: 102px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.16));
+    }
+
+    @media (max-width: 640px) {
+      .counter-customers-zone {
+        gap: 5px;
+        padding: 6px 6px 0 6px;
+      }
+      .char-img { width: 76px; height: 82px; }
+      .order-chip { font-size: 0.74rem; padding: 3px 4px; }
+      .order-chip-icon { width: 20px; height: 20px; }
+    }
+
+    /* 吧檯出餐桌面 + 單點客製調味區 + 進廚房切換大按鈕 */
+    .counter-desk-area {
       background: linear-gradient(180deg, #d69e66 0%, #b5763c 45%, #8c5220 100%);
-      border-top: 3px solid #f3d1a4;
-      border-bottom: 4px solid #4a280a;
-      padding: 5px 10px;
+      border-top: 3.5px solid #f3d1a4;
+      padding: 10px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
       gap: 8px;
       flex-shrink: 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.22);
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.18);
       z-index: 10;
     }
 
-    .bar-plates-row {
-      flex: 1;
+    .desk-top-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      min-width: 0;
     }
 
     .ceramic-plate {
-      height: 44px;
+      height: 58px;
       background: radial-gradient(ellipse at center, rgba(255,255,255,0.45) 55%, rgba(255,255,255,0.18) 100%);
-      border: 2px dashed rgba(255, 250, 240, 0.75);
-      border-radius: 24px;
+      border: 2px dashed rgba(255, 250, 240, 0.8);
+      border-radius: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      padding: 2px 8px;
-      font-size: 0.74rem;
+      gap: 6px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
       font-weight: 900;
       color: #fffbeb;
       text-shadow: 0 1px 1px rgba(0,0,0,0.35);
@@ -444,7 +441,7 @@
     .ceramic-plate.ready {
       background: radial-gradient(ellipse at center, #ffffff 62%, #e2e8f0 95%, #cbd5e1 100%);
       border: 2.5px solid #16a34a;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 3px #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       color: #0f172a;
       text-shadow: none;
       cursor: pointer;
@@ -453,30 +450,76 @@
     .ceramic-plate.selected {
       background: radial-gradient(ellipse at center, #eff6ff 60%, #bfdbfe 100%);
       border: 3px solid #2563eb;
-      transform: translateY(-4px) scale(1.04);
-      box-shadow: 0 8px 14px rgba(37, 99, 235, 0.55);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.55);
     }
 
     .plate-food-img {
-      width: 28px;
-      height: 28px;
+      width: 34px;
+      height: 34px;
       object-fit: contain;
       flex-shrink: 0;
     }
 
+    .plate-text-col {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
     .plate-food-name {
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       font-weight: 900;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .bin-icon-btn {
-      width: 44px;
-      height: 44px;
+    /* 吧檯單點客製調味區 + 進廚房切換按鈕 */
+    .desk-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .seasoning-group {
+      display: flex;
+      gap: 6px;
+      flex: 1.2;
+    }
+
+    .seasoning-group.locked-seasoning {
+      opacity: 0.25;
+      filter: grayscale(100%);
+      pointer-events: none;
+    }
+
+    .season-btn {
+      flex: 1;
+      height: 46px;
+      background: #fffbeb;
+      border: 2px solid #92400e;
+      border-bottom-width: 3px;
       border-radius: 12px;
-      background: linear-gradient(180deg, #f1f5f9, #cbd5e1);
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: #78350f;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 4px;
+      white-space: nowrap;
+    }
+
+    .season-btn:active { transform: scale(0.96); }
+
+    .bin-mini-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: #f1f5f9;
       border: 2px solid #475569;
       display: flex;
       flex-direction: column;
@@ -484,37 +527,112 @@
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.25);
     }
 
-    .bin-icon-btn.active-bin {
-      background: linear-gradient(180deg, #fee2e2, #fca5a5);
+    .bin-mini-btn.active-bin {
+      background: #fee2e2;
       border-color: #dc2626;
     }
 
-    /* 3. 下層開放式白鐵廚房操作檯 */
-    .stainless-kitchen {
-      flex: 1.48;
-      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
-      padding: 6px 8px;
+    .switch-view-btn {
+      flex: 1.3;
+      height: 48px;
+      background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      border: 2px solid #93c5fd;
+      border-bottom-width: 3.5px;
+      border-radius: 14px;
+      font-size: 0.94rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+      white-space: nowrap;
+      padding: 0 10px;
+    }
+
+    .switch-view-btn:active { transform: scale(0.97); }
+
+    /* =====================================================================
+       【畫面 B】：廚房料理操作區（寬敞大工作站 + 點單便利貼 + 回櫃檯大按鈕）
+       ===================================================================== */
+    .kitchen-sticky-bar {
+      background: #fef9c3;
+      border-bottom: 2px dashed #eab308;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .sticky-notes-list {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      flex: 1;
+      align-items: center;
+    }
+
+    .sticky-note-card {
+      background: #fffbeb;
+      border: 1.5px solid #f59e0b;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      color: #78350f;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .sticky-note-card.urgent-note {
+      background: #fee2e2;
+      border-color: #dc2626;
+      color: #991b1b;
+    }
+
+    .memory-blind-hint {
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: #92400e;
+    }
+
+    .stainless-kitchen-full {
+      flex: 1;
+      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+      padding: 8px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
-      gap: 6px;
+      gap: 8px;
       min-height: 0;
     }
 
+    @media (max-width: 640px) {
+      .stainless-kitchen-full {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 6px;
+        padding: 6px;
+      }
+    }
+
     .work-zone {
-      background: rgba(255, 255, 255, 0.94);
-      border: 2px solid #64748b;
-      border-radius: 12px;
-      padding: 5px 7px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 2.5px solid #64748b;
+      border-radius: 14px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       min-height: 0;
       position: relative;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
       transition: opacity 0.25s, filter 0.25s;
     }
 
@@ -523,7 +641,7 @@
     .zone-steamer { border-color: #16a34a; }
     .zone-drink   { border-color: #2563eb; }
 
-    /* V2.1 強化未解鎖工作站：更淡灰階鎖定感，明確表示不可點擊 */
+    /* 強化未解鎖工作站灰階鎖定感 */
     .work-zone.locked {
       opacity: 0.22 !important;
       filter: grayscale(100%) !important;
@@ -537,17 +655,15 @@
       inset: 0;
       align-items: center;
       justify-content: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 900;
       color: #1e293b;
-      background: rgba(255,255,255,0.45);
-      border-radius: 10px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 12px;
       z-index: 5;
     }
 
-    .work-zone.locked .lock-badge {
-      display: flex;
-    }
+    .work-zone.locked .lock-badge { display: flex; }
 
     .zone-main-row {
       display: flex;
@@ -568,32 +684,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.76rem;
+      font-size: 0.8rem;
       font-weight: 900;
       color: #0f172a;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
       flex-shrink: 0;
-      white-space: nowrap;
     }
 
     .appliance-slots {
       display: flex;
-      gap: 5px;
+      gap: 6px;
       flex: 1;
-      min-height: 36px;
-      margin-bottom: 4px;
+      min-height: 40px;
+      margin-bottom: 5px;
     }
 
     .app-slot {
       flex: 1;
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2px 4px;
+      padding: 2px 6px;
       position: relative;
       overflow: hidden;
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 800;
     }
 
@@ -611,13 +726,13 @@
     .cook-anim-stage {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       min-width: 0;
     }
 
     .cook-anim-img {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       object-fit: contain;
       flex-shrink: 0;
       animation: panSizzle 0.55s infinite ease-in-out;
@@ -630,50 +745,52 @@
     }
 
     .cook-stage-label {
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       font-weight: 900;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .cook-bar {
       position: absolute;
       bottom: 0;
       left: 0;
-      height: 4px;
+      height: 5px;
       background: linear-gradient(90deg, #f59e0b, #ef4444);
       width: 0%;
     }
 
-    /* 食材操作大按鈕 */
     .zone-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
-      height: 42px;
+      height: 46px;
       flex-shrink: 0;
     }
 
     .ingredient-btn {
       background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
       border: 2px solid #334155;
-      border-bottom-width: 3px;
-      border-radius: 9px;
-      padding: 0 5px;
+      border-bottom-width: 3.5px;
+      border-radius: 10px;
+      padding: 0 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
       cursor: pointer;
       min-width: 0;
     }
 
     .ingredient-btn:active:not(:disabled) { transform: scale(0.95); }
+    .ingredient-btn.locked-item {
+      opacity: 0.25;
+      filter: grayscale(100%);
+      pointer-events: none;
+    }
 
     .ing-icon {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       object-fit: contain;
       flex-shrink: 0;
     }
@@ -687,23 +804,23 @@
     }
 
     .ing-name {
-      font-size: 0.82rem;
+      font-size: 0.86rem;
       font-weight: 900;
       color: #0f172a;
       white-space: nowrap;
     }
 
     .ing-sub {
-      font-size: 0.62rem;
+      font-size: 0.64rem;
       font-weight: 900;
       color: #c2410c;
       white-space: nowrap;
     }
 
-    /* 緊貼在「備料台」正下方的油條保溫櫃與現炸區 */
+    /* 備料台正下方的油條保溫櫃 */
     .youtiao-tray-row {
-      margin-top: 4px;
-      padding-top: 4px;
+      margin-top: 5px;
+      padding-top: 5px;
       border-top: 1.5px dashed #f59e0b;
       display: flex;
       align-items: center;
@@ -712,15 +829,21 @@
       flex-shrink: 0;
     }
 
+    .youtiao-tray-row.locked-youtiao {
+      opacity: 0.25;
+      filter: grayscale(100%);
+      pointer-events: none;
+    }
+
     .youtiao-glass-box {
       display: flex;
       align-items: center;
       gap: 4px;
       background: #fef3c7;
       border: 1.5px solid #f59e0b;
-      border-radius: 7px;
-      padding: 2px 6px;
-      height: 24px;
+      border-radius: 8px;
+      padding: 2px 8px;
+      height: 26px;
       flex: 1;
       min-width: 0;
     }
@@ -731,8 +854,8 @@
       border: 1.5px solid #9a3412;
       border-bottom-width: 2.5px;
       border-radius: 8px;
-      padding: 3px 9px;
-      font-size: 0.74rem;
+      padding: 4px 10px;
+      font-size: 0.76rem;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
@@ -741,28 +864,51 @@
 
     .fry-youtiao-btn:disabled { background: #94a3b8; border-color: #64748b; cursor: default; }
 
-    /* 手機直式（<= 760px）：白鐵廚房改為四層橫向工作帶 */
-    @media (max-width: 760px) {
-      .stainless-kitchen {
-        grid-template-columns: 1fr;
-        grid-template-rows: 0.92fr 1.35fr 0.92fr 0.92fr;
-        gap: 4px;
-        padding: 5px 6px;
-      }
-
-      .work-zone { padding: 3px 6px; }
+    @media (max-width: 640px) {
       .zone-main-row { flex-direction: row; align-items: stretch; gap: 6px; }
       .zone-appliance-box { flex: 0.85; justify-content: space-between; }
-      .zone-title-bar { margin-bottom: 1px; font-size: 0.7rem; }
-      .appliance-slots { margin-bottom: 0; min-height: 0; gap: 4px; }
-      .app-slot { font-size: 0.66rem; padding: 1px 2px; }
-      .zone-buttons { flex: 1.35; height: auto; gap: 5px; }
-      .ingredient-btn { padding: 0 4px; gap: 4px; }
-      .ing-name { font-size: 0.76rem; }
-      .ing-sub { font-size: 0.58rem; }
-      .ing-icon { width: 20px; height: 20px; }
-      .cook-anim-img { width: 22px; height: 22px; }
-      .cook-stage-label { font-size: 0.62rem; }
+      .appliance-slots { margin-bottom: 0; }
+      .zone-buttons { flex: 1.35; height: auto; }
+      .ing-name { font-size: 0.8rem; }
+    }
+
+    .kitchen-bottom-bar {
+      background: #334155;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .back-counter-btn {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+      color: #ffffff;
+      border: 2px solid #86efac;
+      border-bottom-width: 3.5px;
+      border-radius: 14px;
+      font-size: 0.98rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.35);
+    }
+
+    .back-counter-btn:active { transform: scale(0.97); }
+
+    .plate-badge-pill {
+      background: #fef08a;
+      color: #713f12;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 900;
     }
 
     /* =====================================================================
@@ -784,7 +930,7 @@
       background: var(--white);
       border: 1.5px solid var(--line);
       border-radius: 22px;
-      max-width: 560px;
+      max-width: 580px;
       width: 100%;
       max-height: 92dvh;
       overflow-y: auto;
@@ -826,7 +972,7 @@
       background: #eef2e6;
     }
 
-    .opt-title { font-size: 0.82rem; font-weight: 900; color: var(--wood-dark); }
+    .opt-title { font-size: 0.8rem; font-weight: 900; color: var(--wood-dark); }
     .opt-desc { font-size: 0.68rem; color: #7f7163; margin-top: 2px; line-height: 1.3; }
 
     .btn-primary {
@@ -897,17 +1043,8 @@
       transform: translateY(-1px);
     }
 
-    .ecard-item-title {
-      font-size: 0.8rem;
-      font-weight: 900;
-      color: var(--wood);
-    }
-
-    .ecard-item-sub {
-      font-size: 0.68rem;
-      color: #7f7163;
-      margin-top: 2px;
-    }
+    .ecard-item-title { font-size: 0.8rem; font-weight: 900; color: var(--wood); }
+    .ecard-item-sub { font-size: 0.68rem; color: #7f7163; margin-top: 2px; }
 
     .ecard-contact-bar {
       margin-top: 8px;
@@ -921,30 +1058,10 @@
       gap: 8px;
     }
 
-    .ecard-contact-links {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .ecard-pill-btn {
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 0.74rem;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .ecard-pill-line {
-      background: var(--olive);
-      color: #fff;
-    }
-
-    .ecard-pill-card {
-      background: #fff;
-      color: var(--wood);
-      border: 1px solid #cbb9a4;
-    }
+    .ecard-contact-links { display: flex; gap: 6px; flex-shrink: 0; }
+    .ecard-pill-btn { padding: 6px 10px; border-radius: 10px; font-size: 0.74rem; font-weight: 800; text-decoration: none; }
+    .ecard-pill-line { background: var(--olive); color: #fff; }
+    .ecard-pill-card { background: #fff; color: var(--wood); border: 1px solid #cbb9a4; }
 
     /* 結算報表樣式 */
     .honor-badge-box {
@@ -1012,7 +1129,7 @@
   <header>
     <div class="header-left">
       <div class="brand-sign">晨光永和豆漿</div>
-      <div class="mode-badge" id="headerModeBadge">L0 單品入門｜練習提示</div>
+      <div class="mode-badge" id="headerModeBadge">L0 小餐車試營運｜練習提示</div>
     </div>
     <div class="header-right">
       <div class="stat-pill" id="progressPill">完成 0/6｜好評 0</div>
@@ -1021,192 +1138,227 @@
     </div>
   </header>
 
-  <div class="banner" id="statusBanner">早市開張！看看吧檯前客人的對話氣泡，點擊下方廚房開始料理。</div>
+  <div class="banner" id="statusBanner">早市開張！先看清楚客人的點單，再點下方【進廚房備餐】製作喔。</div>
   <div class="praise-toast" id="praiseToast">✨ 雙鍋齊下！時間管理大師</div>
 
-  <!-- 一鏡到底全螢幕自適應豆漿店場景 -->
-  <div class="scene-wrapper">
-    <!-- 1. 店門口半身顧客區（固定 3 站位，手機直式為 2+1 錯落站位） -->
-    <section class="storefront-customers">
-      <div class="customer-bay empty-bay" id="bay-0">1 號吧檯位</div>
-      <div class="customer-bay empty-bay" id="bay-1">2 號吧檯位</div>
-      <div class="customer-bay empty-bay" id="bay-2">3 號吧檯位</div>
-    </section>
+  <div class="stage-container">
+    <!-- =================================================================
+         【畫面 A】：店門口櫃檯與出餐區
+         ================================================================= -->
+    <div class="view-panel" id="view-counter">
+      <section class="counter-customers-zone">
+        <div class="customer-bay empty-bay" id="bay-0">1 號吧檯位</div>
+        <div class="customer-bay empty-bay" id="bay-1">2 號吧檯位</div>
+        <div class="customer-bay empty-bay" id="bay-2">3 號吧檯位</div>
+      </section>
 
-    <!-- 2. 實體原木吧檯桌面（直接擺放 3 個立體白瓷盤 + 小廚餘桶） -->
-    <section class="wooden-bar-counter">
-      <div class="bar-plates-row">
-        <div class="ceramic-plate" id="plate-0" onclick="handlePlateClick(0)">空瓷盤 1</div>
-        <div class="ceramic-plate" id="plate-1" onclick="handlePlateClick(1)">空瓷盤 2</div>
-        <div class="ceramic-plate" id="plate-2" onclick="handlePlateClick(2)">空瓷盤 3</div>
-      </div>
-      <button class="bin-icon-btn" id="trashBtn" onclick="handleDiscardSelectedPlate()" title="報廢手上餐點">
-        <span style="font-size:1.1rem; line-height:1;">🗑️</span>
-        <span style="font-size:0.6rem; font-weight:900; color:#334155;">報廢</span>
-      </button>
-    </section>
-
-    <!-- 3. 開放式白鐵廚房操作檯 -->
-    <section class="stainless-kitchen">
-      <!-- 1. 雙格鐵板煎台 -->
-      <div class="work-zone zone-griddle">
-        <div class="zone-main-row">
-          <div class="zone-appliance-box">
-            <div class="zone-title-bar">
-              <span>🔥 雙格黑鐵煎台</span>
-              <span style="color:#dc2626;">4秒</span>
-            </div>
-            <div class="appliance-slots">
-              <div class="app-slot app-griddle" id="griddle-0">左煎板</div>
-              <div class="app-slot app-griddle" id="griddle-1">右煎板</div>
-            </div>
-          </div>
-          <div class="zone-buttons">
-            <button class="ingredient-btn" onclick="startCooking('egg_pancake')">
-              <img class="ing-icon" id="img-btn-egg_pancake" alt="原味蛋餅" />
-              <div class="ing-text-wrap"><span class="ing-name">原味蛋餅</span></div>
-            </button>
-            <button class="ingredient-btn" onclick="startCooking('radish_cake')">
-              <img class="ing-icon" id="img-btn-radish_cake" alt="蘿蔔糕" />
-              <div class="ing-text-wrap"><span class="ing-name">蘿蔔糕</span></div>
-            </button>
-          </div>
+      <section class="counter-desk-area">
+        <!-- 3 個吧檯白瓷盤 -->
+        <div class="desk-top-row">
+          <div class="ceramic-plate" id="plate-0" onclick="handlePlateClick(0)">空瓷盤 1</div>
+          <div class="ceramic-plate" id="plate-1" onclick="handlePlateClick(1)">空瓷盤 2</div>
+          <div class="ceramic-plate" id="plate-2" onclick="handlePlateClick(2)">空瓷盤 3</div>
         </div>
+
+        <!-- 吧檯單點客製調味區 + 廚餘桶 + 進廚房切換按鈕 -->
+        <div class="desk-controls-row">
+          <div class="seasoning-group" id="seasoningGroup">
+            <button class="season-btn" onclick="applyModifier('spicy')">🌶️ 加辣／刷醬</button>
+            <button class="season-btn" onclick="applyModifier('cut')">🔪 切半／去冰</button>
+          </div>
+          <button class="bin-mini-btn" id="trashBtn" onclick="handleDiscardSelectedPlate()" title="報廢手上餐點">
+            <span style="font-size:1rem; line-height:1;">🗑️</span>
+            <span style="font-size:0.58rem; font-weight:900; color:#334155;">報廢</span>
+          </button>
+          <button class="switch-view-btn" onclick="switchView('kitchen')">
+            <span>👨‍🍳 進廚房備餐</span>
+            <span class="plate-badge-pill" id="cookingCountBadge" style="display:none;">料理中 1</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- =================================================================
+         【畫面 B】：廚房料理操作區
+         ================================================================= -->
+    <div class="view-panel hidden-view" id="view-kitchen">
+      <!-- 頂部點單便利貼（練習模式顯示；挑戰模式隱藏以訓練工作記憶） -->
+      <div class="kitchen-sticky-bar">
+        <span style="font-size:0.74rem; font-weight:900; color:#92400e; flex-shrink:0;">📝 櫃檯點單：</span>
+        <div class="sticky-notes-list" id="stickyNotesList"></div>
       </div>
 
-      <!-- 2. 備料台（按鈕加註 (需油條)，油條保溫櫃緊貼正下方） -->
-      <div class="work-zone zone-prep" id="card-prep">
-        <div class="lock-badge">🔒 進階關卡解鎖</div>
-        <div class="zone-main-row">
-          <div class="zone-appliance-box">
-            <div class="zone-title-bar">
-              <span>🍙 備料台</span>
-              <span style="color:#d97706;">3秒</span>
-            </div>
-            <div class="appliance-slots">
-              <div class="app-slot app-prep" id="prep-0">木質備料板</div>
-            </div>
-          </div>
-          <div class="zone-buttons">
-            <button class="ingredient-btn" onclick="startCooking('shaobing')">
-              <img class="ing-icon" id="img-btn-shaobing" alt="燒餅油條" />
-              <div class="ing-text-wrap">
-                <span class="ing-name">燒餅油條</span>
-                <span class="ing-sub">(需油條)</span>
+      <!-- 開放式白鐵廚房操作檯 -->
+      <section class="stainless-kitchen-full">
+        <!-- 1. 雙格鐵板煎台 -->
+        <div class="work-zone zone-griddle" id="card-griddle">
+          <div class="lock-badge">🔒 實體店面解鎖</div>
+          <div class="zone-main-row">
+            <div class="zone-appliance-box">
+              <div class="zone-title-bar">
+                <span>🔥 雙格黑鐵煎台</span>
+                <span style="color:#dc2626;">4秒</span>
               </div>
-            </button>
-            <button class="ingredient-btn" onclick="startCooking('fantuan')">
-              <img class="ing-icon" id="img-btn-fantuan" alt="傳統飯糰" />
-              <div class="ing-text-wrap">
-                <span class="ing-name">傳統飯糰</span>
-                <span class="ing-sub">(需油條)</span>
+              <div class="appliance-slots">
+                <div class="app-slot app-griddle" id="griddle-0">左煎板</div>
+                <div class="app-slot app-griddle" id="griddle-1">右煎板</div>
               </div>
-            </button>
+            </div>
+            <div class="zone-buttons">
+              <button class="ingredient-btn" onclick="startCooking('egg_pancake')">
+                <img class="ing-icon" id="img-btn-egg_pancake" alt="原味蛋餅" />
+                <div class="ing-text-wrap"><span class="ing-name">原味蛋餅</span></div>
+              </button>
+              <button class="ingredient-btn" onclick="startCooking('radish_cake')">
+                <img class="ing-icon" id="img-btn-radish_cake" alt="蘿蔔糕" />
+                <div class="ing-text-wrap"><span class="ing-name">蘿蔔糕</span></div>
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="youtiao-tray-row" id="youtiaoStationBox">
-          <div class="youtiao-glass-box" id="youtiaoVisualBox"></div>
-          <button class="fry-youtiao-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條 (+3根)</button>
-        </div>
-      </div>
+        <!-- 2. 備料台（含紫米飯糰切換與油條保溫櫃） -->
+        <div class="work-zone zone-prep" id="card-prep">
+          <div class="lock-badge">🔒 進階關卡解鎖</div>
+          <div class="zone-main-row">
+            <div class="zone-appliance-box">
+              <div class="zone-title-bar">
+                <span>🍙 備料台</span>
+                <span style="color:#d97706;">3秒</span>
+              </div>
+              <div class="appliance-slots">
+                <div class="app-slot app-prep" id="prep-0">木質備料板</div>
+              </div>
+            </div>
+            <div class="zone-buttons">
+              <button class="ingredient-btn" id="btn-prep-left" onclick="startCooking('shaobing')">
+                <img class="ing-icon" id="img-btn-shaobing" alt="燒餅油條" />
+                <div class="ing-text-wrap">
+                  <span class="ing-name" id="lbl-prep-left">燒餅油條</span>
+                  <span class="ing-sub" id="sub-prep-left">(需油條)</span>
+                </div>
+              </button>
+              <button class="ingredient-btn" id="btn-prep-right" onclick="startCooking('fantuan')">
+                <img class="ing-icon" id="img-btn-fantuan" alt="傳統飯糰" />
+                <div class="ing-text-wrap">
+                  <span class="ing-name" id="lbl-prep-right">傳統飯糰</span>
+                  <span class="ing-sub" id="sub-prep-right">(需油條)</span>
+                </div>
+              </button>
+            </div>
+          </div>
 
-      <!-- 3. 傳統竹製蒸籠 -->
-      <div class="work-zone zone-steamer" id="card-steamer">
-        <div class="lock-badge">🔒 進階關卡解鎖</div>
-        <div class="zone-main-row">
-          <div class="zone-appliance-box">
-            <div class="zone-title-bar">
-              <span>♨️ 竹製蒸籠</span>
-              <span style="color:#16a34a;">3.5秒</span>
-            </div>
-            <div class="appliance-slots">
-              <div class="app-slot app-steamer" id="steamer-0">蒸籠空位</div>
-            </div>
-          </div>
-          <div class="zone-buttons">
-            <button class="ingredient-btn" onclick="startCooking('xiaolongbao')">
-              <img class="ing-icon" id="img-btn-xiaolongbao" alt="小籠包" />
-              <div class="ing-text-wrap"><span class="ing-name">小籠包</span></div>
-            </button>
-            <button class="ingredient-btn" onclick="startCooking('mantou_egg')">
-              <img class="ing-icon" id="img-btn-mantou_egg" alt="饅頭夾蛋" />
-              <div class="ing-text-wrap"><span class="ing-name">饅頭夾蛋</span></div>
-            </button>
+          <div class="youtiao-tray-row" id="youtiaoStationBox">
+            <div class="youtiao-glass-box" id="youtiaoVisualBox"></div>
+            <button class="fry-youtiao-btn" id="restockBtn" onclick="startRestockYoutiao()">🔥 炸油條 (+3根)</button>
           </div>
         </div>
-      </div>
 
-      <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
-      <div class="work-zone zone-drink">
-        <div class="zone-main-row">
-          <div class="zone-appliance-box">
-            <div class="zone-title-bar">
-              <span>🥤 豆漿機</span>
-              <span style="color:#2563eb;">2秒</span>
+        <!-- 3. 傳統竹製蒸籠 -->
+        <div class="work-zone zone-steamer" id="card-steamer">
+          <div class="lock-badge">🔒 旗艦店解鎖</div>
+          <div class="zone-main-row">
+            <div class="zone-appliance-box">
+              <div class="zone-title-bar">
+                <span>♨️ 竹製蒸籠</span>
+                <span style="color:#16a34a;">3.5秒</span>
+              </div>
+              <div class="appliance-slots">
+                <div class="app-slot app-steamer" id="steamer-0">蒸籠空位</div>
+              </div>
             </div>
-            <div class="appliance-slots">
-              <div class="app-slot app-drink" id="drink-0">雙龍頭出杯口</div>
+            <div class="zone-buttons">
+              <button class="ingredient-btn" onclick="startCooking('xiaolongbao')">
+                <img class="ing-icon" id="img-btn-xiaolongbao" alt="小籠包" />
+                <div class="ing-text-wrap"><span class="ing-name">小籠包</span></div>
+              </button>
+              <button class="ingredient-btn" onclick="startCooking('mantou_egg')">
+                <img class="ing-icon" id="img-btn-mantou_egg" alt="饅頭夾蛋" />
+                <div class="ing-text-wrap"><span class="ing-name">饅頭夾蛋</span></div>
+              </button>
             </div>
-          </div>
-          <div class="zone-buttons">
-            <button class="ingredient-btn" onclick="startCooking('hot_soy')">
-              <img class="ing-icon" id="img-btn-hot_soy" alt="熱豆漿" />
-              <div class="ing-text-wrap"><span class="ing-name">熱豆漿</span></div>
-            </button>
-            <button class="ingredient-btn" onclick="startCooking('iced_soy')">
-              <img class="ing-icon" id="img-btn-iced_soy" alt="冰豆漿" />
-              <div class="ing-text-wrap"><span class="ing-name">冰豆漿</span></div>
-            </button>
           </div>
         </div>
+
+        <!-- 4. 不鏽鋼雙龍頭豆漿機 -->
+        <div class="work-zone zone-drink" id="card-drink">
+          <div class="zone-main-row">
+            <div class="zone-appliance-box">
+              <div class="zone-title-bar">
+                <span>🥤 豆漿機</span>
+                <span style="color:#2563eb;">2秒</span>
+              </div>
+              <div class="appliance-slots">
+                <div class="app-slot app-drink" id="drink-0">雙龍頭出杯口</div>
+              </div>
+            </div>
+            <div class="zone-buttons">
+              <button class="ingredient-btn" id="btn-hot-soy" onclick="startCooking('hot_soy')">
+                <img class="ing-icon" id="img-btn-hot_soy" alt="熱豆漿" />
+                <div class="ing-text-wrap"><span class="ing-name">熱豆漿</span></div>
+              </button>
+              <button class="ingredient-btn" id="btn-iced-soy" onclick="startCooking('iced_soy')">
+                <img class="ing-icon" id="img-btn-iced_soy" alt="冰豆漿" />
+                <div class="ing-text-wrap"><span class="ing-name">冰豆漿</span></div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 底部回櫃檯出餐大按鈕 -->
+      <div class="kitchen-bottom-bar">
+        <button class="back-counter-btn" onclick="switchView('counter')">
+          <span>🛎️ 回櫃檯出餐</span>
+          <span class="plate-badge-pill" id="readyPlateBadge">吧檯已備好 0/3 盤</span>
+        </button>
       </div>
-    </section>
+    </div>
   </div>
 
-  <!-- 設定彈窗（含 L0 單品入門 ＋ 底部電子名片風格復健延伸卡片） -->
+  <!-- 設定彈窗（小餐車 -> 實體店面故事分級 ＋ 底部電子名片風格復健延伸卡片） -->
   <div class="modal-overlay" id="setupModal">
     <div class="modal-card">
       <div class="modal-title">🌅 晨光永和豆漿店｜認知訓練與表現觀察</div>
 
       <div class="config-section">
-        <span class="config-label">1. 選擇遊戲內提示程度（鷹架輔助）：</span>
+        <span class="config-label">1. 選擇記憶提示輔助（鷹架層級）：</span>
         <div class="option-row">
           <button class="opt-btn selected" id="assist-high" onclick="selectAssist('high')">
-            <div class="opt-title">💡 練習模式（高提示）</div>
-            <div class="opt-desc">端盤時對應客人發藍光提示、耐性寬鬆、缺油條提醒。</div>
+            <div class="opt-title">💡 練習模式（附便利貼）</div>
+            <div class="opt-desc">廚房上方顯示點單便利貼、遞餐發藍光指引、耐性寬鬆。</div>
           </button>
           <button class="opt-btn" id="assist-none" onclick="selectAssist('none')">
-            <div class="opt-title">🧠 觀察／挑戰（零提示）</div>
-            <div class="opt-desc">取消發光指引，需自行看單配對與監控庫存。</div>
+            <div class="opt-title">🧠 記憶挑戰（無小抄）</div>
+            <div class="opt-desc">進廚房不顯示點單便條，考驗短期記憶保持與主動確認。</div>
           </button>
         </div>
       </div>
 
       <div class="config-section">
-        <span class="config-label">2. 選擇營業情境與難度（每局 6 組客人）：</span>
+        <span class="config-label">2. 選擇營業階段與難度（每局 6 組客人）：</span>
         <div class="option-grid-3" style="margin-bottom:6px;">
           <button class="opt-btn selected" id="scen-0" onclick="selectScenario('L0')">
-            <div class="opt-title" style="color:#697655;">L0 單品入門</div>
-            <div class="opt-desc">每人只點1樣｜熟悉操作流程</div>
+            <div class="opt-title" style="color:#697655;">L0 餐車試營運</div>
+            <div class="opt-desc">飯糰＋熱豆漿｜單品入門</div>
           </button>
           <button class="opt-btn" id="scen-1" onclick="selectScenario('L1')">
-            <div class="opt-title">L1 基礎並行</div>
-            <div class="opt-desc">雙樣點單｜雙格煎台與豆漿</div>
+            <div class="opt-title">L1 雙味小餐車</div>
+            <div class="opt-desc">2種飯糰＋冰熱豆漿辨識</div>
           </button>
           <button class="opt-btn" id="scen-2" onclick="selectScenario('L2')">
-            <div class="opt-title">L2 庫存預判</div>
-            <div class="opt-desc">6品項｜油條庫存與補炸</div>
+            <div class="opt-title">L2 實體店開張</div>
+            <div class="opt-desc">解鎖雙格煎台｜多工並行</div>
           </button>
         </div>
         <div class="option-grid-3">
           <button class="opt-btn" id="scen-3" onclick="selectScenario('L3')">
-            <div class="opt-title">L3 急件優先</div>
-            <div class="opt-desc">8品項｜全工作站＋急單</div>
+            <div class="opt-title">L3 早市油條庫存</div>
+            <div class="opt-desc">油條補炸預判＋外送急單</div>
           </button>
           <button class="opt-btn" id="scen-4" onclick="selectScenario('L4')">
-            <div class="opt-title">L4 綜合改單</div>
-            <div class="opt-desc">8品項｜急件＋臨時改單</div>
+            <div class="opt-title">L4 旗艦全能挑戰</div>
+            <div class="opt-desc">全品項＋客製調味＋改單</div>
           </button>
           <button class="opt-btn" id="scen-fixed" onclick="selectScenario('FIXED')">
             <div class="opt-title" style="color:#2563eb;">📋 固定觀察組</div>
@@ -1266,9 +1418,9 @@
 
       <div class="report-kpi-grid">
         <div class="kpi-card"><div class="kpi-val" id="kpiCompleted">6/6</div><div class="kpi-lbl">完成訂單</div></div>
-        <div class="kpi-card"><div class="kpi-val" id="kpiSatisfaction">6/6</div><div class="kpi-lbl">獲得五星好評</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="kpiSatisfaction">6/6</div><div class="kpi-lbl">準時好評</div></div>
         <div class="kpi-card"><div class="kpi-val" id="kpiParallel">0次</div><div class="kpi-lbl">雙鍋並行效率</div></div>
-        <div class="kpi-card"><div class="kpi-val" id="kpiSmartMoves">0次</div><div class="kpi-lbl">預判與急件救援</div></div>
+        <div class="kpi-card"><div class="kpi-val" id="kpiSmartMoves">0次</div><div class="kpi-lbl">預判急件救援</div></div>
       </div>
 
       <div class="summary-box" id="reportSummaryText"></div>
@@ -1280,9 +1432,10 @@
         <div class="detail-row"><span>主動暫停思考策略</span><span id="detPause">0 次</span></div>
         <div class="detail-row"><span>油條庫存應對表現</span><span id="detYoutiao">-</span></div>
         <div class="detail-row"><span>急件優先出餐表現</span><span id="detUrgent">-</span></div>
+        <div class="detail-row"><span>煎台時間監控（自動清焦次數）</span><span id="detScorch">0 次</span></div>
         <div class="detail-row"><span>分類 A：資源預判失誤（缺料點擊）</span><span id="errNoStock">0 次</span></div>
         <div class="detail-row"><span>分類 B：空間監控失誤（工作站滿載）</span><span id="errFull">0 次</span></div>
-        <div class="detail-row"><span>分類 C：分配匹配失誤（送錯客人）</span><span id="errWrongCust">0 次</span></div>
+        <div class="detail-row"><span>分類 C：分配匹配失誤（送錯或漏調味）</span><span id="errWrongCust">0 次</span></div>
         <div class="detail-row" style="border-bottom:none;"><span>分類 D：多餘製作清理（報廢次數）</span><span id="errDiscard">0 次</span></div>
       </div>
 
@@ -1293,8 +1446,7 @@
 
   <script>
     // =========================================================================
-    // 1. 透明 PNG 圖片資產路徑對照表（放進 assets/ 資料夾即自動載入水彩 PNG）
-    //    同時內建優雅 Emoji/向量備援，確保還沒放圖片時也能正常運作不破圖
+    // 1. 透明 PNG 美術資產路徑表（對接 assets/ 資料夾日系水彩 PNG，並內建備援）
     // =========================================================================
     const ASSET_PATHS = {
       characters: [
@@ -1308,60 +1460,70 @@
         { id: 'nurse', name: '護理師小雯', isUrgent: false, src: 'assets/char_nurse.png', fallback: '👩‍⚕️' }
       ],
       foods: {
-        egg_pancake: { src: 'assets/food_egg_pancake.png', fallback: '🌯' },
-        radish_cake: { src: 'assets/food_radish_cake.png', fallback: '🧈' },
-        shaobing:    { src: 'assets/food_shaobing.png',    fallback: '🥖' },
-        fantuan:     { src: 'assets/food_fantuan.png',     fallback: '🍙' },
-        xiaolongbao: { src: 'assets/food_xiaolongbao.png', fallback: '🥟' },
-        mantou_egg:  { src: 'assets/food_mantou_egg.png',  fallback: '🍔' },
-        hot_soy:     { src: 'assets/food_hot_soy.png',     fallback: '☕' },
-        iced_soy:    { src: 'assets/food_iced_soy.png',    fallback: '🥤' }
+        egg_pancake:    { src: 'assets/food_egg_pancake.png',    fallback: '🌯' },
+        radish_cake:    { src: 'assets/food_radish_cake.png',    fallback: '🧈' },
+        shaobing:       { src: 'assets/food_shaobing.png',       fallback: '🥖' },
+        fantuan:        { src: 'assets/food_fantuan.png',        fallback: '🍙' },
+        fantuan_purple: { src: 'assets/food_fantuan_purple.png', fallback: '🟣' },
+        xiaolongbao:    { src: 'assets/food_xiaolongbao.png',    fallback: '🥟' },
+        mantou_egg:     { src: 'assets/food_mantou_egg.png',     fallback: '🍔' },
+        hot_soy:        { src: 'assets/food_hot_soy.png',        fallback: '☕' },
+        iced_soy:       { src: 'assets/food_iced_soy.png',       fallback: '🥤' }
       },
       cookingFrames: {
-        egg_pancake: ['assets/cook_egg_1.png', 'assets/cook_egg_2.png'],
-        radish_cake: ['assets/cook_radish_1.png', 'assets/cook_radish_2.png'],
-        shaobing:    ['assets/cook_shaobing_1.png', 'assets/cook_shaobing_2.png'],
-        fantuan:     ['assets/cook_fantuan_1.png', 'assets/cook_fantuan_2.png'],
-        xiaolongbao: ['assets/cook_xlb_1.png', 'assets/cook_xlb_2.png'],
-        mantou_egg:  ['assets/cook_mantou_1.png', 'assets/cook_mantou_2.png'],
-        hot_soy:     ['assets/cook_hotsoy_1.png', 'assets/cook_hotsoy_2.png'],
-        iced_soy:    ['assets/cook_icedsoy_1.png', 'assets/cook_icedsoy_2.png']
+        egg_pancake:    ['assets/cook_egg_1.png', 'assets/cook_egg_2.png'],
+        radish_cake:    ['assets/cook_radish_1.png', 'assets/cook_radish_2.png'],
+        shaobing:       ['assets/cook_shaobing_prep.png', 'assets/cook_shaobing_prep.png'],
+        fantuan:        ['assets/cook_fantuan_roll.png', 'assets/cook_fantuan_roll.png'],
+        fantuan_purple: ['assets/cook_fantuan_roll.png', 'assets/cook_fantuan_roll.png'],
+        xiaolongbao:    ['assets/cook_xlb_steam.png', 'assets/cook_xlb_steam.png'],
+        mantou_egg:     ['assets/cook_mantou_egg.png', 'assets/cook_mantou_egg.png'],
+        hot_soy:        ['assets/cook_hotsoy_pour.png', 'assets/cook_hotsoy_pour.png'],
+        iced_soy:       ['assets/cook_icedsoy_pour.png', 'assets/cook_icedsoy_pour.png']
       }
     };
 
     const STAGE_LABELS = {
-      egg_pancake: ['淋蛋液煎皮', '捲餅撒蔥花'],
-      radish_cake: ['白糕下油鍋', '煎出焦脆殼'],
-      shaobing:    ['夾入金黃油條', '合攏酥燒餅'],
-      fantuan:     ['鋪紫米放料', '揉捏成飯糰'],
-      xiaolongbao: ['大火蒸氣上升', '湯包膨脹熟透'],
-      mantou_egg:  ['蒸熱黑糖饅頭', '夾入荷包蛋'],
-      hot_soy:     ['熱豆漿注杯', '熱氣封杯中'],
-      iced_soy:    ['冰豆漿注杯', '加冰插吸管']
+      egg_pancake:    ['淋蛋液煎皮', '捲餅撒蔥花'],
+      radish_cake:    ['白糕下油鍋', '煎出焦脆殼'],
+      shaobing:       ['夾入金黃油條', '合攏酥燒餅'],
+      fantuan:        ['鋪米放餡料', '揉捏成飯糰'],
+      fantuan_purple: ['鋪紫米放料', '捏紫米飯糰'],
+      xiaolongbao:    ['大火蒸氣上升', '湯包膨脹熟透'],
+      mantou_egg:     ['蒸熱黑糖饅頭', '夾入荷包蛋'],
+      hot_soy:        ['熱豆漿注杯', '熱氣封杯中'],
+      iced_soy:       ['冰豆漿注杯', '加冰插吸管']
     };
 
     const MENU = {
-      egg_pancake: { id: 'egg_pancake', name: '原味蛋餅', station: 'griddle', duration: 4000, needYoutiao: false },
-      radish_cake: { id: 'radish_cake', name: '蘿蔔糕',   station: 'griddle', duration: 4000, needYoutiao: false },
-      shaobing:    { id: 'shaobing',    name: '燒餅油條', station: 'prep',    duration: 3000, needYoutiao: true },
-      fantuan:     { id: 'fantuan',     name: '傳統飯糰', station: 'prep',    duration: 3000, needYoutiao: true },
-      xiaolongbao: { id: 'xiaolongbao', name: '小籠包',   station: 'steamer', duration: 3500, needYoutiao: false },
-      mantou_egg:  { id: 'mantou_egg',  name: '饅頭夾蛋', station: 'steamer', duration: 3500, needYoutiao: false },
-      hot_soy:     { id: 'hot_soy',     name: '熱豆漿',   station: 'drink',   duration: 2000, needYoutiao: false },
-      iced_soy:    { id: 'iced_soy',    name: '冰豆漿',   station: 'drink',   duration: 2000, needYoutiao: false }
+      egg_pancake:    { id: 'egg_pancake',    name: '原味蛋餅',     station: 'griddle', duration: 4000, needYoutiao: false },
+      radish_cake:    { id: 'radish_cake',    name: '蘿蔔糕',       station: 'griddle', duration: 4000, needYoutiao: false },
+      shaobing:       { id: 'shaobing',       name: '燒餅油條',     station: 'prep',    duration: 3000, needYoutiao: true },
+      fantuan:        { id: 'fantuan',        name: '傳統飯糰',     station: 'prep',    duration: 3000, needYoutiao: true },
+      fantuan_purple: { id: 'fantuan_purple', name: '紫米肉鬆飯糰', station: 'prep',    duration: 3000, needYoutiao: false },
+      xiaolongbao:    { id: 'xiaolongbao',    name: '小籠包',       station: 'steamer', duration: 3500, needYoutiao: false },
+      mantou_egg:     { id: 'mantou_egg',     name: '饅頭夾蛋',     station: 'steamer', duration: 3500, needYoutiao: false },
+      hot_soy:        { id: 'hot_soy',        name: '熱豆漿',       station: 'drink',   duration: 2000, needYoutiao: false },
+      iced_soy:       { id: 'iced_soy',       name: '冰豆漿',       station: 'drink',   duration: 2000, needYoutiao: false }
+    };
+
+    const MOD_LABELS = {
+      spicy: '🌶️加辣',
+      cut:   '🔪切半'
     };
 
     const FIXED_SCRIPT = [
-      { charIdx: 0, urgent: false, items: ['egg_pancake', 'hot_soy'] },
-      { charIdx: 1, urgent: false, items: ['egg_pancake', 'shaobing'] },
-      { charIdx: 2, urgent: true,  items: ['fantuan', 'iced_soy'] },
-      { charIdx: 3, urgent: false, items: ['xiaolongbao', 'hot_soy'], changeTo: { idx: 1, newId: 'iced_soy' } },
-      { charIdx: 4, urgent: true,  items: ['radish_cake', 'mantou_egg'] },
-      { charIdx: 5, urgent: false, items: ['shaobing', 'radish_cake'] }
+      { charIdx: 0, urgent: false, items: [{ id: 'egg_pancake', mod: null }, { id: 'hot_soy', mod: null }] },
+      { charIdx: 1, urgent: false, items: [{ id: 'egg_pancake', mod: 'spicy' }, { id: 'shaobing', mod: null }] },
+      { charIdx: 2, urgent: true,  items: [{ id: 'fantuan', mod: null }, { id: 'iced_soy', mod: null }] },
+      { charIdx: 3, urgent: false, items: [{ id: 'xiaolongbao', mod: null }, { id: 'hot_soy', mod: null }], changeTo: { idx: 1, newId: 'iced_soy' } },
+      { charIdx: 4, urgent: true,  items: [{ id: 'radish_cake', mod: 'spicy' }, { id: 'mantou_egg', mod: 'cut' }] },
+      { charIdx: 5, urgent: false, items: [{ id: 'shaobing', mod: null }, { id: 'radish_cake', mod: null }] }
     ];
 
     let assistMode = 'high';
-    let scenarioMode = 'L0'; // 預設選中 L0 單品入門
+    let scenarioMode = 'L0';
+    let currentView = 'counter'; // 'counter' | 'kitchen'
 
     const TARGET_CUSTOMERS = 6;
     let completedCount = 0;
@@ -1386,7 +1548,7 @@
       drink: [null]
     };
 
-    let readyPlates = [null, null, null];
+    let readyPlates = [null, null, null]; // { menuId, name, mod: null | 'spicy' | 'cut' }
     let selectedPlateIdx = null;
     let metrics = {};
 
@@ -1399,6 +1561,7 @@
         reactiveRestock: 0,
         urgentTotal: 0,
         urgentPriorityWins: 0,
+        scorchCleanCount: 0,
         errNoStock: 0,
         errFullStation: 0,
         errWrongCustomer: 0,
@@ -1407,7 +1570,6 @@
       };
     }
 
-    // 綁定按鈕 PNG 圖片與平滑備援
     function initStaticImages() {
       Object.keys(ASSET_PATHS.foods).forEach(key => {
         const imgEl = document.getElementById(`img-btn-${key}`);
@@ -1416,11 +1578,18 @@
           imgEl.onerror = function() {
             const span = document.createElement('span');
             span.textContent = ASSET_PATHS.foods[key].fallback;
-            span.style.fontSize = '1.2rem';
+            span.style.fontSize = '1.25rem';
             this.replaceWith(span);
           };
         }
       });
+    }
+
+    function switchView(viewName) {
+      currentView = viewName;
+      document.getElementById('view-counter').classList.toggle('hidden-view', viewName !== 'counter');
+      document.getElementById('view-kitchen').classList.toggle('hidden-view', viewName !== 'kitchen');
+      renderAll();
     }
 
     function showPraiseToast(text) {
@@ -1455,23 +1624,58 @@
       document.getElementById('clinicalDetailPanel').classList.toggle('hidden');
     }
 
-    // V2.1/V2.2 明確灰階鎖定未開放工作站
+    // 依據故事分級鎖定工作站與調整按鈕（小餐車 L0/L1 ⇄ 實體店面 L2~L4）
     function applyScenarioLocks() {
-      const hasPrep = !['L0', 'L1'].includes(scenarioMode);
+      const isCartMode = ['L0', 'L1'].includes(scenarioMode);
+      const hasGriddle = !isCartMode;
       const hasSteamer = ['L3', 'L4', 'FIXED'].includes(scenarioMode);
+      const hasYoutiao = !['L0', 'L1', 'L2'].includes(scenarioMode);
+      const hasSeasoning = ['L4', 'FIXED'].includes(scenarioMode);
 
-      document.getElementById('card-prep').classList.toggle('locked', !hasPrep);
+      document.getElementById('card-griddle').classList.toggle('locked', !hasGriddle);
+      document.getElementById('card-prep').classList.remove('locked');
       document.getElementById('card-steamer').classList.toggle('locked', !hasSteamer);
+      document.getElementById('youtiaoStationBox').classList.toggle('locked-youtiao', !hasYoutiao);
+      document.getElementById('seasoningGroup').classList.toggle('locked-seasoning', !hasSeasoning);
+
+      // 小餐車模式（L0, L1）：備料台改賣「傳統飯糰」與「紫米肉鬆飯糰」（不需油條）
+      const btnLeft = document.getElementById('btn-prep-left');
+      const btnRight = document.getElementById('btn-prep-right');
+      const btnIcedSoy = document.getElementById('btn-iced-soy');
+
+      if (isCartMode) {
+        btnLeft.setAttribute('onclick', "startCooking('fantuan')");
+        document.getElementById('lbl-prep-left').textContent = '傳統飯糰';
+        document.getElementById('sub-prep-left').textContent = '(餐車招牌)';
+        btnRight.setAttribute('onclick', "startCooking('fantuan_purple')");
+        document.getElementById('lbl-prep-right').textContent = '紫米肉鬆飯糰';
+        document.getElementById('sub-prep-right').textContent = '(雙味限定)';
+
+        btnLeft.classList.remove('locked-item');
+        btnRight.classList.toggle('locked-item', scenarioMode === 'L0');
+        btnIcedSoy.classList.toggle('locked-item', scenarioMode === 'L0');
+      } else {
+        btnLeft.setAttribute('onclick', "startCooking('shaobing')");
+        document.getElementById('lbl-prep-left').textContent = '燒餅油條';
+        document.getElementById('sub-prep-left').textContent = hasYoutiao ? '(需油條)' : '(已備好料)';
+        btnRight.setAttribute('onclick', "startCooking('fantuan')");
+        document.getElementById('lbl-prep-right').textContent = '傳統飯糰';
+        document.getElementById('sub-prep-right').textContent = hasYoutiao ? '(需油條)' : '(已備好料)';
+
+        btnLeft.classList.remove('locked-item');
+        btnRight.classList.remove('locked-item');
+        btnIcedSoy.classList.remove('locked-item');
+      }
 
       const scenLabel = {
-        L0: 'L0 單品入門',
-        L1: 'L1 基礎並行',
-        L2: 'L2 庫存預判',
-        L3: 'L3 急件優先',
-        L4: 'L4 綜合改單',
+        L0: 'L0 餐車試營運',
+        L1: 'L1 雙味小餐車',
+        L2: 'L2 實體店開張',
+        L3: 'L3 油條庫存戰',
+        L4: 'L4 旗艦全能版',
         FIXED: '📋 固定觀察組'
       }[scenarioMode];
-      const assistLabel = assistMode === 'high' ? '練習提示' : '零提示觀察';
+      const assistLabel = assistMode === 'high' ? '附便利貼' : '無小抄記憶';
       document.getElementById('headerModeBadge').textContent = `${scenLabel}｜${assistLabel}`;
     }
 
@@ -1497,7 +1701,9 @@
       selectedPlateIdx = null;
       isManualPaused = false;
 
+      switchView('counter');
       updatePauseUI();
+
       spawnCustomerToSeat(0);
       if (scenarioMode !== 'L0') {
         spawnCustomerToSeat(1);
@@ -1506,9 +1712,7 @@
         spawnCustomerToSeat(2);
       }
 
-      showBanner(scenarioMode === 'L0'
-        ? '入門練習開始！看看吧檯客人的單品點單，點擊下方亮起的工作站製作吧。'
-        : '早市開張！看看吧檯前客人的對話氣泡，點擊下方廚房開始料理。');
+      showBanner('早市開張！先看清楚客人的點單，再點下方【👨‍🍳 進廚房備餐】製作喔。');
 
       lastTick = performance.now();
       if (gameLoopId) cancelAnimationFrame(gameLoopId);
@@ -1525,7 +1729,7 @@
         const script = FIXED_SCRIPT[idx];
         const charObj = ASSET_PATHS.characters[script.charIdx];
         if (script.urgent) metrics.urgentTotal++;
-        const maxPatience = (script.urgent ? 28000 : 45000) * patienceScale;
+        const maxPatience = (script.urgent ? 35000 : 52000) * patienceScale;
         seats[seatIdx] = {
           id: totalGenerated,
           seatIdx,
@@ -1537,7 +1741,7 @@
           patience: maxPatience,
           timedOut: false,
           changeRule: script.changeTo || null,
-          items: script.items.map(id => ({ ...MENU[id], done: false })),
+          items: script.items.map(obj => ({ ...MENU[obj.id], mod: obj.mod, done: false })),
           isDone: false
         };
       } else {
@@ -1550,30 +1754,34 @@
           ? shuffledChars.urgent[idx % shuffledChars.urgent.length]
           : shuffledChars.normal[idx % shuffledChars.normal.length];
 
-        const maxPatience = (scenarioMode === 'L0' ? 60000 : (isUrgent ? 28000 : 45000)) * patienceScale;
+        const maxPatience = (scenarioMode === 'L0' ? 65000 : (isUrgent ? 35000 : 52000)) * patienceScale;
         const name = `${totalGenerated}號・${charObj.name}`;
-
-        let availableKeys = ['egg_pancake', 'radish_cake', 'hot_soy', 'iced_soy'];
-        if (!['L0', 'L1'].includes(scenarioMode)) availableKeys.push('shaobing', 'fantuan');
-        if (['L3', 'L4'].includes(scenarioMode)) availableKeys.push('xiaolongbao', 'mantou_egg');
 
         let items = [];
         if (scenarioMode === 'L0') {
-          // Level 0：每次只點 1 樣基礎餐點
-          const k1 = availableKeys[idx % availableKeys.length];
-          items.push({ ...MENU[k1], done: false });
-        } else if (totalGenerated <= 2 && scenarioMode === 'L1') {
-          items.push({ ...MENU.egg_pancake, done: false });
-          items.push({ ...MENU[totalGenerated === 1 ? 'hot_soy' : 'iced_soy'], done: false });
-        } else if (totalGenerated <= 3 && !['L0', 'L1'].includes(scenarioMode)) {
-          const p = totalGenerated % 2 === 1 ? MENU.shaobing : MENU.fantuan;
-          const o = totalGenerated % 2 === 1 ? MENU.hot_soy : MENU.egg_pancake;
-          items.push({ ...p, done: false }, { ...o, done: false });
+          const k = idx % 2 === 0 ? 'fantuan' : 'hot_soy';
+          items.push({ ...MENU[k], mod: null, done: false });
+        } else if (scenarioMode === 'L1') {
+          const r = idx % 2 === 0 ? 'fantuan' : 'fantuan_purple';
+          const d = idx % 3 === 0 ? 'iced_soy' : 'hot_soy';
+          items.push({ ...MENU[r], mod: null, done: false }, { ...MENU[d], mod: null, done: false });
+        } else if (scenarioMode === 'L2') {
+          const pool = ['egg_pancake', 'radish_cake', 'hot_soy', 'iced_soy'];
+          const k1 = pool[idx % 2];
+          const k2 = pool[2 + (idx % 2)];
+          items.push({ ...MENU[k1], mod: null, done: false }, { ...MENU[k2], mod: null, done: false });
         } else {
-          const k1 = availableKeys[Math.floor(Math.random() * availableKeys.length)];
-          let k2 = availableKeys[Math.floor(Math.random() * availableKeys.length)];
+          const pool = ['egg_pancake', 'radish_cake', 'shaobing', 'fantuan', 'hot_soy', 'iced_soy'];
+          if (scenarioMode === 'L4') pool.push('xiaolongbao', 'mantou_egg');
+          const k1 = pool[Math.floor(Math.random() * pool.length)];
+          let k2 = pool[Math.floor(Math.random() * pool.length)];
           if (k2 === k1) k2 = 'hot_soy';
-          items.push({ ...MENU[k1], done: false }, { ...MENU[k2], done: false });
+
+          let mod1 = null;
+          if (scenarioMode === 'L4' && (idx === 1 || idx === 4)) {
+            mod1 = ['egg_pancake', 'radish_cake'].includes(k1) ? 'spicy' : 'cut';
+          }
+          items.push({ ...MENU[k1], mod: mod1, done: false }, { ...MENU[k2], mod: null, done: false });
         }
 
         seats[seatIdx] = {
@@ -1607,7 +1815,7 @@
           const target = cust4.items[cust4.changeRule.idx];
           const oldName = target.name;
           const newMenu = MENU[cust4.changeRule.newId];
-          Object.assign(target, { ...newMenu, done: false });
+          Object.assign(target, { ...newMenu, mod: null, done: false });
           cust4.note = `改單！${oldName}改${newMenu.name}`;
           showBanner(`🔔 ${cust4.name} 臨時改單：「${oldName}」改成「${newMenu.name}」！`, 'alert-mode');
           renderAll();
@@ -1618,9 +1826,9 @@
           metrics.orderChangeDone = true;
           const target = candidate.items.find(i => !i.done);
           const oldName = target.name;
-          const pool = Object.values(MENU).filter(m => m.id !== target.id);
+          const pool = Object.values(MENU).filter(m => m.id !== target.id && m.id !== 'fantuan_purple');
           const newMenu = pool[Math.floor(Math.random() * pool.length)];
-          Object.assign(target, { ...newMenu, done: false });
+          Object.assign(target, { ...newMenu, mod: null, done: false });
           candidate.note = `改單！${oldName}改${newMenu.name}`;
           showBanner(`🔔 ${candidate.name} 臨時改單：「${oldName}」改成「${newMenu.name}」！`, 'alert-mode');
           renderAll();
@@ -1642,11 +1850,11 @@
       if (isManualPaused) {
         btn.textContent = '▶ 繼續營業';
         btn.classList.add('is-paused');
-        showBanner('⏸ 已暫停耐性倒數（思考整理中），想好順序後按「繼續營業」', 'paused-mode');
+        showBanner('⏸ 已暫停時間倒數（思考整理中），想好順序後按「繼續營業」', 'paused-mode');
       } else {
         btn.textContent = '⏸ 暫停思考';
         btn.classList.remove('is-paused');
-        showBanner('🔥 廚房營業中！點擊工作站料理，起鍋後點吧檯白瓷盤遞給客人');
+        showBanner('🔥 營業中！可在櫃檯與廚房之間自由切換備餐與遞餐');
       }
     }
 
@@ -1659,7 +1867,8 @@
       const food = MENU[menuId];
       if (!food) return;
 
-      if (food.needYoutiao && youtiaoStock <= 0) {
+      const hasYoutiaoMechanic = !['L0', 'L1', 'L2'].includes(scenarioMode);
+      if (hasYoutiaoMechanic && food.needYoutiao && youtiaoStock <= 0) {
         metrics.errNoStock++;
         showBanner('💡 油條保溫櫃空囉！請先點備料台下方的「🔥 炸油條 (+3根)」補貨吧！', 'alert-mode');
         renderAll();
@@ -1678,11 +1887,11 @@
       const readyCount = readyPlates.filter(Boolean).length;
       if (activeJobsCount + readyCount >= 5) {
         metrics.errFullStation++;
-        showBanner('💡 吧檯白瓷盤快放滿囉，先把做好的餐點端給客人吧！', 'alert-mode');
+        showBanner('💡 吧檯白瓷盤快放滿囉，先點【🛎️ 回櫃檯出餐】遞給客人吧！', 'alert-mode');
         return;
       }
 
-      if (food.needYoutiao) {
+      if (hasYoutiaoMechanic && food.needYoutiao) {
         youtiaoStock--;
       }
 
@@ -1690,7 +1899,8 @@
         menuId: food.id,
         name: food.name,
         duration: food.duration,
-        elapsed: 0
+        elapsed: 0,
+        overcookElapsed: 0
       };
 
       if (food.station === 'griddle' && slots[0] !== null && slots[1] !== null) {
@@ -1706,7 +1916,7 @@
     }
 
     function startRestockYoutiao() {
-      if (['L0', 'L1'].includes(scenarioMode) || restockTimer > 0) return;
+      if (['L0', 'L1', 'L2'].includes(scenarioMode) || restockTimer > 0) return;
       if (isManualPaused) {
         isManualPaused = false;
         updatePauseUI();
@@ -1726,6 +1936,18 @@
       renderAll();
     }
 
+    // 吧檯單點客製調味（加辣／切半）
+    function applyModifier(modType) {
+      if (selectedPlateIdx === null || !readyPlates[selectedPlateIdx]) {
+        showBanner('💡 請先點一下吧檯上有餐點的白瓷盤端起，再按調味加工按鈕喔！');
+        return;
+      }
+      const plateItem = readyPlates[selectedPlateIdx];
+      plateItem.mod = plateItem.mod === modType ? null : modType;
+      showBanner(`✨ 已為【${plateItem.name}】加上「${MOD_LABELS[modType]}」，請點擊上方客人遞餐！`, 'holding-mode');
+      renderAll();
+    }
+
     function handlePlateClick(idx) {
       const food = readyPlates[idx];
       if (!food) return;
@@ -1737,7 +1959,8 @@
       } else {
         selectedPlateIdx = idx;
         document.getElementById('trashBtn').classList.add('active-bin');
-        showBanner(`🍽️ 手上端著【${food.name}】，請點擊上方需要的客人遞餐！`, 'holding-mode');
+        const modStr = food.mod ? ` (${MOD_LABELS[food.mod]})` : '';
+        showBanner(`🍽️ 手上端著【${food.name}${modStr}】，請點擊上方需要的客人遞餐！`, 'holding-mode');
       }
       renderAll();
     }
@@ -1752,7 +1975,7 @@
       selectedPlateIdx = null;
       metrics.errDiscard++;
       document.getElementById('trashBtn').classList.remove('active-bin');
-      showBanner(`🗑️ 已倒掉清理【${discardedName}】，空出了一個吧檯白瓷盤。`);
+      showBanner(`🗑️ 已清理【${discardedName}】，空出了一個吧檯白瓷盤。`);
       renderAll();
     }
 
@@ -1768,10 +1991,15 @@
       const foodOnPlate = readyPlates[selectedPlateIdx];
       if (!foodOnPlate) return;
 
-      const matchItem = cust.items.find(i => !i.done && i.id === foodOnPlate.menuId);
+      const matchItem = cust.items.find(i => !i.done && i.id === foodOnPlate.menuId && (i.mod || null) === (foodOnPlate.mod || null));
       if (!matchItem) {
         metrics.errWrongCustomer++;
-        showBanner(`💡 ${cust.name} 沒有點【${foodOnPlate.name}】喔，請看看另外客人的氣泡點單！`, 'alert-mode');
+        const sameFoodDiffMod = cust.items.find(i => !i.done && i.id === foodOnPlate.menuId);
+        if (sameFoodDiffMod && sameFoodDiffMod.mod) {
+          showBanner(`💡 ${cust.name} 這份要「${MOD_LABELS[sameFoodDiffMod.mod]}」喔！請先按吧檯下方的調味鈕再遞餐！`, 'alert-mode');
+        } else {
+          showBanner(`💡 ${cust.name} 沒有點這份餐點喔，請看看另外客人的氣泡點單！`, 'alert-mode');
+        }
         return;
       }
 
@@ -1787,7 +2015,7 @@
         let praiseMsg = `🎉 ${cust.name} 餐點全齊，開心離開了！`;
         if (!cust.timedOut) {
           metrics.satisfiedCustomers++;
-          praiseMsg = `⭐ 獲得五星好評！${cust.name} 對出餐速度非常滿意！`;
+          praiseMsg = `⭐ 獲得準時五星好評！${cust.name} 對出餐速度非常滿意！`;
         }
 
         if (cust.isUrgent) {
@@ -1805,7 +2033,7 @@
           if (completedCount >= TARGET_CUSTOMERS) {
             endGame();
           } else {
-            seatCooldowns[seatIdx] = 1000;
+            seatCooldowns[seatIdx] = 900;
             renderAll();
           }
         }, 650);
@@ -1834,7 +2062,6 @@
           if (seats[i] === null && seatCooldowns[i] > 0) {
             seatCooldowns[i] = Math.max(0, seatCooldowns[i] - dt);
             if (seatCooldowns[i] === 0 && totalGenerated < TARGET_CUSTOMERS) {
-              // Level 0 每次只維持場上 1 位客人，專注無干擾
               if (scenarioMode === 'L0' && seats.some(Boolean)) continue;
               spawnCustomerToSeat(i);
               needRender = true;
@@ -1842,6 +2069,7 @@
           }
         }
 
+        // 無懲罰時鐘：超時純記錄，不扣分、不赶人
         seats.forEach(cust => {
           if (cust && !cust.isDone && cust.patience > 0) {
             cust.patience = Math.max(0, cust.patience - dt);
@@ -1881,11 +2109,18 @@
               if (slot.elapsed >= slot.duration) {
                 const emptyPlate = readyPlates.findIndex(p => p === null);
                 if (emptyPlate !== -1) {
-                  readyPlates[emptyPlate] = { menuId: slot.menuId, name: slot.name };
+                  readyPlates[emptyPlate] = { menuId: slot.menuId, name: slot.name, mod: null };
                   stations[stKey][idx] = null;
                   needRender = true;
                 } else {
-                  slot.elapsed = slot.duration;
+                  // 吧檯瓷盤全滿導致滯留鍋上，超過 8 秒自動清焦重來（零懲罰）
+                  slot.overcookElapsed += dt;
+                  if (stKey === 'griddle' && slot.overcookElapsed >= 8000) {
+                    metrics.scorchCleanCount++;
+                    stations[stKey][idx] = null;
+                    showBanner('💨 煎台久放微焦，系統已自動清理鍋面，再煎一份就好囉！', 'alert-mode');
+                    needRender = true;
+                  }
                 }
               } else if (!prevHalf && currHalf) {
                 needRender = true;
@@ -1908,7 +2143,7 @@
 
     function generatePositiveSummary() {
       const smartTotal = metrics.proactiveRestock + metrics.urgentPriorityWins;
-      let praise = `太棒了！你順利服務完所有 ${completedCount} 位客人，並獲得了 ${metrics.satisfiedCustomers} 顆五星好評！`;
+      let praise = `太棒了！你順利服務完所有 ${completedCount} 位客人，並獲得了 ${metrics.satisfiedCustomers} 顆準時五星好評！`;
 
       if (metrics.parallelGriddle >= 2) {
         praise += `你非常擅長「雙鍋齊下」同時料理（共 ${metrics.parallelGriddle} 次），展現了很棒的組織與時間安排能力。`;
@@ -1918,9 +2153,9 @@
         praise += `你在忙碌時懂得主動按「暫停思考」整理順序，是非常成熟的自我監控策略。`;
       }
 
-      let tip = scenarioMode === 'L0'
-        ? ' 你已經熟練掌握「看單 ➔ 料理 ➔ 端盤遞餐」的完整流程，下次可以試試看 L1 雙樣點單挑戰喔！'
-        : ' 下次營業時，可以試著多利用雙格煎台同時煎兩份餐點，或先瞄一眼備料台下方的油條數量再動手，出餐會更從容順手喔！';
+      let tip = ['L0', 'L1'].includes(scenarioMode)
+        ? ' 你已經熟練掌握「看單 ➔ 進廚房製作 ➔ 回吧檯遞餐」的雙視角記憶切換，下次可以挑戰升級成實體店面關卡喔！'
+        : ' 下次營業時，可以多利用雙格煎台同時煎兩份餐點，或先瞄一眼備料台下方的油條數量再動手，出餐會更從容順手喔！';
 
       return praise + tip;
     }
@@ -1930,8 +2165,8 @@
       const smartMoves = metrics.proactiveRestock + metrics.urgentPriorityWins;
 
       let honor = '🌟 穩健經營好手';
-      if (scenarioMode === 'L0') {
-        honor = '🌱 晨光豆漿店・順利畢業新星';
+      if (['L0', 'L1'].includes(scenarioMode)) {
+        honor = '🌱 晨光小餐車・順利畢業新星';
       } else if (metrics.satisfiedCustomers >= 5 && metrics.parallelGriddle >= 2) {
         honor = '🏆 金牌效率神店長';
       } else if (smartMoves >= 2) {
@@ -1948,12 +2183,13 @@
       document.getElementById('kpiSmartMoves').textContent = `${smartMoves} 次`;
 
       document.getElementById('detPause').textContent = `${metrics.manualPauseCount} 次`;
-      document.getElementById('detYoutiao').textContent = ['L0', 'L1'].includes(scenarioMode)
+      document.getElementById('detYoutiao').textContent = ['L0', 'L1', 'L2'].includes(scenarioMode)
         ? '本關無油條機制'
         : `提前主動補貨 ${metrics.proactiveRestock} 次 / 歸零後自行補貨 ${metrics.reactiveRestock} 次`;
       document.getElementById('detUrgent').textContent = metrics.urgentTotal > 0
         ? `優先完成 ${metrics.urgentPriorityWins} / ${metrics.urgentTotal} 組`
         : '本關無急件';
+      document.getElementById('detScorch').textContent = `${metrics.scorchCleanCount} 次`;
       document.getElementById('errNoStock').textContent = `${metrics.errNoStock} 次`;
       document.getElementById('errFull').textContent = `${metrics.errFullStation} 次`;
       document.getElementById('errWrongCust').textContent = `${metrics.errWrongCustomer} 次`;
@@ -1965,14 +2201,14 @@
 
     function exportCSV() {
       const headers = [
-        '日期時間', '情境模式', '提示層級', '店長稱號', '完成訂單數', '獲得好評數',
+        '日期時間', '情境模式', '記憶提示層級', '店長稱號', '完成訂單數', '準時好評數',
         '雙格煎台並行次數', '主動暫停思考次數', '提前主動補貨次數', '歸零後自行補貨次數',
-        '急件優先完成數', '錯誤A_缺料點擊', '錯誤B_滿載點擊', '錯誤C_送錯客人', '錯誤D_報廢次數', '觀察摘要'
+        '急件優先完成數', '自動清焦次數', '錯誤A_缺料點擊', '錯誤B_滿載點擊', '錯誤C_送錯或漏調味', '錯誤D_報廢次數', '觀察摘要'
       ];
       const row = [
         `"${new Date().toLocaleString('zh-TW')}"`,
         `"${scenarioMode}"`,
-        `"${assistMode === 'high' ? '練習模式(高提示)' : '觀察挑戰(零提示)'}"`,
+        `"${assistMode === 'high' ? '練習模式(附便利貼)' : '記憶挑戰(無小抄)'}"`,
         `"${document.getElementById('honorTitle').textContent}"`,
         completedCount,
         metrics.satisfiedCustomers,
@@ -1981,6 +2217,7 @@
         metrics.proactiveRestock,
         metrics.reactiveRestock,
         metrics.urgentPriorityWins,
+        metrics.scorchCleanCount,
         metrics.errNoStock,
         metrics.errFullStation,
         metrics.errWrongCustomer,
@@ -1993,7 +2230,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `晨光永和豆漿_認知表現紀錄_${new Date().toISOString().slice(0,10)}.csv`;
+      a.download = `晨光永和豆漿_雙視角認知紀錄_${new Date().toISOString().slice(0,10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -2001,20 +2238,51 @@
     function renderYoutiaoCabinet() {
       const box = document.getElementById('youtiaoVisualBox');
       if (restockTimer > 0) {
-        box.innerHTML = `<span style="font-size:0.72rem; font-weight:900; color:#ea580c;">🫧 金黃油鍋翻炸中...</span>`;
+        box.innerHTML = `<span style="font-size:0.74rem; font-weight:900; color:#ea580c;">🫧 金黃油鍋翻炸中...</span>`;
         return;
       }
       if (youtiaoStock === 0) {
-        box.innerHTML = `<span style="font-size:0.72rem; font-weight:900; color:#dc2626;">🥖 油條保溫櫃：0 根</span>`;
+        box.innerHTML = `<span style="font-size:0.74rem; font-weight:900; color:#dc2626;">🥖 油條保溫櫃：0 根</span>`;
         return;
       }
-      box.innerHTML = `<span style="font-size:0.72rem; font-weight:900; color:#92400e;">🥖 油條保溫櫃：${'🥖'.repeat(Math.min(youtiaoStock, 4))} 剩 ${youtiaoStock} 根</span>`;
+      box.innerHTML = `<span style="font-size:0.74rem; font-weight:900; color:#92400e;">🥖 油條保溫櫃：${'🥖'.repeat(Math.min(youtiaoStock, 4))} 剩 ${youtiaoStock} 根</span>`;
+    }
+
+    function renderStickyNotes() {
+      const container = document.getElementById('stickyNotesList');
+      if (assistMode === 'none') {
+        container.innerHTML = `<span class="memory-blind-hint">🧠 記憶挑戰模式：憑腦海記憶備餐，忘記可按下方【回櫃檯】確認！</span>`;
+        return;
+      }
+      const activeCusts = seats.filter(c => c && !c.isDone);
+      if (activeCusts.length === 0) {
+        container.innerHTML = `<span style="font-size:0.74rem; color:#78350f;">目前櫃檯無待出餐點</span>`;
+        return;
+      }
+      container.innerHTML = activeCusts.map(c => {
+        const listStr = c.items.filter(i => !i.done).map(i => `${i.name}${i.mod ? '(' + MOD_LABELS[i.mod] + ')' : ''}`).join(' + ');
+        return `<div class="sticky-note-card ${c.isUrgent ? 'urgent-note' : ''}">${c.isUrgent ? '🔥' : ''}${c.name}：${listStr}</div>`;
+      }).join('');
     }
 
     function renderAll() {
       document.getElementById('progressPill').textContent = `完成 ${completedCount}/${TARGET_CUSTOMERS}｜好評 ${metrics.satisfiedCustomers}`;
 
+      const readyCount = readyPlates.filter(Boolean).length;
+      const cookingCount = [...stations.griddle, ...stations.prep, ...stations.steamer, ...stations.drink].filter(Boolean).length;
+
+      document.getElementById('readyPlateBadge').textContent = `吧檯已備好 ${readyCount}/3 盤`;
+      const cookBadge = document.getElementById('cookingCountBadge');
+      if (cookingCount > 0) {
+        cookBadge.style.display = 'inline-block';
+        cookBadge.textContent = `料理中 ${cookingCount}`;
+      } else {
+        cookBadge.style.display = 'none';
+      }
+
       renderYoutiaoCabinet();
+      renderStickyNotes();
+
       const restockBtn = document.getElementById('restockBtn');
       restockBtn.disabled = restockTimer > 0;
       if (restockTimer === 0) {
@@ -2023,6 +2291,7 @@
 
       const heldFood = selectedPlateIdx !== null ? readyPlates[selectedPlateIdx] : null;
 
+      // 1. 渲染櫃檯三位半身顧客與點單氣泡
       for (let i = 0; i < 3; i++) {
         const bayEl = document.getElementById(`bay-${i}`);
         const cust = seats[i];
@@ -2034,7 +2303,7 @@
           continue;
         }
 
-        const hasMatch = heldFood && !cust.isDone && cust.items.some(item => !item.done && item.id === heldFood.menuId);
+        const hasMatch = heldFood && !cust.isDone && cust.items.some(item => !item.done && item.id === heldFood.menuId && (item.mod || null) === (heldFood.mod || null));
         const showAssistGlow = assistMode === 'high' && hasMatch;
 
         bayEl.className = `customer-bay ${showAssistGlow ? 'assist-target' : ''}`;
@@ -2044,44 +2313,46 @@
         const barColor = ratio > 0.5 ? '#16a34a' : (ratio > 0.25 ? '#eab308' : '#dc2626');
 
         const itemsHtml = cust.items.map(item => {
-          const isAssistMatch = assistMode === 'high' && heldFood && !item.done && item.id === heldFood.menuId;
+          const isAssistMatch = assistMode === 'high' && heldFood && !item.done && item.id === heldFood.menuId && (item.mod || null) === (heldFood.mod || null);
           const foodMeta = ASSET_PATHS.foods[item.id];
+          const modHtml = item.mod ? `<span class="mod-tag ${item.mod === 'cut' ? 'mod-cut' : ''}">${MOD_LABELS[item.mod]}</span>` : '';
           return `
             <div class="order-chip ${item.done ? 'done' : ''} ${isAssistMatch ? 'assist-match' : ''}">
               <div class="order-chip-left">
                 <img class="order-chip-icon" src="${foodMeta.src}" onerror="this.outerHTML='<span>${foodMeta.fallback}</span>'" alt="${item.name}" />
                 <span class="order-chip-name">${item.name}</span>
+                ${modHtml}
               </div>
-              <span style="font-size:0.68rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
+              <span style="font-size:0.75rem; flex-shrink:0;">${item.done ? '✅' : (isAssistMatch ? '👈' : '')}</span>
             </div>
           `;
         }).join('');
 
         bayEl.innerHTML = `
-          <div class="cust-stage">
-            <div class="char-figure-wrap">
-              <div class="char-name-tag ${cust.isUrgent && !cust.isDone ? 'urgent-tag' : ''}">
-                ${cust.isUrgent && !cust.isDone ? '🔥' : ''}${cust.name}
-              </div>
-              <div class="char-patience-bar">
-                <div class="char-patience-fill" id="patience-${cust.id}" style="width:${ratio * 100}%; background:${barColor};"></div>
-              </div>
-              <img class="char-img" src="${cust.charObj.src}" onerror="this.outerHTML='<div style=\\'font-size:2.4rem;line-height:1.1;\\'>${cust.charObj.fallback}</div>'" alt="${cust.name}" />
+          <div class="speech-bubble ${cust.isUrgent ? 'urgent-bubble' : ''} ${showAssistGlow ? 'assist-bubble' : ''}">
+            ${cust.note ? `<div class="bubble-note">${cust.note}</div>` : ''}
+            ${itemsHtml}
+          </div>
+          <div class="char-figure-wrap">
+            <div class="char-name-tag ${cust.isUrgent && !cust.isDone ? 'urgent-tag' : ''}">
+              ${cust.isUrgent && !cust.isDone ? '🔥' : ''}${cust.name}
             </div>
-            <div class="speech-bubble ${cust.isUrgent ? 'urgent-bubble' : ''} ${showAssistGlow ? 'assist-bubble' : ''}">
-              ${cust.note ? `<div class="bubble-note">${cust.note}</div>` : ''}
-              <div class="bubble-items">${itemsHtml}</div>
+            <div class="char-patience-bar">
+              <div class="char-patience-fill" id="patience-${cust.id}" style="width:${ratio * 100}%; background:${barColor};"></div>
             </div>
+            <img class="char-img" src="${cust.charObj.src}" onerror="this.outerHTML='<div style=\\'font-size:3rem;line-height:1.1;\\'>${cust.charObj.fallback}</div>'" alt="${cust.name}" />
           </div>
         `;
       }
 
+      // 2. 渲染廚房四大工作站
       renderSlot('griddle', 0, '左煎板');
       renderSlot('griddle', 1, '右煎板');
       renderSlot('prep', 0, '木質備料板');
       renderSlot('steamer', 0, '蒸籠空位');
       renderSlot('drink', 0, '雙龍頭出杯口');
 
+      // 3. 渲染吧檯白瓷盤
       readyPlates.forEach((food, idx) => {
         const el = document.getElementById(`plate-${idx}`);
         if (!food) {
@@ -2090,10 +2361,14 @@
         } else {
           const isSel = selectedPlateIdx === idx;
           const foodMeta = ASSET_PATHS.foods[food.menuId];
+          const modBadge = food.mod ? `<span class="mod-tag ${food.mod === 'cut' ? 'mod-cut' : ''}">${MOD_LABELS[food.mod]}</span>` : '';
           el.className = `ceramic-plate ready ${isSel ? 'selected' : ''}`;
           el.innerHTML = `
-            <img class="plate-food-img" src="${foodMeta.src}" onerror="this.outerHTML='<span style=\\'font-size:1.2rem;\\'>${foodMeta.fallback}</span>'" alt="${food.name}" />
-            <span class="plate-food-name">${food.name}</span>
+            <img class="plate-food-img" src="${foodMeta.src}" onerror="this.outerHTML='<span style=\\'font-size:1.4rem;\\'>${foodMeta.fallback}</span>'" alt="${food.name}" />
+            <div class="plate-text-col">
+              <span class="plate-food-name">${food.name}</span>
+              ${modBadge}
+            </div>
           `;
         }
       });
@@ -2116,7 +2391,7 @@
         el.className = `app-slot app-${stKey} busy`;
         el.innerHTML = `
           <div class="cook-anim-stage">
-            <img class="cook-anim-img" src="${frameSrc}" onerror="this.outerHTML='<span style=\\'font-size:1.2rem;\\'>${fallbackEmoji}</span>'" alt="${stageText}" />
+            <img class="cook-anim-img" src="${frameSrc}" onerror="this.outerHTML='<span style=\\'font-size:1.3rem;\\'>${fallbackEmoji}</span>'" alt="${stageText}" />
             <span class="cook-stage-label">${stageText}</span>
           </div>
           <div class="cook-bar" style="width:${pct}%"></div>
