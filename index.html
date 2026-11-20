@@ -574,6 +574,12 @@
     box-shadow: 0 3px 0 #a37b52;
   }
 
+  .mod-btn.active-mod {
+    background: #fef3c7;
+    border-color: #d97706;
+    color: #92400e;
+  }
+
   .trash-btn {
     flex: 0 0 auto;
     background: #f5ebe0;
@@ -1527,13 +1533,25 @@
     { id: 'FIXED', title: 'FIXED 固定觀察組', tag: '前後測專用', desc: '固定 6 組客人順序與事件腳本，供前後測比較', maxConcurrent: 3, maxItems: 3, unlockGriddle: true, unlockSteamer: true, unlockYoutiao: true, unlockMods: true, allowUrgent: true, allowChange: true, menu: Object.keys(DISHES) }
   ];
 
+  const DISH_MODS = {
+    soy_hot:         [{ id: 'unsweet', label: '🥛無糖', btn: '🥛 無糖' }, { id: 'sweet', label: '🍯加糖', btn: '🍯 加糖' }],
+    soy_iced:        [{ id: 'unsweet', label: '🥛無糖', btn: '🥛 無糖' }, { id: 'no_ice', label: '❄️去冰', btn: '❄️ 去冰' }],
+    danbing:         [{ id: 'spicy', label: '🌶️加辣', btn: '🌶️ 加辣' }, { id: 'cut', label: '🔪切半', btn: '🔪 切半' }],
+    radish_cake:     [{ id: 'spicy', label: '🌶️加辣', btn: '🌶️ 加辣' }, { id: 'cut', label: '🔪切半', btn: '🔪 切半' }],
+    shaobing_youtiao:[{ id: 'cut', label: '🔪切半', btn: '🔪 切半' }, { id: 'separate', label: '🛍️分裝', btn: '🛍️ 分裝' }],
+    xiaolongbao:     [{ id: 'spicy', label: '🌶️加辣', btn: '🌶️ 加辣' }, { id: 'ginger', label: '🧄薑絲', btn: '🧄 加薑絲' }],
+    mantou_egg:      [{ id: 'spicy', label: '🌶️加辣', btn: '🌶️ 加辣' }, { id: 'cut', label: '🔪切半', btn: '🔪 切半' }],
+    fantuan_classic: [{ id: 'spicy', label: '🌶️加辣', btn: '🌶️ 加辣' }, { id: 'no_pickle', label: '🚫無酸菜', btn: '🚫 無酸菜' }],
+    fantuan_purple:  [{ id: 'spicy', label: '🌶️加辣', btn: '🌶️ 加辣' }, { id: 'no_pickle', label: '🚫無酸菜', btn: '🚫 無酸菜' }]
+  };
+
   const FIXED_SCRIPT = [
-    { custId: 'grandma', items: [{ dish: 'fantuan_classic', mod: null }, { dish: 'soy_hot', mod: null }], urgent: false, changeAfter: null },
-    { custId: 'student', items: [{ dish: 'danbing', mod: 'spicy' }, { dish: 'soy_iced', mod: 'cut' }], urgent: false, changeAfter: null },
+    { custId: 'grandma', items: [{ dish: 'fantuan_classic', mod: null }, { dish: 'soy_hot', mod: 'unsweet' }], urgent: false, changeAfter: null },
+    { custId: 'student', items: [{ dish: 'danbing', mod: 'spicy' }, { dish: 'soy_iced', mod: 'no_ice' }], urgent: false, changeAfter: null },
     { custId: 'delivery', items: [{ dish: 'shaobing_youtiao', mod: 'cut' }, { dish: 'danbing', mod: null }, { dish: 'soy_hot', mod: null }], urgent: true, changeAfter: null },
-    { custId: 'office', items: [{ dish: 'radish_cake', mod: 'spicy' }], urgent: false, changeAfter: { fromIdx: 0, toDish: 'xiaolongbao', toMod: 'spicy' } },
-    { custId: 'worker', items: [{ dish: 'mantou_egg', mod: null }, { dish: 'fantuan_purple', mod: null }, { dish: 'soy_iced', mod: null }], urgent: false, changeAfter: null },
-    { custId: 'nurse', items: [{ dish: 'xiaolongbao', mod: null }, { dish: 'soy_iced', mod: null }], urgent: false, changeAfter: null }
+    { custId: 'office', items: [{ dish: 'radish_cake', mod: 'spicy' }], urgent: false, changeAfter: { fromIdx: 0, toDish: 'xiaolongbao', toMod: 'ginger' } },
+    { custId: 'worker', items: [{ dish: 'mantou_egg', mod: 'cut' }, { dish: 'fantuan_purple', mod: 'no_pickle' }, { dish: 'soy_iced', mod: null }], urgent: false, changeAfter: null },
+    { custId: 'nurse', items: [{ dish: 'xiaolongbao', mod: 'spicy' }, { dish: 'soy_iced', mod: 'unsweet' }], urgent: false, changeAfter: null }
   ];
 
   const SFX = {
@@ -1686,15 +1704,18 @@
       for (let k = 0; k < itemCount; k++) {
         const dishId = lvl.menu[(i * 2 + k * 3 + Math.floor(Math.random() * lvl.menu.length)) % lvl.menu.length];
         let mod = null;
-        if (lvl.unlockMods && dishId !== 'soy_hot' && Math.random() < 0.4) {
-          mod = (dishId === 'soy_iced') ? 'cut' : (Math.random() < 0.5 ? 'spicy' : 'cut');
+        if (lvl.unlockMods && DISH_MODS[dishId] && Math.random() < 0.42) {
+          const opts = DISH_MODS[dishId];
+          mod = opts[Math.floor(Math.random() * opts.length)].id;
         }
         items.push({ dish: dishId, mod, done: false });
       }
       let changeAfter = null;
       if (lvl.allowChange && i === 3) {
         const altDish = lvl.menu[(i + 3) % lvl.menu.length];
-        changeAfter = { fromIdx: 0, toDish: altDish, toMod: items[0].mod, triggered: false };
+        const altOpts = DISH_MODS[altDish];
+        const altMod = (items[0].mod && altOpts) ? altOpts[0].id : null;
+        changeAfter = { fromIdx: 0, toDish: altDish, toMod: altMod, triggered: false };
       }
       const pat = calcPatience(itemCount, isUrgent);
       out.push({
@@ -1949,7 +1970,7 @@
     if (sameDishWrongMod) {
       state.stats.errWrongMod++;
       const needed = pendingItems.find(it => it.dish === plate.dishId);
-      const modText = needed.mod === 'spicy' ? '加辣／刷醬' : (needed.mod === 'cut' ? '切半／去冰' : '原味不加料');
+      const modText = modLabel(needed.mod, needed.dish) || '原味';
       showToast(`差一點點！${cust.cust.name}這份需要「${modText}」喔`);
     } else {
       const neededElsewhere = state.slots.some((other, oi) => oi !== slotIdx && other && other.items.some(it => !it.done && it.dish === plate.dishId));
@@ -2078,9 +2099,49 @@
   }
 
   function modLabel(mod, dishId) {
-    if (mod === 'spicy') return '🌶️加辣';
-    if (mod === 'cut') return (dishId === 'soy_iced' || dishId === 'soy_hot') ? '❄️去冰' : '🔪切';
+    if (!mod) return '';
+    const opts = DISH_MODS[dishId] || [];
+    const found = opts.find(o => o.id === mod);
+    if (found) return found.label;
+    for (const arr of Object.values(DISH_MODS)) {
+      const m = arr.find(o => o.id === mod);
+      if (m) return m.label;
+    }
     return '';
+  }
+
+  function updateMorphModButtons() {
+    const lvl = currentLevel();
+    const b1 = $('modSpicyBtn');
+    const b2 = $('modCutBtn');
+    const plate = state.selectedPlateIdx !== null ? state.plates[state.selectedPlateIdx] : null;
+    if (!lvl.unlockMods) {
+      b1.textContent = '✨ 客製1';
+      b2.textContent = '✨ 客製2';
+      b1.classList.remove('active-mod');
+      b2.classList.remove('active-mod');
+      b1.style.opacity = '0.45';
+      b2.style.opacity = '0.45';
+      return;
+    }
+    if (!plate || !DISH_MODS[plate.dishId]) {
+      b1.textContent = '✨ 選盤客製';
+      b2.textContent = '🌶️ 選盤調味';
+      b1.classList.remove('active-mod');
+      b2.classList.remove('active-mod');
+      b1.style.opacity = '0.75';
+      b2.style.opacity = '0.75';
+      return;
+    }
+    const opts = DISH_MODS[plate.dishId];
+    b1.textContent = opts[0].btn;
+    b2.textContent = opts[1].btn;
+    b1.dataset.modId = opts[0].id;
+    b2.dataset.modId = opts[1].id;
+    b1.style.opacity = '1';
+    b2.style.opacity = '1';
+    b1.classList.toggle('active-mod', plate.mod === opts[0].id);
+    b2.classList.toggle('active-mod', plate.mod === opts[1].id);
   }
 
   function renderCounter() {
@@ -2157,6 +2218,7 @@
           ${m ? `<span class="mod-tag">${m}</span>` : ''}
         </button>`;
     }).join('');
+    updateMorphModButtons();
   }
 
   function updatePatienceBars() {
@@ -2183,7 +2245,7 @@
         const pending = c.items.filter(i => !i.done);
         const lines = pending.map(i => {
           const d = DISHES[i.dish];
-          const m = i.mod === 'spicy' ? '🌶️' : (i.mod === 'cut' ? (i.dish === 'soy_iced' || i.dish === 'soy_hot' ? '❄️' : '🔪') : '');
+          const m = modLabel(i.mod, i.dish);
           return `<div class="sticky-item-line">• ${d.shortName || d.name}${m}</div>`;
         }).join('');
         return `
@@ -2408,8 +2470,8 @@
   $('goKitchenBtn').addEventListener('click', () => { SFX.click(); switchView('kitchen'); });
   $('goCounterBtn').addEventListener('click', () => { SFX.click(); switchView('counter'); });
 
-  $('modSpicyBtn').addEventListener('click', () => applyModifier('spicy'));
-  $('modCutBtn').addEventListener('click', () => applyModifier('cut'));
+  $('modSpicyBtn').addEventListener('click', () => applyModifier($('modSpicyBtn').dataset.modId));
+  $('modCutBtn').addEventListener('click', () => applyModifier($('modCutBtn').dataset.modId));
   $('trashBtn').addEventListener('click', trashSelectedPlate);
   elFryBtn.addEventListener('click', fryYoutiaoBatch);
 
