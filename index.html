@@ -661,15 +661,15 @@
   }
 
   .kitchen-top-counter .plate-slot {
-    min-height: 54px;
-    padding: 3px 3px;
-    border-radius: 13px;
+    min-height: 46px;
+    padding: 2px 3px;
+    border-radius: 12px;
     gap: 1px;
   }
 
   .kitchen-top-counter .plate-img {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
   }
 
   .kitchen-top-counter .plate-name {
@@ -740,13 +740,11 @@
   }
 
   .sticky-item-line {
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 800;
     color: var(--ink);
-    line-height: 1.25;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.2;
+    word-break: break-word;
   }
 
   .stations-grid {
@@ -762,8 +760,48 @@
   @media (max-width: 640px) {
     .stations-grid {
       grid-template-columns: 1fr;
-      grid-template-rows: 1fr 1.38fr 1fr 1fr;
-      gap: 6px;
+      grid-template-rows: 1fr 1.65fr 1fr 1fr;
+      gap: 4px;
+    }
+    .station-card {
+      padding: 4px 7px;
+      gap: 3px;
+    }
+    .cook-slot {
+      height: 34px;
+    }
+    .cook-btn {
+      min-height: 34px;
+      padding: 2px 4px;
+      font-size: 12px;
+    }
+    .cook-btn img {
+      width: 28px;
+      height: 28px;
+    }
+    #stationPrep .cook-btn {
+      font-size: 11.5px;
+      gap: 3px;
+    }
+    #stationPrep .cook-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .youtiao-warmer-bar {
+      padding: 2px 7px;
+    }
+    .youtiao-warmer-info img {
+      width: 22px;
+      height: 22px;
+    }
+    .fry-btn {
+      min-height: 26px;
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+    .kitchen-footer .switch-view-btn {
+      min-height: 42px;
+      padding: 5px 10px;
     }
   }
 
