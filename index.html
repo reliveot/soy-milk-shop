@@ -197,20 +197,27 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.26s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .view-panel.hidden {
+  #viewCounter.hidden {
     opacity: 0;
     pointer-events: none;
-    transform: scale(0.985);
+    transform: translateY(-28px);
+    z-index: 0;
+  }
+
+  #viewKitchen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(28px);
     z-index: 0;
   }
 
   .view-panel.active {
     opacity: 1;
     pointer-events: auto;
-    transform: scale(1);
+    transform: translateY(0);
     z-index: 5;
   }
 
@@ -622,13 +629,60 @@
     font-weight: 800;
   }
 
-  /* ================= VIEW B: KITCHEN (ZERO WASTED SPACE, BIG DISH BUTTONS) ================= */
+  /* ================= VIEW B: KITCHEN (WITH TOP SERVING COUNTER) ================= */
   .kitchen-bg {
     background: linear-gradient(180deg, #eef2f5 0%, #dde4ea 100%);
-    padding: 6px 8px calc(7px + env(safe-area-inset-bottom));
+    padding: 0 8px calc(7px + env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
+  }
+
+  .kitchen-top-counter {
+    margin: 0 -8px;
+    background: linear-gradient(180deg, var(--wood-light) 0%, var(--wood-mid) 30%, #b5834c 100%);
+    border-bottom: 3px solid #f6dec0;
+    box-shadow: 0 3px 10px rgba(59, 42, 30, 0.16);
+    padding: 5px 8px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 0 0 auto;
+  }
+
+  .kitchen-counter-label {
+    font-size: 11px;
+    font-weight: 900;
+    color: #fffef8;
+    text-shadow: 0 1px 2px rgba(92, 56, 24, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .kitchen-top-counter .plate-slot {
+    min-height: 54px;
+    padding: 3px 3px;
+    border-radius: 13px;
+    gap: 1px;
+  }
+
+  .kitchen-top-counter .plate-img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .kitchen-top-counter .plate-name {
+    font-size: 10.5px;
+  }
+
+  .switch-view-btn.to-counter.has-plates {
+    animation: readyServePulse 1.5s infinite ease-in-out;
+  }
+
+  @keyframes readyServePulse {
+    0%, 100% { box-shadow: 0 4px 0 #065f46, 0 6px 14px rgba(6, 95, 70, 0.25); }
+    50% { box-shadow: 0 4px 0 #065f46, 0 0 0 5px rgba(16, 185, 129, 0.35); }
   }
 
   .sticky-notes-board {
@@ -790,7 +844,7 @@
     justify-content: center;
     gap: 5px;
     padding: 3px 6px;
-    height: 44px;
+    height: 38px;
     position: relative;
     overflow: hidden;
   }
@@ -820,8 +874,8 @@
   }
 
   .cook-img {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -869,22 +923,22 @@
     flex: 1 1 0;
     background: #fff;
     border: 2px solid #cbd5e1;
-    border-radius: 12px;
-    padding: 4px 8px;
-    font-size: 13px;
+    border-radius: 11px;
+    padding: 3px 6px;
+    font-size: 12.5px;
     font-weight: 900;
     color: var(--ink);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    min-height: 44px;
-    box-shadow: 0 3px 0 #94a3b8;
+    gap: 5px;
+    min-height: 38px;
+    box-shadow: 0 2px 0 #94a3b8;
   }
 
   .cook-btn img {
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -1256,6 +1310,13 @@
 
     <!-- VIEW B: Open Kitchen Area -->
     <section class="view-panel hidden kitchen-bg" id="viewKitchen">
+      <div class="kitchen-top-counter">
+        <div class="kitchen-counter-label">
+          <span>🍽️ 出餐吧檯（做好後點「點擊上盤」放這）</span>
+          <span id="kitchenPlateHint">0/4 盤</span>
+        </div>
+        <div class="plates-row" id="kitchenPlatesRow"></div>
+      </div>
       <div class="sticky-notes-board" id="stickyNotesBoard"></div>
 
       <div class="stations-grid">
@@ -1640,6 +1701,7 @@
   const elViewCounter = $('viewCounter');
   const elViewKitchen = $('viewKitchen');
   const elPlatesRow = $('platesRow');
+  const elKitchenPlatesRow = $('kitchenPlatesRow');
   const elCookingBadge = $('cookingCountBadge');
   const elReadyBadge = $('readyPlateBadge');
   const elStickyBoard = $('stickyNotesBoard');
@@ -2096,6 +2158,8 @@
     elCookingBadge.textContent = `${cooking}`;
     const readyPlates = state.plates.filter(Boolean).length;
     elReadyBadge.textContent = `吧檯已備好 ${readyPlates}/4 盤`;
+    $('kitchenPlateHint').textContent = `${readyPlates}/4 盤`;
+    $('goCounterBtn').classList.toggle('has-plates', readyPlates > 0);
   }
 
   function modLabel(mod, dishId) {
@@ -2203,7 +2267,7 @@
       `;
     });
 
-    elPlatesRow.innerHTML = state.plates.map((p, idx) => {
+    const platesHtml = state.plates.map((p, idx) => {
       if (!p) {
         return `<button class="plate-slot empty" data-plate="${idx}" type="button">空盤</button>`;
       }
@@ -2218,6 +2282,8 @@
           ${m ? `<span class="mod-tag">${m}</span>` : ''}
         </button>`;
     }).join('');
+    elPlatesRow.innerHTML = platesHtml;
+    elKitchenPlatesRow.innerHTML = platesHtml;
     updateMorphModButtons();
   }
 
@@ -2485,6 +2551,18 @@
     const p = e.target.closest('[data-plate]');
     if (!p) return;
     selectPlate(Number(p.dataset.plate));
+  });
+
+  elKitchenPlatesRow.addEventListener('click', (e) => {
+    const p = e.target.closest('[data-plate]');
+    if (!p) return;
+    const idx = Number(p.dataset.plate);
+    if (state.plates[idx]) {
+      SFX.click();
+      showToast('已備好在吧檯！請點下方「🛎️ 回櫃檯出餐」端給客人');
+    } else {
+      showToast('這是空盤，做好餐點後點「點擊上盤」就會放來這裡！');
+    }
   });
 
   $('viewKitchen').addEventListener('click', (e) => {
